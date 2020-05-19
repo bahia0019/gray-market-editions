@@ -1,6 +1,4 @@
-<?php function gme_tab( $tab ) { ?>
-
-	<h2><?php echo esc_html( $tab ); ?> Tab</h2>
+<h2><?php echo esc_html( $tab ); ?> Tab</h2>
 
 	<?php
 	if ( have_rows( $tab . '_repeater' ) ) : ?>
@@ -37,6 +35,3 @@
 			<?php endwhile; ?>
 
 	<?php endif; ?>
-
-<?php
-	}

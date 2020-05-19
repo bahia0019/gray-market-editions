@@ -34,17 +34,18 @@ add_filter('woocommerce_add_cart_item_data', function ($cart_item_data, $product
 
 // Append the Informational Tabs
 add_filter('woocommerce_product_tabs', function ($array) {
-    $tab = 'frame';
     $framing = [
-        'framing' => [
+        'Frame' => [
             'title'    => 'Framing Options',
             'priority' => 1,
-            'callback' => gme_tab($tab),
+            'callback' => function ($tab, $context) {
+                require_once BB_TEMPLATES_PATH . 'frame-tab.php';
+            },
         ],
-        'paper' => [
+        'Paper' => [
             'title'    => 'Paper Options',
             'priority' => 2,
-            'callback' => function () {
+            'callback' => function ($tab, $context) {
                 require_once BB_TEMPLATES_PATH . 'paper-tab.php';
             },
         ],
