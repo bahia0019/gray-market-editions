@@ -6,12 +6,25 @@ Vue.use(Cloudinary)
 
 Vue.component('cloudinary-component', CloudinaryComponent)
 
+// Temp testing function
+function randomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min) + min)
+}
+
 const app = new Vue({
   el: '#vue-app',
   data() {
     return {
       quantity: '',
       variations: [],
+      cloudinaryUrls: [
+        `https://i.picsum.photos/id/${randomNumber(1, 20)}/600/400.jpg`,
+        `https://i.picsum.photos/id/${randomNumber(1, 20)}/600/400.jpg`,
+        `https://i.picsum.photos/id/${randomNumber(1, 20)}/600/400.jpg`,
+        `https://i.picsum.photos/id/${randomNumber(1, 20)}/600/400.jpg`,
+        `https://i.picsum.photos/id/${randomNumber(1, 20)}/600/400.jpg`,
+        `https://i.picsum.photos/id/${randomNumber(1, 20)}/600/400.jpg`,
+      ],
     }
   },
   methods: {
