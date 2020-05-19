@@ -16,36 +16,32 @@ add_filter('woocommerce_quantity_input_args', function ($args, $product) {
     return $args;
 }, 10, 2);
 
-// Add hidden input field to capture Cloudinary image URL's for when $_POST action
+// Add hidden input field to bind to Vue data for capturing Cloudinary image URL's to send along with $_POST data
 add_action('woocommerce_after_variations_form', function () {
-    // echo '<input type="hidden" name="cloudinary_image_urls" value="' . json_encode(["blah" => "dee"]) . '" />';
+    echo '<input type="hidden" name="cloudinary_image_urls" v-model="cloudinaryUrls" />';
 });
 
-// Append Cloudinary image to cart itmem during 'add to cart'
+// Append Cloudinary image to cart item during 'add to cart'
 add_filter('woocommerce_add_cart_item_data', function ($cart_item_data, $product_id, $variation_id, $quantity) {
-    $cart_item_data['cloudinary_image_urls'] = [
-        'https://i.picsum.photos/id/' . random_int(1, 20) . '/600/400.jpg',
-        'https://i.picsum.photos/id/' . random_int(1, 20) . '/600/400.jpg',
-        'https://i.picsum.photos/id/' . random_int(1, 20) . '/600/400.jpg',
-        'https://i.picsum.photos/id/' . random_int(1, 20) . '/600/400.jpg',
-        'https://i.picsum.photos/id/' . random_int(1, 20) . '/600/400.jpg',
-        'https://i.picsum.photos/id/' . random_int(1, 20) . '/600/400.jpg',
-        'https://i.picsum.photos/id/' . random_int(1, 20) . '/600/400.jpg',
-    ];
+    if (!isset($_POST['cloudinary_image_urls'])) {
+        return;
+    }
+
+    $cart_item_data['cloudinary_image_urls'] = explode(',', $_POST['cloudinary_image_urls']);
 
     return $cart_item_data;
 }, 10, 4);
 
 // Append the Informational Tabs
 add_filter('woocommerce_product_tabs', function ($array) {
-	$tab = 'frame';
+    $tab = 'frame';
     $framing = [
         'framing' => [
             'title'    => 'Framing Options',
             'priority' => 1,
-            'callback' => gme_tab( $tab ),
-		],
-		'paper' => [
+            'callback' => gme_tab($tab),
+        ],
+        'paper' => [
             'title'    => 'Paper Options',
             'priority' => 2,
             'callback' => function () {
@@ -59,5 +55,5 @@ add_filter('woocommerce_product_tabs', function ($array) {
 
 // Add Cloudinary widgets scripts
 add_action('woocommerce_after_single_product', function () {
-	require_once BB_TEMPLATES_PATH . 'cloudinary-widget.php';
+    require_once BB_TEMPLATES_PATH . 'cloudinary-widget.php';
 });
