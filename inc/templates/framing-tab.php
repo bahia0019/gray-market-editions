@@ -1,37 +1,42 @@
-<h2>Framing Tab</h2>
+<?php function gme_tab( $tab ) { ?>
 
-<?php
-if ( have_rows( 'frame_repeater' ) ) : ?>
+	<h2><?php echo esc_html( $tab ); ?> Tab</h2>
 
-		<?php
-		while ( have_rows( 'frame_repeater' ) ) :
+	<?php
+	if ( have_rows( $tab . '_repeater' ) ) : ?>
 
-			the_row();
+			<?php
+			while ( have_rows( $tab . '_repeater' ) ) :
 
-			$title   = get_sub_field( 'frame_title' );
-			$image   = get_sub_field( 'frame_image' );
-			$content = get_sub_field( 'frame_text', false, false );
-			?>
-		<div style="border-bottom:1px solid rgba(0, 0, 0, 0.05); padding-bottom: 1em; margin-bottom: 2em;">
+				the_row();
 
-			<?php if ( $title ) : ?>
-				<header>
-					<h4><?php echo esc_html( $title ); ?></h4>
-				</header>
-			<?php endif; ?>
+				$title   = get_sub_field( $tab . '_title' );
+				$content = get_sub_field( $tab . '_text', false, false );
+				$image   = get_sub_field( $tab . '_image' );
+				?>
+			<div style="border-bottom:1px solid rgba(0, 0, 0, 0.05); padding-bottom: 1em; margin-bottom: 2em;">
 
-			<div>
+				<?php if ( $title ) : ?>
+					<header>
+						<h4><?php echo esc_html( $title ); ?></h4>
+					</header>
+				<?php endif; ?>
 
-				<figure style="float:right;">	
-					<?php echo wp_get_attachment_image( $image, 'thumbnail', false, array( 'alt' => $image['alt'] ) ); ?>
-				</figure>
+				<div>
 
-				<?php echo esc_html( $content ); ?>
-				<div style="clear:both;"></div>
+					<figure style="float:right;">	
+						<?php echo wp_get_attachment_image( $image, 'thumbnail', false, array( 'alt' => $image['alt'] ) ); ?>
+					</figure>
+
+					<?php echo esc_html( $content ); ?>
+					<div style="clear:both;"></div>
+
+				</div>
 
 			</div>
+			<?php endwhile; ?>
 
-		</div>
-		<?php endwhile; ?>
+	<?php endif; ?>
 
-<?php endif; ?>
+<?php
+	}

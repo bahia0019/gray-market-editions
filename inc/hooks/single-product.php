@@ -38,17 +38,16 @@ add_filter('woocommerce_add_cart_item_data', function ($cart_item_data, $product
 
 // Append the Informational Tabs
 add_filter('woocommerce_product_tabs', function ($array) {
+	$tab = 'frame';
     $framing = [
         'framing' => [
             'title'    => 'Framing Options',
-            'priority' => 5,
-            'callback' => function () {
-                require_once BB_TEMPLATES_PATH . 'framing-tab.php';
-            },
+            'priority' => 1,
+            'callback' => gme_tab( $tab ),
 		],
 		'paper' => [
             'title'    => 'Paper Options',
-            'priority' => 6,
+            'priority' => 2,
             'callback' => function () {
                 require_once BB_TEMPLATES_PATH . 'paper-tab.php';
             },
@@ -60,5 +59,5 @@ add_filter('woocommerce_product_tabs', function ($array) {
 
 // Add Cloudinary widgets scripts
 add_action('woocommerce_after_single_product', function () {
-    require_once BB_TEMPLATES_PATH . 'cloudinary-widget.php';
+	require_once BB_TEMPLATES_PATH . 'cloudinary-widget.php';
 });
