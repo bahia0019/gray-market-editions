@@ -3,7 +3,6 @@
 // Control min/max when adding product to cart
 add_filter('woocommerce_available_variation', function ($args, $product) {
     $args['min_qty'] = 6;
-    $args['max_qty'] = 60;
 
     return $args;
 }, 10, 2);
@@ -11,7 +10,6 @@ add_filter('woocommerce_available_variation', function ($args, $product) {
 add_filter('woocommerce_quantity_input_args', function ($args, $product) {
     $args['step'] = 6;
     $args['min_value'] = 6;
-    $args['max_value'] = 60;
 
     return $args;
 }, 10, 2);
