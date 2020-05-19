@@ -36,7 +36,7 @@ add_filter('woocommerce_add_cart_item_data', function ($cart_item_data, $product
     return $cart_item_data;
 }, 10, 4);
 
-// Append 'Framing' Tab
+// Append the Informational Tabs
 add_filter('woocommerce_product_tabs', function ($array) {
     $framing = [
         'framing' => [
@@ -48,7 +48,7 @@ add_filter('woocommerce_product_tabs', function ($array) {
 		],
 		'paper' => [
             'title'    => 'Paper Options',
-            'priority' => 5,
+            'priority' => 6,
             'callback' => function () {
                 require_once BB_TEMPLATES_PATH . 'paper-tab.php';
             },
