@@ -3,7 +3,6 @@ let mix = require('laravel-mix')
 mix.setPublicPath('./')
 
 mix.js('resources/js/app.js', 'dist/js/app.js')
-mix.js('resources/js/vue/*.js', 'dist/js/vue.js')
 mix.copy('resources/css/app.css', 'dist/css/app.css')
 mix.version()
 
