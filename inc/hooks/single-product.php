@@ -45,6 +45,13 @@ add_filter('woocommerce_product_tabs', function ($array) {
             'callback' => function () {
                 require_once BB_TEMPLATES_PATH . 'framing-tab.php';
             },
+		],
+		'paper' => [
+            'title'    => 'Paper Options',
+            'priority' => 5,
+            'callback' => function () {
+                require_once BB_TEMPLATES_PATH . 'paper-tab.php';
+            },
         ],
     ];
 
