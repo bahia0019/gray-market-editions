@@ -51,8 +51,3 @@ add_filter('woocommerce_product_tabs', function ($array) {
 
     return array_merge($array, $framing);
 });
-
-// Add Cloudinary widgets scripts
-add_action('woocommerce_after_single_product', function () {
-    require_once BB_TEMPLATES_PATH . 'cloudinary-widget.php';
-});
