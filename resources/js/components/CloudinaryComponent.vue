@@ -1,8 +1,8 @@
 <template>
   <div>
     <cld-context cloudName="flaunt-your-site">
-      <cld-image publicId="WilliamBay-PartsPerMillion_DSC5995_lit9ko" :angle="angle">
-        <!-- <cld-transformation :angle="angle" /> -->
+      <cld-image publicId="WilliamBay-PartsPerMillion_DSC5995_lit9ko" :angle="angle" ref="cldImage">
+        <cld-transformation :angle="angle" />
       </cld-image>
     </cld-context>
 
@@ -12,7 +12,7 @@
 
     <div class="image-grid">
       <div class="image-grid-thumb" v-for="(image, index) in images" :key="index">
-        <img :src="image" @click="currentImage(index)" />
+        <img :src="image" @click="setCurrentImage(index)" />
       </div>
     </div>
   </div>
@@ -22,17 +22,29 @@
 export default {
   data() {
     return {
-      images: this.$root.cloudinaryUrls,
-      angle: 0
+      angle: 0,
+      currentImage: "",
+      images: this.$root.cloudinaryUrls
     };
   },
+  mounted() {
+    this.watchCldImage();
+  },
   methods: {
-    currentImage(index) {
-      console.log(this.images[index]);
-    },
     rotate() {
-      // Logic to rotate at 45 degrees
-      this.angle = 90;
+      this.angle = this.angle === 270 ? 0 : this.angle + 90;
+    },
+    setCurrentImage(index) {
+      this.currentImage = this.images[index];
+    },
+    watchCldImage() {
+      this.$watch("$refs.cldImage.imageAttrs.src", {
+        handler(newUrl, oldUrl) {
+          console.log(oldUrl);
+          console.log(newUrl);
+        },
+        immediate: true
+      });
     }
   }
 };
