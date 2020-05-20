@@ -53,18 +53,29 @@ export default {
 <style scoped>
 .image-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-template-rows: 1fr;
   grid-gap: 1rem;
   margin-top: 2rem;
 }
 
 .image-grid-thumb {
+  background: black;
+  display: grid;
+}
+
+.image-grid-thumb:before {
+  content: "";
+  padding-bottom: 100%;
+  display: block;
+  grid-area: 1 / 1 / 2 / 2;
 }
 
 .image-grid-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  grid-area: 1 / 1 / 2 / 2;
+  border-radius: 0;
 }
 </style>

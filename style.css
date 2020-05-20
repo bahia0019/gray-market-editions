@@ -38,6 +38,18 @@ Updated: 2020-05-09 15:53:18
     width: 100%;
 }
 
+/* Woocommerce */
+@media (min-width: 768px) {
+    .storefront-full-width-content.single-product
+        div.product
+        .woocommerce-product-gallery {
+        width: 60%;
+    }
+    .storefront-full-width-content.single-product div.product .summary {
+        width: 25%;
+    }
+}
+
 /* Cloudinary mini grid */
 .cloudinary-mini-grid {
     margin-top: 1rem;
