@@ -5,8 +5,12 @@ add_action('wp_enqueue_scripts', function () {
 
     wp_enqueue_style('woo_photo', get_stylesheet_directory_uri() . '/dist/css/app.css', [], $version);
 
+    if (is_product()) {
+        wp_enqueue_script('cloudinary', 'https://widget.cloudinary.com/v2.0/global/all.js', ['jquery'], $version, true);
+    }
+
     if (is_product() || is_cart() && !WC()->cart->is_empty()) {
-        wp_enqueue_script('woo_photo', get_stylesheet_directory_uri() . '/dist/js/app.js', ['jquery'], $version, true);
+        wp_enqueue_script('woo_photo', get_stylesheet_directory_uri() . '/dist/js/app.js', ['jquery', 'cloudinary'], $version, true);
     }
 });
 

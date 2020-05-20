@@ -45,5 +45,21 @@ const app = new Vue({
                 })
             }
         },
+        uploadWidget() {
+            var myWidget = cloudinary.createUploadWidget({
+                cloudName: 'flaunt-your-site'
+            }, (error, result) => {
+                if (!error && result && result.event === "success") {
+                    // Assuming this is where the newly uploaded images are
+                    // returned. We can push them onto array. E.g...
+
+                    // this.cloudinaryUrls.push(...SOME_IMAGES)
+
+                    console.log('Done! Here is the image info: ', result.info)
+                }
+            })
+
+            myWidget.open()
+        }
     },
 })
