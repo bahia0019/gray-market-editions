@@ -6,11 +6,6 @@ Vue.use(Cloudinary)
 
 Vue.component("cloudinary-component", CloudinaryComponent)
 
-// Temp testing function
-function randomNumber(min, max) {
-    return Math.floor(Math.random() * (max - min) + min)
-}
-
 const app = new Vue({
     el: "#vue-app",
     data() {
