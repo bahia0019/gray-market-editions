@@ -79,7 +79,8 @@
         v-for="(image, index) in images"
         :publicId="image"
         :key="index"
-        @click.native="setCurrentImage(index)"
+        @click.native="setCurrentImage(index); setActiveThumb = !setActiveThumb;"
+        :class="{ active: setActiveThumb }"
       >
         <cld-transformation height="300" width="300" crop="fill" />
       </cld-image>
@@ -93,7 +94,8 @@ export default {
     return {
       angle: 0,
       currentImage: "",
-      images: this.$root.cloudinaryUrls
+      images: this.$root.cloudinaryUrls,
+      setActiveThumb: false
     };
   },
   mounted() {
@@ -139,9 +141,9 @@ export default {
 }
 
 .image-grid-thumb {
-  background: black;
   display: grid;
   cursor: pointer;
+  transition: 350ms;
 }
 
 .image-grid-thumb img {
@@ -150,6 +152,11 @@ export default {
   object-fit: cover;
   grid-area: 1 / 1 / 2 / 2;
   border-radius: 0;
+}
+
+.image-grid-thumb:hover,
+.image-grid-thumb.active {
+  filter: opacity(0.5);
 }
 
 .edit-tools {
@@ -166,6 +173,7 @@ export default {
   padding: 0;
   margin: 0;
   position: relative;
+  transition: 350ms;
 }
 
 .edit-tools svg {
@@ -175,7 +183,7 @@ export default {
 /* Tooltips */
 
 .tool-tip {
-  display: none;
+  visibility: hidden;
   width: fit-content;
   top: 34px;
   position: absolute;
@@ -183,7 +191,7 @@ export default {
 }
 
 .edit-tools button:hover .tool-tip {
-  display: block;
+  visibility: visible;
 }
 
 .triangle {
