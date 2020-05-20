@@ -1,6 +1,6 @@
 <template>
   <div>
-    <cld-context id="stage" cloudName="flaunt-your-site">
+    <cld-context cloudName="flaunt-your-site" ref="stage">
       <cld-image publicId="16_20_bg_l0wg9w.jpg" :angle="angle" ref="cldImage">
         <!-- <cld-transformation :angle="angle" /> -->
         <cld-transformation height="3200" quality="100:444" width="4000" crop="scale" />
@@ -104,7 +104,7 @@ export default {
       this.angle = this.angle === 270 ? 0 : this.angle + 90;
     },
     setStageHeight() {
-      console.log(document.querySelector("#stage").offsetHeight);
+      console.log(this.$refs.stage.$el.offsetHeight);
     },
     setCurrentImage(index) {
       console.log(this.images[index]);
