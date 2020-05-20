@@ -1,13 +1,15 @@
 <template>
   <div>
-    <cld-context cloudName="flaunt-your-site">
-      <cld-image publicId="WilliamBay-PartsPerMillion_DSC5995_lit9ko" :angle="angle" ref="cldImage">
-        <cld-transformation :angle="angle" />
+    <cld-context id="stage" cloudName="flaunt-your-site">
+      <cld-image publicId="16_20_bg_l0wg9w.jpg" :angle="angle" ref="cldImage">
+        <!-- <cld-transformation :angle="angle" /> -->
+        <cld-transformation height="3200" quality="100:444" width="4000" crop="scale" />
+        <cld-transformation gravity="center" :overlay="currentImage" />
       </cld-image>
     </cld-context>
 
     <div class="edit-tools">
-      <button id="full-frame" @click="fullFrame">
+      <button id="full-frame">
         <svg viewBox="0 0 32 32">
           <path d="M32 0h-13l5 5-6 6 3 3 6-6 5 5z" />
           <path d="M32 32v-13l-5 5-6-6-3 3 6 6-5 5z" />
@@ -20,7 +22,7 @@
         </div>
       </button>
 
-      <button id="borders" @click="borders">
+      <button id="borders">
         <svg viewBox="0 0 32 32">
           <path
             d="M28 0h-24c-2.2 0-4 1.8-4 4v24c0 2.2 1.8 4 4 4h24c2.2 0 4-1.8 4-4v-24c0-2.2-1.8-4-4-4zM28 28h-24v-24h24v24z"
@@ -32,7 +34,7 @@
         </div>
       </button>
 
-      <button id="orientation" @click="orientation">
+      <button id="orientation">
         <svg viewBox="0 0 32 32">
           <path d="M26 28h-20v-4l6-10 8.219 10 5.781-4v8z" />
           <path d="M26 15c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3c1.657 0 3 1.343 3 3z" />
@@ -58,7 +60,7 @@
         </div>
       </button>
 
-      <button id="rotate" @click="rotate">
+      <button id="rotate" @click="setStageHeight">
         <svg viewBox="0 0 32 32">
           <path
             d="M32 12h-12l4.485-4.485c-2.267-2.266-5.28-3.515-8.485-3.515s-6.219 1.248-8.485 3.515c-2.266 2.267-3.515 5.28-3.515 8.485s1.248 6.219 3.515 8.485c2.267 2.266 5.28 3.515 8.485 3.515s6.219-1.248 8.485-3.515c0.189-0.189 0.371-0.384 0.546-0.583l3.010 2.634c-2.933 3.349-7.239 5.464-12.041 5.464-8.837 0-16-7.163-16-16s7.163-16 16-16c4.418 0 8.418 1.791 11.313 4.687l4.687-4.687v12z"
@@ -75,8 +77,9 @@
       <cld-image
         class="image-grid-thumb"
         v-for="(image, index) in images"
-        :key="index"
         :publicId="image"
+        :key="index"
+        @click.native="setCurrentImage(index)"
       >
         <cld-transformation height="300" width="300" crop="fill" />
       </cld-image>
@@ -100,15 +103,16 @@ export default {
     rotate() {
       this.angle = this.angle === 270 ? 0 : this.angle + 90;
     },
+    setStageHeight() {
+      console.log(document.querySelector("#stage").offsetHeight);
+    },
     setCurrentImage(index) {
+      console.log(this.images[index]);
       this.currentImage = this.images[index];
     },
     watchCldImage() {
       this.$watch("$refs.cldImage.imageAttrs.src", {
-        handler(newUrl, oldUrl) {
-          console.log(oldUrl);
-          console.log(newUrl);
-        },
+        handler(newUrl, oldUrl) {},
         immediate: true
       });
     }
@@ -117,9 +121,13 @@ export default {
 </script>
 
 <style scoped>
+.cld-image {
+  border: 1px solid #999;
+}
+
 .image-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   grid-template-rows: 1fr;
   grid-gap: 0.5rem;
   margin-top: 2rem;
@@ -127,9 +135,13 @@ export default {
   border: 1px solid #666;
 }
 
+.image-grid button {
+}
+
 .image-grid-thumb {
   background: black;
   display: grid;
+  cursor: pointer;
 }
 
 .image-grid-thumb img {
