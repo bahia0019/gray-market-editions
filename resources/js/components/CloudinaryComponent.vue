@@ -1,7 +1,7 @@
 <template>
   <div>
     <div ref="stage">
-      <cld-image publicId="16_20_bg_l0wg9w.jpg" ref="cldImage">
+      <cld-image publicId="16_20_bg_l0wg9w.jpg" ref="cldImage" onload="cloudinaryOnLoad()">
         <cld-transformation :width="canvasWidth" :height="canvasHeight" crop="scale" />
         <cld-transformation
           :overlay="currentImage"
@@ -110,6 +110,12 @@ export default {
     this.getStageHeight();
   },
   methods: {
+    //   Set and Reflect Angle
+    setAngle() {
+      this.$root.processingImage = true
+      this.angle = this.angle === 270 ? 0 : this.angle + 90;
+      this.reflectAngle();
+    },
     getStageHeight() {
       let stage = this.$refs.stage;
       let stageHeight = stage.offsetHeight;
