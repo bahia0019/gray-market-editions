@@ -28,6 +28,12 @@ const app = new Vue({
                 `Utah/_DSC0927_dtiu3g.jpg`,
                 `Utah/_DSC1000_fc8j4j.jpg`,
             ],
+            processingImage: false
+        }
+    },
+    mounted() {
+        window.cloudinaryOnLoad = () => {
+            this.processingImage = false
         }
     },
     methods: {

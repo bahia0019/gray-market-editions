@@ -1,6 +1,6 @@
 <template>
   <div>
-    <cld-image publicId="16_20_bg_l0wg9w.jpg" ref="cldImage">
+    <cld-image publicId="16_20_bg_l0wg9w.jpg" ref="cldImage" onload="cloudinaryOnLoad()">
       <cld-transformation :width="canvasWidth" :height="canvasHeight" crop="scale" />
       <cld-transformation :overlay="currentImage" width="2000" crop="scale" :angle="angle" />
     </cld-image>
@@ -103,6 +103,7 @@ export default {
   methods: {
     //   Set and Reflect Angle
     setAngle() {
+      this.$root.processingImage = true
       this.angle = this.angle === 270 ? 0 : this.angle + 90;
       this.reflectAngle();
     },
