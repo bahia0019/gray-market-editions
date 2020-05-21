@@ -1,13 +1,12 @@
 <template>
   <div>
-
     <cld-image publicId="16_20_bg_l0wg9w.jpg" ref="cldImage">
-      <cld-transformation height="3200" quality="100:444" width="4000" crop="scale" />
+      <cld-transformation :width="canvasWidth" :height="canvasHeight" crop="scale" />
       <cld-transformation :overlay="currentImage" width="2000" crop="scale" :angle="angle" />
     </cld-image>
 
     <div class="edit-tools">
-      <button id="full-frame">
+      <button id="full-frame" @click="setCanvasWidth(); setCanvasHeight();">
         <svg viewBox="0 0 32 32">
           <path d="M32 0h-13l5 5-6 6 3 3 6-6 5 5z" />
           <path d="M32 32v-13l-5 5-6-6-3 3 6 6-5 5z" />
@@ -46,7 +45,7 @@
         </div>
       </button>
 
-      <button id="rotate" @click="rotate">
+      <button id="rotate" @click="setAngle">
         <svg viewBox="0 0 32 32">
           <path
             d="M32 12h-12l4.485-4.485c-2.267-2.266-5.28-3.515-8.485-3.515s-6.219 1.248-8.485 3.515c-2.266 2.267-3.515 5.28-3.515 8.485s1.248 6.219 3.515 8.485c2.267 2.266 5.28 3.515 8.485 3.515s6.219-1.248 8.485-3.515c0.189-0.189 0.371-0.384 0.546-0.583l3.010 2.634c-2.933 3.349-7.239 5.464-12.041 5.464-8.837 0-16-7.163-16-16s7.163-16 16-16c4.418 0 8.418 1.791 11.313 4.687l4.687-4.687v12z"
@@ -58,7 +57,7 @@
         </div>
       </button>
 
-      <button id="rotate" @click="setStageHeight">
+      <button id="rotate">
         <svg viewBox="0 0 32 32">
           <path
             d="M32 12h-12l4.485-4.485c-2.267-2.266-5.28-3.515-8.485-3.515s-6.219 1.248-8.485 3.515c-2.266 2.267-3.515 5.28-3.515 8.485s1.248 6.219 3.515 8.485c2.267 2.266 5.28 3.515 8.485 3.515s6.219-1.248 8.485-3.515c0.189-0.189 0.371-0.384 0.546-0.583l3.010 2.634c-2.933 3.349-7.239 5.464-12.041 5.464-8.837 0-16-7.163-16-16s7.163-16 16-16c4.418 0 8.418 1.791 11.313 4.687l4.687-4.687v12z"
@@ -92,46 +91,67 @@ export default {
     return {
       angle: 0,
       images: this.$root.cloudinaryUrls,
-      currentImage: 'Utah:_DSC0873_d8bcxg.jpg'
+      currentImage: "Utah:_DSC0873_d8bcxg.jpg",
+      canvasWidth: 4000,
+      canvasHeight: 3200
     };
   },
   mounted() {
-    this.setCurrentImage(0)
-    this.watchCldImage()
+    this.setCurrentImage(0);
+    this.watchCldImage();
   },
   methods: {
-    rotate() {
-      this.angle = this.angle === 270 ? 0 : this.angle + 90
-      this.setRotate()
+    //   Set and Reflect Angle
+    setAngle() {
+      this.angle = this.angle === 270 ? 0 : this.angle + 90;
+      this.reflectAngle();
     },
-    setStageHeight() {
-      console.log(this.$refs.cldImage.$el.offsetHeight)
+    reflectAngle() {
+      let obj = this.$refs.cldImage.transformations.find(
+        transformation => "angle" in transformation
+      );
+      this.$set(obj, "angle", this.angle);
     },
+    //   Set and Reflect Canvas Height
+    setCanvasWidth() {
+      this.canvasWidth = 400;
+      this.reflectCanvasWidth();
+    },
+    reflectCanvasWidth() {
+      let obj = this.$refs.cldImage.transformations.find(
+        transformation => "width" in transformation
+      );
+      this.$set(obj, "width", this.canvasWidth);
+    },
+    //   Set and Reflect Canvas Height
+    setCanvasHeight() {
+      this.canvasHeight = 320;
+      this.reflectCanvasHeight();
+    },
+    reflectCanvasHeight() {
+      let obj = this.$refs.cldImage.transformations.find(
+        transformation => "height" in transformation
+      );
+      this.$set(obj, "height", this.canvasHeight);
+    },
+    // Set and Reflect Current Image.
     setCurrentImage(index) {
-      this.currentImage = this.images[index]
-      this.setOverlay()
+      this.currentImage = this.images[index];
+      this.reflectCurrentImage();
+    },
+    reflectCurrentImage() {
+      let obj = this.$refs.cldImage.transformations.find(
+        transformation => "overlay" in transformation
+      );
+      this.$set(obj, "overlay", this.currentImage.replace("/", ":"));
     },
     watchCldImage() {
       this.$watch("$refs.cldImage.imageAttrs.src", {
         handler(newUrl, oldUrl) {
-          console.log(newUrl)
+          console.log(newUrl);
         },
         immediate: true
       });
-    },
-    setOverlay() {
-      let obj = this.$refs.cldImage.transformations.find(
-        transformation => 'overlay' in transformation
-      )
-
-      this.$set(obj, 'overlay', this.currentImage.replace('/', ':'))
-    },
-    setRotate() {
-      let obj = this.$refs.cldImage.transformations.find(
-         transformation => 'angle' in transformation
-      )
-      
-      this.$set(obj, 'angle', this.angle)
     }
   }
 };

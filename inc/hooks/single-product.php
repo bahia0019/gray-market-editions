@@ -51,3 +51,8 @@ add_filter('woocommerce_product_tabs', function ($array) {
 
     return array_merge($array, $framing);
 });
+
+
+
+// Remove the variable price range.
+remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_price', 10 );
