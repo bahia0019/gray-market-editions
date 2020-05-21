@@ -1,12 +1,10 @@
 <template>
   <div>
-    <cld-context cloudName="flaunt-your-site" ref="stage">
-      <cld-image publicId="16_20_bg_l0wg9w.jpg" :angle="angle" ref="cldImage">
-        <!-- <cld-transformation :angle="angle" /> -->
-        <cld-transformation height="3200" quality="100:444" width="4000" crop="scale" />
-        <cld-transformation gravity="center" :overlay="currentImage" />
-      </cld-image>
-    </cld-context>
+
+    <cld-image publicId="16_20_bg_l0wg9w.jpg" ref="cldImage">
+      <cld-transformation height="3200" quality="100:444" width="4000" crop="scale" />
+      <cld-transformation :overlay="currentImage" width="500" crop="scale" :angle="angle" />
+    </cld-image>
 
     <div class="edit-tools">
       <button id="full-frame">
@@ -73,7 +71,7 @@
       </button>
     </div>
 
-    <cld-context class="image-grid" cloudName="flaunt-your-site">
+    <div class="image-grid">
       <cld-image
         class="image-grid-thumb"
         v-for="(image, index) in images"
@@ -84,7 +82,7 @@
       >
         <cld-transformation height="300" width="300" crop="fill" />
       </cld-image>
-    </cld-context>
+    </div>
   </div>
 </template>
 
@@ -93,30 +91,46 @@ export default {
   data() {
     return {
       angle: 0,
-      currentImage: "",
+      currentImage: 'Utah:_DSC0873_d8bcxg.jpg',
       images: this.$root.cloudinaryUrls,
       setActiveThumb: false
     };
   },
   mounted() {
-    this.watchCldImage();
+    this.setCurrentImage(0)
+    this.watchCldImage()
   },
   methods: {
     rotate() {
-      this.angle = this.angle === 270 ? 0 : this.angle + 90;
+      this.angle = this.angle === 270 ? 0 : this.angle + 90
+      this.setRotate()
     },
     setStageHeight() {
-      console.log(this.$refs.stage.$el.offsetHeight);
+      console.log(this.$refs.cldImage.$el.offsetHeight)
     },
     setCurrentImage(index) {
-      console.log(this.images[index]);
-      this.currentImage = this.images[index];
+      this.currentImage = this.images[index]
+      this.setOverlayImage()
     },
     watchCldImage() {
       this.$watch("$refs.cldImage.imageAttrs.src", {
-        handler(newUrl, oldUrl) {},
+        handler(newUrl, oldUrl) {
+          console.log(newUrl)
+        },
         immediate: true
       });
+    },
+    setOverlayImage() {
+      const overlay = this.$refs.cldImage.transformations.find(
+        transformation => transformation.overlay
+      )
+
+      this.$set(overlay, 'overlay', this.currentImage.replace('/', ':'))
+    },
+    setRotate() {
+      const angle = this.$refs.cldImage.transformations[1]
+
+      this.$set(angle, 'angle', this.angle)
     }
   }
 };
