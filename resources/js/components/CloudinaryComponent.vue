@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div ref="stage">
+    <div ref="stage" id="stage" :class="{ processingImage: $root.processingImage}">
       <cld-image publicId="16_20_bg_l0wg9w.jpg" ref="cldImage" onload="cloudinaryOnLoad()">
         <cld-transformation :width="canvasWidth" :height="canvasHeight" crop="scale" />
         <cld-transformation
@@ -11,6 +11,12 @@
           :angle="angle"
         />
       </cld-image>
+
+      <svg viewBox="0 0 32 32" class="spinner">
+        <path
+          d="M32 12h-12l4.485-4.485c-2.267-2.266-5.28-3.515-8.485-3.515s-6.219 1.248-8.485 3.515c-2.266 2.267-3.515 5.28-3.515 8.485s1.248 6.219 3.515 8.485c2.267 2.266 5.28 3.515 8.485 3.515s6.219-1.248 8.485-3.515c0.189-0.189 0.371-0.384 0.546-0.583l3.010 2.634c-2.933 3.349-7.239 5.464-12.041 5.464-8.837 0-16-7.163-16-16s7.163-16 16-16c4.418 0 8.418 1.791 11.313 4.687l4.687-4.687v12z"
+        />
+      </svg>
     </div>
     <div class="edit-tools">
       <button id="full-frame" @click="setCanvasWidth(); setCanvasHeight();">
@@ -112,7 +118,7 @@ export default {
   methods: {
     //   Set and Reflect Angle
     setAngle() {
-      this.$root.processingImage = true
+      this.$root.processingImage = true;
       this.angle = this.angle === 270 ? 0 : this.angle + 90;
       this.reflectAngle();
     },
@@ -203,6 +209,7 @@ export default {
     },
     //   Set and Reflect Angle
     setAngle() {
+      this.$root.processingImage = true;
       this.angle = this.angle === 270 ? 0 : this.angle + 90;
       this.reflectAngle();
     },
@@ -224,6 +231,42 @@ export default {
 </script>
 
 <style scoped>
+#stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes spinner {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  width: 25px;
+  position: absolute;
+  z-index: 10;
+  animation-name: spinner;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+#stage .spinner {
+  display: none;
+}
+#stage.processingImage {
+  filter: opacity(0.5);
+}
+
+#stage.processingImage .spinner {
+  display: block;
+}
+
 .cld-image {
   border: 1px solid #999;
 }
