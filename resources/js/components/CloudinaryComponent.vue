@@ -1,12 +1,10 @@
 <template>
   <div>
-    <cld-context cloudName="flaunt-your-site" ref="stage">
-      <cld-image publicId="16_20_bg_l0wg9w.jpg" :angle="angle" ref="cldImage">
-        <!-- <cld-transformation :angle="angle" /> -->
-        <cld-transformation height="3200" quality="100:444" width="4000" crop="scale" />
-        <cld-transformation gravity="center" :overlay="currentImage" />
-      </cld-image>
-    </cld-context>
+
+    <cld-image publicId="16_20_bg_l0wg9w.jpg" ref="cldImage">
+      <cld-transformation height="3200" quality="100:444" width="4000" crop="scale" />
+      <cld-transformation :overlay="currentImage" width="2000" crop="scale" :angle="angle" />
+    </cld-image>
 
     <div class="edit-tools">
       <button id="full-frame">
@@ -73,18 +71,18 @@
       </button>
     </div>
 
-    <cld-context class="image-grid" cloudName="flaunt-your-site">
+    <div class="image-grid">
       <cld-image
         class="image-grid-thumb"
         v-for="(image, index) in images"
         :publicId="image"
         :key="index"
-        @click.native="setCurrentImage(index); setActiveThumb = !setActiveThumb;"
-        :class="{ active: setActiveThumb }"
+        @click.native="setCurrentImage(index)"
+        :class="{'active': image === currentImage}"
       >
         <cld-transformation height="300" width="300" crop="fill" />
       </cld-image>
-    </cld-context>
+    </div>
   </div>
 </template>
 
@@ -93,30 +91,47 @@ export default {
   data() {
     return {
       angle: 0,
-      currentImage: "",
       images: this.$root.cloudinaryUrls,
-      setActiveThumb: false
+      currentImage: 'Utah:_DSC0873_d8bcxg.jpg'
     };
   },
   mounted() {
-    this.watchCldImage();
+    this.setCurrentImage(0)
+    this.watchCldImage()
   },
   methods: {
     rotate() {
-      this.angle = this.angle === 270 ? 0 : this.angle + 90;
+      this.angle = this.angle === 270 ? 0 : this.angle + 90
+      this.setRotate()
     },
     setStageHeight() {
-      console.log(this.$refs.stage.$el.offsetHeight);
+      console.log(this.$refs.cldImage.$el.offsetHeight)
     },
     setCurrentImage(index) {
-      console.log(this.images[index]);
-      this.currentImage = this.images[index];
+      this.currentImage = this.images[index]
+      this.setOverlay()
     },
     watchCldImage() {
       this.$watch("$refs.cldImage.imageAttrs.src", {
-        handler(newUrl, oldUrl) {},
+        handler(newUrl, oldUrl) {
+          console.log(newUrl)
+        },
         immediate: true
       });
+    },
+    setOverlay() {
+      let obj = this.$refs.cldImage.transformations.find(
+        transformation => 'overlay' in transformation
+      )
+
+      this.$set(obj, 'overlay', this.currentImage.replace('/', ':'))
+    },
+    setRotate() {
+      let obj = this.$refs.cldImage.transformations.find(
+         transformation => 'angle' in transformation
+      )
+      
+      this.$set(obj, 'angle', this.angle)
     }
   }
 };
@@ -181,7 +196,6 @@ export default {
 }
 
 /* Tooltips */
-
 .tool-tip {
   visibility: hidden;
   width: fit-content;
@@ -203,6 +217,7 @@ export default {
   position: relative;
   left: 60%;
 }
+
 .tip {
   color: #fff;
   background-color: #57b8ff;
