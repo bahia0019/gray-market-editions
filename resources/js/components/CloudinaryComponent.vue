@@ -77,8 +77,8 @@
         v-for="(image, index) in images"
         :publicId="image"
         :key="index"
-        @click.native="setCurrentImage(index); setActiveThumb = !setActiveThumb;"
-        :class="{ active: setActiveThumb }"
+        @click.native="setCurrentImage(index)"
+        :class="{'active': image === currentImage}"
       >
         <cld-transformation height="300" width="300" crop="fill" />
       </cld-image>
@@ -91,7 +91,6 @@ export default {
   data() {
     return {
       angle: 0,
-      setActiveThumb: false,
       images: this.$root.cloudinaryUrls,
       currentImage: 'Utah:_DSC0873_d8bcxg.jpg'
     };
@@ -197,7 +196,6 @@ export default {
 }
 
 /* Tooltips */
-
 .tool-tip {
   visibility: hidden;
   width: fit-content;
@@ -219,6 +217,7 @@ export default {
   position: relative;
   left: 60%;
 }
+
 .tip {
   color: #fff;
   background-color: #57b8ff;
