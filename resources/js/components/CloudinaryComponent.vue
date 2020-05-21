@@ -3,7 +3,7 @@
 
     <cld-image publicId="16_20_bg_l0wg9w.jpg" ref="cldImage">
       <cld-transformation height="3200" quality="100:444" width="4000" crop="scale" />
-      <cld-transformation :overlay="currentImage" width="500" crop="scale" :angle="angle" />
+      <cld-transformation :overlay="currentImage" width="2000" crop="scale" :angle="angle" />
     </cld-image>
 
     <div class="edit-tools">
@@ -91,9 +91,9 @@ export default {
   data() {
     return {
       angle: 0,
-      currentImage: 'Utah:_DSC0873_d8bcxg.jpg',
+      setActiveThumb: false,
       images: this.$root.cloudinaryUrls,
-      setActiveThumb: false
+      currentImage: 'Utah:_DSC0873_d8bcxg.jpg'
     };
   },
   mounted() {
@@ -110,7 +110,7 @@ export default {
     },
     setCurrentImage(index) {
       this.currentImage = this.images[index]
-      this.setOverlayImage()
+      this.setOverlay()
     },
     watchCldImage() {
       this.$watch("$refs.cldImage.imageAttrs.src", {
@@ -120,17 +120,19 @@ export default {
         immediate: true
       });
     },
-    setOverlayImage() {
-      const overlay = this.$refs.cldImage.transformations.find(
-        transformation => transformation.overlay
+    setOverlay() {
+      let obj = this.$refs.cldImage.transformations.find(
+        transformation => 'overlay' in transformation
       )
 
-      this.$set(overlay, 'overlay', this.currentImage.replace('/', ':'))
+      this.$set(obj, 'overlay', this.currentImage.replace('/', ':'))
     },
     setRotate() {
-      const angle = this.$refs.cldImage.transformations[1]
-
-      this.$set(angle, 'angle', this.angle)
+      let obj = this.$refs.cldImage.transformations.find(
+         transformation => 'angle' in transformation
+      )
+      
+      this.$set(obj, 'angle', this.angle)
     }
   }
 };
