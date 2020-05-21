@@ -120,7 +120,6 @@ export default {
       let stage = this.$refs.stage;
       let stageHeight = stage.offsetHeight;
       console.log(stageHeight);
-
     },
     getSizeInfo() {
       let size = document.querySelector("#size");
