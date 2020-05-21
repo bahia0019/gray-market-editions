@@ -9,6 +9,7 @@ if (!defined('WPINC')) {
 define('BB_TEMPLATES_PATH', get_stylesheet_directory() . '/inc/templates/');
 
 require_once get_stylesheet_directory() . '/inc/wp-enqueue.php';
+require_once get_stylesheet_directory() . '/inc/hooks/acf.php';
 require_once get_stylesheet_directory() . '/inc/hooks/cart.php';
 require_once get_stylesheet_directory() . '/inc/hooks/checkout.php';
 require_once get_stylesheet_directory() . '/inc/hooks/vue-wraps.php';
