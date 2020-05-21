@@ -205,6 +205,7 @@ export default {
   display: flex;
   justify-content: center;
   align-self: center;
+  align-items: center;
   padding: 0;
   margin: 0;
   position: relative;
