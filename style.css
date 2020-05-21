@@ -70,3 +70,7 @@ Updated: 2020-05-09 15:53:18
 .cloudinary-mini-grid__image {
     width: 100%;
 }
+
+img {
+    border-radius: 0;
+}
