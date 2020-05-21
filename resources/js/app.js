@@ -1,8 +1,11 @@
 import Vue from "vue"
-import Cloudinary from "cloudinary-vue"
 import CloudinaryComponent from "./components/CloudinaryComponent.vue"
+import Cloudinary, { CldImage, CldTransformation } from "cloudinary-vue"
 
-Vue.use(Cloudinary)
+Vue.use(Cloudinary, {
+    configuration: { cloudName: "flaunt-your-site" },
+    components: [CldImage, CldTransformation],
+})
 
 Vue.component("cloudinary-component", CloudinaryComponent)
 
