@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div ref="stage" id="stage" :class="{ 'processing-image': $root.processingImage}">
+    <div ref="stage" class="stage" :class="{ 'processing-image': $root.processingImage}">
       <cld-image publicId="16_20_bg_l0wg9w.jpg" ref="cldImage" onload="cloudinaryOnLoad()">
         <cld-transformation :width="canvasWidth" :height="canvasHeight" crop="scale" />
         <cld-transformation
@@ -173,12 +173,8 @@ export default {
     },
     // Set and Reflect Current Image.
     setCurrentImage(index) {
-<<<<<<< HEAD
       this.$root.processingImage = true;
-      this.currentImage = this.images[index];
-=======
       this.currentImage = this.images[index].public_id;
->>>>>>> 7120b8138d040812836df24ccae71f64e2f490fb
       this.reflectCurrentImage();
     },
 
@@ -245,7 +241,7 @@ export default {
 </script>
 
 <style scoped>
-#stage {
+.stage {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -270,14 +266,14 @@ export default {
   animation-timing-function: linear;
 }
 
-#stage .spinner {
+.stage .spinner {
   display: none;
 }
-#stage.processing-image {
+.stage.processing-image {
   filter: opacity(0.5);
 }
 
-#stage.processing-image .spinner {
+.stage.processing-image .spinner {
   display: block;
 }
 
