@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div ref="stage" id="stage" :class="{ processingImage: $root.processingImage}">
+    <div ref="stage" id="stage" :class="{ 'processing-image': $root.processingImage}">
       <cld-image publicId="16_20_bg_l0wg9w.jpg" ref="cldImage" onload="cloudinaryOnLoad()">
         <cld-transformation :width="canvasWidth" :height="canvasHeight" crop="scale" />
         <cld-transformation
@@ -76,10 +76,10 @@
       <cld-image
         class="image-grid-thumb"
         v-for="(image, index) in images"
-        :publicId="image"
+        :publicId="image.public_id"
         :key="index"
         @click.native="setCurrentImage(index)"
-        :class="{'active': image === currentImage}"
+        :class="{'active': image.public_id === currentImage}"
       >
         <cld-transformation height="300" width="300" crop="fill" />
       </cld-image>
@@ -101,8 +101,8 @@ export default {
   data() {
     return {
       angle: 0,
-      images: this.$root.cloudinaryUrls,
-      currentImage: "Utah:_DSC0873_d8bcxg.jpg",
+      images: this.$root.cloudinaryImages,
+      currentImage: "",
       canvasWidth: 1000,
       canvasHeight: 800,
       imageWidth: 750,
@@ -110,7 +110,6 @@ export default {
     };
   },
   mounted() {
-    this.setCurrentImage(0);
     this.watchCldImage();
     // this.getSizeInfo();
     this.getStageHeight();
@@ -174,8 +173,12 @@ export default {
     },
     // Set and Reflect Current Image.
     setCurrentImage(index) {
+<<<<<<< HEAD
       this.$root.processingImage = true;
       this.currentImage = this.images[index];
+=======
+      this.currentImage = this.images[index].public_id;
+>>>>>>> 7120b8138d040812836df24ccae71f64e2f490fb
       this.reflectCurrentImage();
     },
 
@@ -270,11 +273,11 @@ export default {
 #stage .spinner {
   display: none;
 }
-#stage.processingImage {
+#stage.processing-image {
   filter: opacity(0.5);
 }
 
-#stage.processingImage .spinner {
+#stage.processing-image .spinner {
   display: block;
 }
 

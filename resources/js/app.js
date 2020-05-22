@@ -3,7 +3,9 @@ import CloudinaryComponent from "./components/CloudinaryComponent.vue"
 import Cloudinary, { CldImage, CldTransformation } from "cloudinary-vue"
 
 Vue.use(Cloudinary, {
-    configuration: { cloudName: "flaunt-your-site" },
+    configuration: { 
+        cloudName: "flaunt-your-site"
+    },
     components: [CldImage, CldTransformation],
 })
 
@@ -15,19 +17,7 @@ const app = new Vue({
         return {
             quantity: "",
             variations: [],
-            cloudinaryUrls: [
-                `Utah/_DSC0873_d8bcxg.jpg`,
-                `Utah/_DSC1086_vovwor.jpg`,
-                `Utah/_DSC1041_jkxbgy.jpg`,
-                `Utah/_DSC1078_ngpcke.jpg`,
-                `Utah/_DSC0975_tyoo0t.jpg`,
-                `Utah/_DSC1126_wkdwg2.jpg`,
-                `Utah/_DSC0913_di0new.jpg`,
-                `Utah/_DSC0841_w3hkst.jpg`,
-                `Utah/_DSC1002_sijudo.jpg`,
-                `Utah/_DSC0927_dtiu3g.jpg`,
-                `Utah/_DSC1000_fc8j4j.jpg`,
-            ],
+            cloudinaryImages: [],
             processingImage: false
         }
     },
@@ -56,15 +46,18 @@ const app = new Vue({
         },
         uploadWidget() {
             var myWidget = cloudinary.createUploadWidget({
-                cloudName: 'flaunt-your-site'
+                cloudName: 'flaunt-your-site',
+                uploadPreset: 'ptv4bkw2',
+                showPoweredBy: false,
+                sources: ['local']
             }, (error, result) => {
                 if (!error && result && result.event === "success") {
-                    // Assuming this is where the newly uploaded images are
-                    // returned. We can push them onto array. E.g...
+                    this.cloudinaryImages.push(result.info)
+                }
 
-                    // this.cloudinaryUrls.push(...SOME_IMAGES)
-
-                    console.log('Done! Here is the image info: ', result.info)
+                if (error) {
+                    console.log('Cloudinary upload error');
+                    console.log(error);
                 }
             })
 
