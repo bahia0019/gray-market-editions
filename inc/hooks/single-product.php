@@ -16,7 +16,7 @@ add_filter('woocommerce_quantity_input_args', function ($args, $product) {
 
 // Add hidden input field to bind to Vue data for capturing Cloudinary image URL's to send along with $_POST data
 add_action('woocommerce_after_variations_form', function () {
-    echo '<input type="hidden" name="cloudinary_image_urls" v-model="cloudinaryUrls" />';
+    echo '<input type="hidden" name="cloudinary_image_urls" v-model="cloudinaryImages" />';
 });
 
 // Append Cloudinary image to cart item during 'add to cart'
