@@ -1,6 +1,7 @@
-<h2><?php echo esc_html( $tab ); ?> Tab</h2>
-
+<h2><?php echo esc_html( $context['title'] ); ?></h2>
+	
 	<?php
+	echo $tab;
 	if ( have_rows( $tab . '_repeater' ) ) : ?>
 
 			<?php
