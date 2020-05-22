@@ -82,6 +82,7 @@
         :class="{'active': image.public_id === currentImage}"
       >
         <cld-transformation height="300" width="300" crop="fill" />
+        <div class="remove-thumb" @click="removeImage(index)"></div>
       </cld-image>
       <div class="image-grid-thumb upload" @click="addAdditionalImages">
         <svg id="icon-box-remove" viewBox="0 0 32 32">
@@ -111,15 +112,13 @@ export default {
   },
   mounted() {
     this.watchCldImage();
-    // this.getSizeInfo();
     this.getStageHeight();
-    console.log(this.getSizeInfo);
+    console.log(images);
   },
   methods: {
     getStageHeight() {
       let stage = this.$refs.stage;
       let stageHeight = stage.offsetHeight;
-      console.log(stageHeight);
     },
     // getSizeInfo() {
     //   let size = this.$root.variations;
@@ -132,8 +131,17 @@ export default {
     //   //     console.log(height + "X" + width);
     //   //   });
     // },
+    // Set and Reflect Current Image.
+    setCurrentImage(index) {
+      this.$root.processingImage = true;
+      this.currentImage = this.images[index].public_id;
+      this.reflectCurrentImage();
+    },
     addAdditionalImages() {
       console.log("Select additional images, and add to existing array.");
+    },
+    removeImage(index) {
+      this.images.splice(index, 1);
     },
     /**
      * Canvas methods
@@ -170,12 +178,6 @@ export default {
         transformation => "width" in transformation
       );
       this.$set(obj, "width", this.canvasWidth);
-    },
-    // Set and Reflect Current Image.
-    setCurrentImage(index) {
-      this.$root.processingImage = true;
-      this.currentImage = this.images[index].public_id;
-      this.reflectCurrentImage();
     },
 
     /**
@@ -299,6 +301,7 @@ export default {
   cursor: pointer;
   transition: 250ms;
   border: none;
+  position: relative;
 }
 
 .upload {
@@ -330,6 +333,25 @@ export default {
 .image-grid-thumb:hover,
 .image-grid-thumb.active {
   filter: opacity(0.5);
+}
+
+.image-grid-thumb:hover .remove-thumb {
+  display: block;
+}
+
+.remove-thumb {
+  display: none;
+  width: 12px;
+  height: 12px;
+  background-color: red;
+  border-radius: 20px;
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  filter: opacity(0.75);
+}
+.remove-thumb:hover {
+  filter: opacity(1);
 }
 
 .edit-tools {

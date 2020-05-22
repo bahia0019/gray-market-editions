@@ -3,8 +3,8 @@ import CloudinaryComponent from "./components/CloudinaryComponent.vue"
 import Cloudinary, { CldImage, CldTransformation } from "cloudinary-vue"
 
 Vue.use(Cloudinary, {
-    configuration: { 
-        cloudName: "flaunt-your-site"
+    configuration: {
+        cloudName: "flaunt-your-site",
     },
     components: [CldImage, CldTransformation],
 })
@@ -18,7 +18,7 @@ const app = new Vue({
             quantity: "",
             variations: [],
             cloudinaryImages: [],
-            processingImage: false
+            processingImage: false,
         }
     },
     mounted() {
@@ -45,23 +45,26 @@ const app = new Vue({
             }
         },
         uploadWidget() {
-            var myWidget = cloudinary.createUploadWidget({
-                cloudName: 'flaunt-your-site',
-                uploadPreset: 'ptv4bkw2',
-                showPoweredBy: false,
-                sources: ['local']
-            }, (error, result) => {
-                if (!error && result && result.event === "success") {
-                    this.cloudinaryImages.push(result.info)
-                }
+            var myWidget = cloudinary.createUploadWidget(
+                {
+                    cloudName: "flaunt-your-site",
+                    uploadPreset: "ptv4bkw2",
+                    showPoweredBy: false,
+                    sources: ["local"],
+                },
+                (error, result) => {
+                    if (!error && result && result.event === "success") {
+                        this.cloudinaryImages.push(result.info)
+                    }
 
-                if (error) {
-                    console.log('Cloudinary upload error');
-                    console.log(error);
+                    if (error) {
+                        console.log("Cloudinary upload error")
+                        console.log(error)
+                    }
                 }
-            })
+            )
 
             myWidget.open()
-        }
+        },
     },
 })
