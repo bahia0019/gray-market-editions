@@ -102,8 +102,8 @@ export default {
   data() {
     return {
       angle: 0,
-      images: this.$root.cloudinaryImages,
-      currentImage: "",
+      //   images: this.$root.cloudinaryImages,
+      images: this.$root.cloudinaryTestImages,
       canvasWidth: 1000,
       canvasHeight: 800,
       imageWidth: 750,
