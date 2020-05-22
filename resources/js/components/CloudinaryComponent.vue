@@ -18,7 +18,7 @@
         />
       </svg>
     </div>
-    <div class="edit-tools">
+    <div class="edit-tools" :class="{ processingImage: $root.processingImage}">
       <button id="full-frame" @click="setCanvasWidth(); setCanvasHeight();">
         <svg viewBox="0 0 32 32">
           <path d="M32 0h-13l5 5-6 6 3 3 6-6 5 5z" />
@@ -112,25 +112,27 @@ export default {
   mounted() {
     this.setCurrentImage(0);
     this.watchCldImage();
-    this.getSizeInfo();
+    // this.getSizeInfo();
     this.getStageHeight();
+    console.log(this.getSizeInfo);
   },
   methods: {
-    //   Set and Reflect Angle
-    setAngle() {
-      this.$root.processingImage = true;
-      this.angle = this.angle === 270 ? 0 : this.angle + 90;
-      this.reflectAngle();
-    },
     getStageHeight() {
       let stage = this.$refs.stage;
       let stageHeight = stage.offsetHeight;
       console.log(stageHeight);
     },
-    getSizeInfo() {
-      let size = document.querySelector("#size");
-      console.log(size.selectedOptions[0].innerHTML);
-    },
+    // getSizeInfo() {
+    //   let size = this.$root.variations;
+    //   console.log(size);
+    //   //   size.addEventListener("change", event => {
+    //   //     let widthHeight = size.selectedOptions[0].value.split("x");
+
+    //   //     let height = parseInt(widthHeight[0]);
+    //   //     let width = parseInt(widthHeight[1]);
+    //   //     console.log(height + "X" + width);
+    //   //   });
+    // },
     addAdditionalImages() {
       console.log("Select additional images, and add to existing array.");
     },
@@ -139,7 +141,7 @@ export default {
      */
     //   Set and Reflect Canvas Width
     setCanvasWidth() {
-      //   this.canvasWidth = 400;
+      this.$root.processingImage = true;
       this.reflectCanvasWidth();
     },
     reflectCanvasWidth() {
@@ -150,7 +152,7 @@ export default {
     },
     //   Set and Reflect Canvas Height
     setCanvasHeight() {
-      //   this.canvasHeight = 320;
+      this.$root.processingImage = true;
       this.reflectCanvasHeight();
     },
     reflectCanvasHeight() {
@@ -160,6 +162,7 @@ export default {
       this.$set(obj, "height", this.canvasHeight);
     },
     setOrientation() {
+      this.$root.processingImage = true;
       this.canvasWidth = this.canvasHeight * 0.8;
       this.reflectOrientation();
     },
@@ -171,6 +174,7 @@ export default {
     },
     // Set and Reflect Current Image.
     setCurrentImage(index) {
+      this.$root.processingImage = true;
       this.currentImage = this.images[index];
       this.reflectCurrentImage();
     },
@@ -187,6 +191,7 @@ export default {
     },
     //   Set and Reflect Image Width
     setImageWidth() {
+      this.$root.processingImage = true;
       this.imageWidth = canvasWidth;
       this.reflectImageWidth();
     },
@@ -198,6 +203,7 @@ export default {
     },
     //   Set and Reflect Image Height
     setImageHeight() {
+      this.$root.processingImage = true;
       this.imageHeight = canvasHeight;
       this.reflectImageHeight();
     },
@@ -225,6 +231,11 @@ export default {
         handler(newUrl, oldUrl) {},
         immediate: true
       });
+    }
+  },
+  computed: {
+    getSizeInfo() {
+      return this.$root.variations[0].value;
     }
   }
 };
@@ -337,6 +348,11 @@ export default {
   margin: 0;
   position: relative;
   transition: 350ms;
+}
+
+.edit-tools.processingImage button {
+  filter: opacity(0.5);
+  cursor: wait;
 }
 
 .edit-tools svg {
