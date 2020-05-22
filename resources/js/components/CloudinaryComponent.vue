@@ -113,7 +113,7 @@ export default {
   mounted() {
     this.watchCldImage();
     this.getStageHeight();
-    console.log(images);
+    this.infoLinks();
   },
   methods: {
     getStageHeight() {
@@ -226,12 +226,15 @@ export default {
       );
       this.$set(obj, "angle", this.angle);
     },
-
     watchCldImage() {
       this.$watch("$refs.cldImage.imageAttrs.src", {
         handler(newUrl, oldUrl) {},
         immediate: true
       });
+    },
+    infoLinks() {
+      let size = document.querySelector("[for=" + "size" + "]");
+      size.innerHTML = size.innerHTML + "<a href='#'>*</a>";
     }
   },
   computed: {
