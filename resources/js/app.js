@@ -40,23 +40,6 @@ const app = new Vue({
         }
     },
     methods: {
-        setQuantity(e) {
-            this.quantity = e.target.value
-        },
-        setVariations(e) {
-            let exists = this.variations.find(
-                (variation) => variation.name === e.target.id
-            )
-
-            if (exists) {
-                exists.value = e.target.value
-            } else {
-                this.variations.push({
-                    name: e.target.id,
-                    value: e.target.value,
-                })
-            }
-        },
         uploadWidget() {
             var myWidget = cloudinary.createUploadWidget(
                 {

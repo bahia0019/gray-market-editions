@@ -17,37 +17,3 @@ add_action('woocommerce_before_cart', function () {
 add_action('woocommerce_after_cart', function () {
     echo '</div>';
 });
-
-// Vue method around buy button quantity input
-add_action('woocommerce_before_quantity_input_field', function () {
-    if (!is_singular('product')) {
-        return;
-    }
-
-    echo '<div @change="setQuantity">';
-});
-
-add_action('woocommerce_after_quantity_input_field', function () {
-    if (!is_singular('product')) {
-        return;
-    }
-
-    echo '</div>';
-});
-
-// Vue method around variations select dropdowns
-add_action('woocommerce_before_variations_form', function () {
-    if (!is_singular('product')) {
-        return;
-    }
-
-    echo '<div @change="setVariations">';
-});
-
-add_action('woocommerce_after_variations_form', function () {
-    if (!is_singular('product')) {
-        return;
-    }
-
-    echo '</div>';
-});
