@@ -5,7 +5,7 @@
       v-for="(image, index) in images"
       :publicId="image.public_id"
       :key="index"
-      @click.native="$emit('selectedImage', index)"
+      @click.native="selectImage(index)"
       :class="{'active': image.public_id === currentImage}"
     >
       <cld-transformation height="300" width="300" crop="fill" />
@@ -24,19 +24,18 @@
 
 <script>
 export default {
-  props: {
-    currentImage: {
-      type: String,
-      required: true
-    }
-  },
   data() {
     return {
+      currentImage: '',
       //   images: this.$root.cloudinaryImages,
       images: this.$root.cloudinaryTestImages
     }
   },
   methods: {
+    selectImage(index) {
+      this.currentImage = this.images[index].public_id
+      this.$emit('selectImage', this.currentImage)
+    },
     removeImage(index) {
       this.images.splice(index, 1)
     },
