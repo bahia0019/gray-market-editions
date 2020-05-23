@@ -20,9 +20,13 @@
       </svg>
     </div>
 
-    <edit-tools @orientation="setOrientation" @angle="setAngle"></edit-tools>
+    <edit-tools
+      @angleClick="setAngle"
+      @orientationClick="setOrientation" 
+      @fullFrameClick="setCanvasWidth(); setCanvasHeight();">
+    </edit-tools>
 
-    <image-grid :current-image="currentImage" @selectedImage="setCurrentImage"></image-grid>
+    <image-grid @selectImage="setCurrentImage"></image-grid>
   </div>
 </template>
 
@@ -38,8 +42,6 @@ export default {
   data() {
     return {
       angle: 0,
-      //   images: this.$root.cloudinaryImages,
-      images: this.$root.cloudinaryTestImages,
       currentImage: "",
       canvasWidth: 1000,
       canvasHeight: 800,
@@ -96,7 +98,7 @@ export default {
     // Set and Reflect Current Image.
     setCurrentImage(payload) {
       this.$root.processingImage = true;
-      this.currentImage = this.images[payload].public_id;
+      this.currentImage = payload;
       this.reflectCurrentImage();
     },
     /**
