@@ -1,6 +1,7 @@
 <template>
   <div>
     <div ref="stage" class="stage" :class="{ 'processing-image': $root.processingImage}">
+      <div ref="frame" class="frame"></div>
       <cld-image publicId="16_20_bg_l0wg9w.jpg" ref="cldImage" onload="cloudinaryOnLoad()">
         <cld-transformation :width="canvasWidth" :height="canvasHeight" crop="scale" />
         <cld-transformation
@@ -104,6 +105,7 @@ export default {
       angle: 0,
       //   images: this.$root.cloudinaryImages,
       images: this.$root.cloudinaryTestImages,
+      currentImage: "",
       canvasWidth: 1000,
       canvasHeight: 800,
       imageWidth: 750,
@@ -114,23 +116,48 @@ export default {
     this.watchCldImage();
     this.getStageHeight();
     this.infoLinks();
+    this.getSizeInfo();
+    this.getFrameInfo();
   },
   methods: {
     getStageHeight() {
       let stage = this.$refs.stage;
       let stageHeight = stage.offsetHeight;
     },
-    // getSizeInfo() {
-    //   let size = this.$root.variations;
-    //   console.log(size);
-    //   //   size.addEventListener("change", event => {
-    //   //     let widthHeight = size.selectedOptions[0].value.split("x");
+    // Get info from dropdowns.
+    getSizeInfo() {
+      let size = document.querySelector("select#size");
+      size.addEventListener("change", event => {
+        let widthHeight = size.selectedOptions[0].value.split("x");
+        let height = parseInt(widthHeight[0]);
+        let width = parseInt(widthHeight[1]);
+        console.log(height + "X" + width);
+      });
+    },
+    getFrameInfo() {
+      let frame = document.querySelector("select#frame");
+      let regex = /[!"#$%&'()*+,./:;<=>?@[\]^_`{|}~]/g;
+      let frameStyle;
+      frame.addEventListener("change", event => {
+        frameStyle = frame.selectedOptions[0].value
+          .toLowerCase()
+          .replace(regex, "")
+          .replace(/ +/g, "-");
 
-    //   //     let height = parseInt(widthHeight[0]);
-    //   //     let width = parseInt(widthHeight[1]);
-    //   //     console.log(height + "X" + width);
-    //   //   });
-    // },
+        switch (frameStyle) {
+          case "black":
+            this.$refs.frame.classList = "frame";
+            this.$refs.frame.classList.add("frame-black", "active");
+            break;
+          case "down-n-dirty":
+            this.$refs.frame.classList = "frame";
+            this.$refs.frame.classList.add("frame-down-n-dirty", "active");
+            break;
+          default:
+            this.$refs.frame.classList = "frame";
+        }
+      });
+    },
     // Set and Reflect Current Image.
     setCurrentImage(index) {
       this.$root.processingImage = true;
@@ -236,11 +263,6 @@ export default {
       let size = document.querySelector("[for=" + "size" + "]");
       size.innerHTML = size.innerHTML + "<a href='#'>*</a>";
     }
-  },
-  computed: {
-    getSizeInfo() {
-      return this.$root.variations[0].value;
-    }
   }
 };
 </script>
@@ -250,6 +272,24 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+.frame {
+  display: none;
+  position: absolute;
+  border: 30px solid transparent;
+  width: 100%;
+  height: 100%;
+}
+.frame-black {
+  border-color: #000;
+}
+.frame-down-n-dirty {
+  border-image: url(https://img.freepik.com/free-photo/wooden-textured-background_53876-14865.jpg?size=626&ext=jpg)
+    50 round;
+}
+.frame.active {
+  display: block;
 }
 
 @keyframes spinner {
