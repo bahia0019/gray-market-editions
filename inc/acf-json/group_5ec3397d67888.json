@@ -4,7 +4,7 @@
     "fields": [
         {
             "key": "field_5ec379fdae304",
-            "label": "Frame Styles",
+            "label": "Frame Options",
             "name": "",
             "type": "tab",
             "instructions": "",
@@ -88,9 +88,9 @@
                         "class": "",
                         "id": ""
                     },
-                    "return_format": "",
+                    "return_format": "array",
                     "preview_size": "medium",
-                    "library": "",
+                    "library": "all",
                     "min_width": "",
                     "min_height": "",
                     "min_size": "",
@@ -103,7 +103,7 @@
         },
         {
             "key": "field_5ec339d5d12de",
-            "label": "Paper Styles",
+            "label": "Paper Options",
             "name": "",
             "type": "tab",
             "instructions": "",
@@ -202,7 +202,7 @@
         },
         {
             "key": "field_5ec37a79ae305",
-            "label": "Ink Information",
+            "label": "Ink Options",
             "name": "",
             "type": "tab",
             "instructions": "",
@@ -317,5 +317,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1590077392
+    "modified": 1590362817
 }

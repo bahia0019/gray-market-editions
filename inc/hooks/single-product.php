@@ -21,41 +21,34 @@ add_action('woocommerce_after_variations_form', function () {
 
 // Append Cloudinary image to cart item during 'add to cart'
 add_filter('woocommerce_add_cart_item_data', function ($cart_item_data, $product_id, $variation_id, $quantity) {
-    if (!isset($_POST['cloudinary_image_urls'])) {
-        return;
-    }
+	if (!isset($_POST['cloudinary_image_urls'])) {
+		return;
+	}
 
-    $cart_item_data['cloudinary_image_urls'] = explode(',', $_POST['cloudinary_image_urls']);
+	$cart_item_data['cloudinary_image_urls'] = explode(',', $_POST['cloudinary_image_urls']);
 
-    return $cart_item_data;
+	return $cart_item_data;
 }, 10, 4);
 
 // Append the Informational Tabs
 add_filter('woocommerce_product_tabs', function ( $array ) {
-	$tabs = [
-		'frame' => [
-			'title'    => 'Frame Options',
-			'priority' => 1,
-			'callback' => function ( $tab, $context ) {
-				require_once BB_TEMPLATES_PATH . 'tab.php';
-			},
-		],
-		'paper' => [
-			'title'    => 'Paper Options',
-			'priority' => 2,
-			'callback' => function ( $tab, $context ) {
-				require_once BB_TEMPLATES_PATH . 'paper-tab.php';
-			},
-		],
-		'ink' => [
-			'title'    => 'Ink Options',
-			'priority' => 3,
-			'callback' => function ( $tab, $context ) {
-				require_once BB_TEMPLATES_PATH . 'tab.php';
-			},
-		],
-	];
 
+	$options = [ 'frame', 'paper', 'ink' ];
+	$order   = 1;
+	$tabs    = [];
+
+	foreach ( $options as $option ) {
+
+		$tabs = [
+			$option => [
+				'title'    => ucfirst( $option ) . ' Options',
+				'priority' => $order++,
+				'callback' => function ( $tab, $context ) {
+					require_once BB_TEMPLATES_PATH . 'tab.php';
+				},
+			],
+		];
+	}
 	return array_merge( $array, $tabs );
 });
 
