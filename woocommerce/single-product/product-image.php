@@ -40,5 +40,4 @@ $wrapper_classes   = apply_filters(
 
 <div class="<?php echo esc_attr(implode(' ', array_map('sanitize_html_class', $wrapper_classes))); ?>" data-columns="<?php echo esc_attr($columns); ?>">
 	<cloudinary-component></cloudinary-component>
-    <button @click="uploadWidget">Upload files</button>
 </div>

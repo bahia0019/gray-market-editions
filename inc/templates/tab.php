@@ -24,7 +24,7 @@
 				<div>
 
 					<figure style="float:right;">	
-						<?php echo wp_get_attachment_image( $image, 'thumbnail', false, array( 'alt' => $image['alt'] ) ); ?>
+						<?php echo wp_get_attachment_image( $image, 'thumbnail', false ); ?>
 					</figure>
 
 					<?php echo esc_html( $content ); ?>
