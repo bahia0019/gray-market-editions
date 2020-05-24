@@ -34,7 +34,7 @@ add_filter('woocommerce_add_cart_item_data', function ($cart_item_data, $product
 add_filter('woocommerce_product_tabs', function ( $array ) {
 	$tabs = [
 		'frame' => [
-			'title'    => 'Framing Options',
+			'title'    => 'Frame Options',
 			'priority' => 1,
 			'callback' => function ( $tab, $context ) {
 				require_once BB_TEMPLATES_PATH . 'tab.php';

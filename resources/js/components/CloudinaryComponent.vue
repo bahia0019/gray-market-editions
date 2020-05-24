@@ -103,8 +103,8 @@ export default {
   data() {
     return {
       angle: 0,
-      //   images: this.$root.cloudinaryImages,
-      images: this.$root.cloudinaryTestImages,
+      images: this.$root.cloudinaryImages,
+      //   images: this.$root.cloudinaryTestImages,
       currentImage: "",
       canvasWidth: 1000,
       canvasHeight: 800,
@@ -260,8 +260,28 @@ export default {
       });
     },
     infoLinks() {
-      let size = document.querySelector("[for=" + "size" + "]");
-      size.innerHTML = size.innerHTML + "<a href='#'>*</a>";
+      let labels = document.querySelectorAll(".variations .label > label");
+      for (let i = 0; i < labels.length; i++) {
+        labels[i].innerHTML =
+          labels[i].innerHTML +
+          '<a href="#tab-title-' +
+          labels[i].innerHTML.toLowerCase() +
+          '">*</a>';
+
+        labels[i].addEventListener("click", () => {
+          let wcTabs = document.querySelectorAll(".wc-tabs li");
+          for (let j = 0; j < wcTabs.length; j++) {
+            wcTabs[j].classList.remove("active");
+            wcTabs[j].scrollIntoView({ behavior: "smooth" });
+          }
+          document
+            .querySelector(
+              "#tab-title-" +
+                labels[i].innerText.replace(/\*/g, "").toLowerCase()
+            )
+            .classList.add("active");
+        });
+      }
     }
   }
 };
