@@ -15,8 +15,7 @@ const app = new Vue({
     el: "#vue-app",
     data() {
         return {
-            quantity: "",
-            variations: [],
+            finalImages: [],
             cloudinaryImages: [],
             cloudinaryTestImages: [
                 { public_id: "Utah/_DSC0873_d8bcxg.jpg" },
@@ -51,6 +50,10 @@ const app = new Vue({
                 (error, result) => {
                     if (!error && result && result.event === "success") {
                         this.cloudinaryImages.push(result.info)
+                        this.finalImages.push({
+                            public_id: result.info.public_id,
+                            url: result.info.secure_url
+                        })
                     }
 
                     if (error) {
@@ -62,5 +65,10 @@ const app = new Vue({
 
             myWidget.open()
         },
+    },
+    computed: {
+        finalUrls() {
+            return this.finalImages.map(image => image.url)
+        }
     },
 })

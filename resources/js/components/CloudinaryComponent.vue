@@ -1,30 +1,32 @@
 <template>
   <div>
-    <div ref="stage" class="stage" :class="{ 'processing-image': $root.processingImage}">
-      <div ref="frame" class="frame"></div>
-      <cld-image publicId="16_20_bg_l0wg9w.jpg" ref="cldImage" onload="cloudinaryOnLoad()">
-        <cld-transformation :width="canvasWidth" :height="canvasHeight" crop="scale" />
-        <cld-transformation
-          :overlay="currentImage"
-          :width="imageWidth"
-          :height="imageHeight"
-          crop="scale"
-          :angle="angle"
-        />
-      </cld-image>
+    <div v-show="currentImage">
+      <div ref="stage" class="stage" :class="{ 'processing-image': $root.processingImage}">
+        <div ref="frame" class="frame"></div>
+        <cld-image publicId="16_20_bg_l0wg9w.jpg" ref="cldImage" onload="cloudinaryOnLoad()">
+          <cld-transformation :width="canvasWidth" :height="canvasHeight" crop="scale" />
+          <cld-transformation
+            :overlay="currentImage"
+            :width="imageWidth"
+            :height="imageHeight"
+            crop="scale"
+            :angle="angle"
+          />
+        </cld-image>
 
-      <svg viewBox="0 0 32 32" class="spinner">
-        <path
-          d="M32 12h-12l4.485-4.485c-2.267-2.266-5.28-3.515-8.485-3.515s-6.219 1.248-8.485 3.515c-2.266 2.267-3.515 5.28-3.515 8.485s1.248 6.219 3.515 8.485c2.267 2.266 5.28 3.515 8.485 3.515s6.219-1.248 8.485-3.515c0.189-0.189 0.371-0.384 0.546-0.583l3.010 2.634c-2.933 3.349-7.239 5.464-12.041 5.464-8.837 0-16-7.163-16-16s7.163-16 16-16c4.418 0 8.418 1.791 11.313 4.687l4.687-4.687v12z"
-        />
-      </svg>
+        <svg viewBox="0 0 32 32" class="spinner">
+          <path
+            d="M32 12h-12l4.485-4.485c-2.267-2.266-5.28-3.515-8.485-3.515s-6.219 1.248-8.485 3.515c-2.266 2.267-3.515 5.28-3.515 8.485s1.248 6.219 3.515 8.485c2.267 2.266 5.28 3.515 8.485 3.515s6.219-1.248 8.485-3.515c0.189-0.189 0.371-0.384 0.546-0.583l3.010 2.634c-2.933 3.349-7.239 5.464-12.041 5.464-8.837 0-16-7.163-16-16s7.163-16 16-16c4.418 0 8.418 1.791 11.313 4.687l4.687-4.687v12z"
+          />
+        </svg>
+      </div>
+
+      <edit-tools
+        @angleClick="setAngle"
+        @orientationClick="setOrientation" 
+        @fullFrameClick="setCanvasWidth(); setCanvasHeight();">
+      </edit-tools>
     </div>
-
-    <edit-tools
-      @angleClick="setAngle"
-      @orientationClick="setOrientation" 
-      @fullFrameClick="setCanvasWidth(); setCanvasHeight();">
-    </edit-tools>
 
     <image-grid @selectImage="setCurrentImage"></image-grid>
   </div>
@@ -186,8 +188,21 @@ export default {
     },
     watchCldImage() {
       this.$watch("$refs.cldImage.imageAttrs.src", {
-        handler(newUrl, oldUrl) {},
-        immediate: true
+        handler(newUrl, oldUrl) {
+          let existing = this.$root.finalImages.filter(
+            image => this.currentImage === image.public_id
+          );
+
+          if (existing.length) {
+            this.$set(existing[0], "url", newUrl)
+          } else {
+            this.$root.finalImages.push({
+              public_id: this.currentImage,
+              url: newUrl || oldUrl
+            });
+          }
+        },
+        immediate: false
       });
     },
     infoLinks() {

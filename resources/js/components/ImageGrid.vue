@@ -1,5 +1,5 @@
 <template>
-  <div class="image-grid">
+  <div class="image-grid" v-if="images.length">
     <cld-image
       class="image-grid-thumb"
       v-for="(image, index) in images"
@@ -11,13 +11,23 @@
       <cld-transformation height="300" width="300" crop="fill" />
       <div class="remove-thumb" @click="removeImage(index)"></div>
     </cld-image>
-    <div class="image-grid-thumb upload" @click="addAdditionalImages">
+    <div class="image-grid-thumb upload" @click="$root.uploadWidget">
       <svg id="icon-box-remove" viewBox="0 0 32 32">
         <path
           d="M26 2h-20l-6 6v21c0 0.552 0.448 1 1 1h30c0.552 0 1-0.448 1-1v-21l-6-6zM20 20v6h-8v-6h-6l10-8 10 8h-6zM4.828 6l2-2h18.343l2 2h-22.343z"
         />
       </svg>
       Upload More
+    </div>
+  </div>
+  <div v-else>
+    <div class="image-grid-thumb upload large" @click="$root.uploadWidget">
+      <svg viewBox="0 0 32 32">
+        <path
+          d="M26 2h-20l-6 6v21c0 0.552 0.448 1 1 1h30c0.552 0 1-0.448 1-1v-21l-6-6zM20 20v6h-8v-6h-6l10-8 10 8h-6zM4.828 6l2-2h18.343l2 2h-22.343z"
+        />
+      </svg>
+      <span>Upload Images</span>
     </div>
   </div>
 </template>
@@ -27,8 +37,13 @@ export default {
   data() {
     return {
       currentImage: '',
-      //   images: this.$root.cloudinaryImages,
-      images: this.$root.cloudinaryTestImages
+      images: this.$root.cloudinaryImages
+      // images: this.$root.cloudinaryTestImages
+    }
+  },
+  updated() {
+    if (this.images.length && !this.currentImage) {
+      this.selectImage(0)
     }
   },
   methods: {
@@ -38,9 +53,6 @@ export default {
     },
     removeImage(index) {
       this.images.splice(index, 1)
-    },
-    addAdditionalImages() {
-      console.log('Select additional images, and add to existing array.')
     }
   }
 }
@@ -82,9 +94,24 @@ export default {
 .image-grid-thumb.upload:hover {
   filter: opacity(1);
 }
+
 .upload svg {
   width: 20px;
   height: 20px;
+}
+
+.image-grid-thumb.large {
+  min-height: 500px;
+}
+
+.image-grid-thumb.large svg {
+  width: 50px;
+  height: 50px;
+}
+
+.image-grid-thumb.large span {
+  font-size: 16px;
+  margin-top: 4px;
 }
 
 .image-grid-thumb img {
