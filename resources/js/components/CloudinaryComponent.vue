@@ -45,17 +45,27 @@
         </div>
 
         <image-grid @selectImage="setCurrentImage"></image-grid>
+
+        <poster-templates v-if="productType === 'Posters'"></poster-templates>
     </div>
 </template>
 
 <script>
 import EditTools from "./EditTools.vue"
 import ImageGrid from "./ImageGrid.vue"
+import PosterTemplates from "./PosterTemplates.vue"
 
 export default {
     components: {
         EditTools,
         ImageGrid,
+        PosterTemplates,
+    },
+    props: {
+        productType: {
+            type: String,
+            required: true
+        }
     },
     data() {
         return {

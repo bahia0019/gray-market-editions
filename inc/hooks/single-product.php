@@ -38,21 +38,17 @@ add_filter('woocommerce_product_tabs', function ( $array ) {
 	$tabs    = [];
 
 	foreach ( $options as $option ) {
-
-		$tabs = [
-			$option => [
-				'title'    => ucfirst( $option ) . ' Options',
-				'priority' => $order++,
-				'callback' => function ( $tab, $context ) {
-					require_once BB_TEMPLATES_PATH . 'tab.php';
-				},
-			],
+		$tabs[$option] = [
+			'title'    => ucfirst( $option ) . ' Options',
+			'priority' => $order++,
+			'callback' => function ( $tab, $context ) {
+				require BB_TEMPLATES_PATH . 'tab.php';
+			},
 		];
 	}
+	
 	return array_merge( $array, $tabs );
 });
-
-
 
 // Remove the variable price range.
 remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_price', 10 );
