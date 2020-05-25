@@ -70,8 +70,6 @@ export default {
     data() {
         return {
             angle: 0,
-            images: this.$root.cloudinaryImages,
-            //   images: this.$root.cloudinaryTestImages,
             currentImage: "",
             canvasWidth: 1000,
             canvasHeight: 800,
@@ -131,7 +129,7 @@ export default {
         // Set and Reflect Current Image.
         setCurrentImage(payload) {
             this.$root.processingImage = true
-            this.currentImage = payload
+            this.currentImage = payload.public_id
             this.reflectCurrentImage()
         },
         /**

@@ -37,8 +37,8 @@ export default {
   data() {
     return {
       currentImage: '',
-      images: this.$root.cloudinaryImages
-      // images: this.$root.cloudinaryTestImages
+      // images: this.$root.cloudinaryImages
+      images: this.$root.cloudinaryTestImages
     }
   },
   updated() {
@@ -49,7 +49,7 @@ export default {
   methods: {
     selectImage(index) {
       this.currentImage = this.images[index].public_id
-      this.$emit('selectImage', this.currentImage)
+      this.$emit('selectImage', this.images[index])
     },
     removeImage(index) {
       this.images.splice(index, 1)
