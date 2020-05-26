@@ -49,7 +49,8 @@ export default {
       canvasHeight: 800,
       imageWidth: "",
       imageHeight: "",
-      portrait: false,
+      imageProportion: "",
+      portrait: "",
       stageHeight: ""
     };
   },
@@ -59,10 +60,9 @@ export default {
     this.setCanvasHeight();
     this.getFrameInfo();
     this.reflectCurrentImage();
-    this.getImageOrientation();
-    this.setImageWidth();
-    this.setImageHeight();
+    this.getImageInfo();
   },
+  updated() {},
   methods: {
     determineStageHeight() {
       let stage = this.$refs.stage;
@@ -78,31 +78,6 @@ export default {
       });
       // Observe one or multiple elements
       myObserver.observe(stage);
-    },
-
-    getFrameInfo() {
-      let frame = document.querySelector("select#frame");
-      let regex = /[!"#$%&'()*+,./:;<=>?@[\]^_`{|}~]/g;
-      let frameStyle;
-      frame.addEventListener("change", event => {
-        frameStyle = frame.selectedOptions[0].value
-          .toLowerCase()
-          .replace(regex, "")
-          .replace(/ +/g, "-");
-
-        switch (frameStyle) {
-          case "black":
-            this.$refs.frame.classList = "frame";
-            this.$refs.frame.classList.add("frame-black", "active");
-            break;
-          case "down-n-dirty":
-            this.$refs.frame.classList = "frame";
-            this.$refs.frame.classList.add("frame-down-n-dirty", "active");
-            break;
-          default:
-            this.$refs.frame.classList = "frame";
-        }
-      });
     },
 
     /**
@@ -152,19 +127,23 @@ export default {
       );
       this.$set(obj, "overlay", this.image.public_id.replace("/", ":"));
     },
-    getImageOrientation() {
+
+    getImageInfo() {
+      // If LANDSCAPE.
       if (this.image.width > this.image.height) {
         this.portrait = false;
+        this.imageProportion = this.image.height / this.image.width;
+        this.imageWidth = this.canvasWidth;
+        this.imageHeight = Math.round(this.canvasWidth * this.imageProportion);
+        // If PORTRAIT.
       } else {
         this.portrait = true;
+        this.imageProportion = this.image.width / this.image.height;
+        this.imageHeight = this.canvasWidth;
+        this.imageWidth = Math.round(this.imageHeight * this.imageProportion);
       }
-    },
-    //   Set and Reflect Image Width
-    setImageWidth() {
-      this.$root.processingImage = true;
-      this.imageWidth = this.canvasWidth;
-      //   this.imageWidth = this.image.width;
       this.reflectImageWidth();
+      this.reflectImageHeight();
     },
     reflectImageWidth() {
       let obj = this.$refs.cldImage.transformations.find(
@@ -172,20 +151,13 @@ export default {
       );
       this.$set(obj, "width", this.imageWidth);
     },
-    //   Set and Reflect Image Height
-    setImageHeight() {
-      this.$root.processingImage = true;
-      this.imageHeight = this.canvasHeight;
-      //   this.imageHeight = this.image.height;
-
-      this.reflectImageHeight();
-    },
     reflectImageHeight() {
       let obj = this.$refs.cldImage.transformations.find(
         transformation => "height" in transformation
       );
       this.$set(obj, "height", this.imageHeight);
     },
+
     //   Set and Reflect Angle
     setAngle() {
       this.$root.processingImage = true;
@@ -215,6 +187,30 @@ export default {
           }
         },
         immediate: false
+      });
+    },
+    getFrameInfo() {
+      let frame = document.querySelector("select#frame");
+      let regex = /[!"#$%&'()*+,./:;<=>?@[\]^_`{|}~]/g;
+      let frameStyle;
+      frame.addEventListener("change", event => {
+        frameStyle = frame.selectedOptions[0].value
+          .toLowerCase()
+          .replace(regex, "")
+          .replace(/ +/g, "-");
+
+        switch (frameStyle) {
+          case "black":
+            this.$refs.frame.classList = "frame";
+            this.$refs.frame.classList.add("frame-black", "active");
+            break;
+          case "down-n-dirty":
+            this.$refs.frame.classList = "frame";
+            this.$refs.frame.classList.add("frame-down-n-dirty", "active");
+            break;
+          default:
+            this.$refs.frame.classList = "frame";
+        }
       });
     }
   }

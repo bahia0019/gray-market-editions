@@ -40,9 +40,6 @@ export default {
     this.infoLinks();
   },
   methods: {
-    setCurrentImage(payload) {
-      this.$root.currentImage = payload;
-    },
     infoLinks() {
       let labels = document.querySelectorAll(".variations .label > label");
       for (let i = 0; i < labels.length; i++) {
