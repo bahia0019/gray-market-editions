@@ -5,8 +5,8 @@
       v-for="(image, index) in images"
       :publicId="image.public_id"
       :key="index"
-      @click.native="selectImage(index)"
-      :class="{'active': image.public_id === currentImage}"
+      @click.native="$root.currentImage = image"
+      :class="{'active': image.public_id === $root.currentImage.public_id}"
     >
       <cld-transformation height="300" width="300" crop="fill" />
       <div class="remove-thumb" @click="removeImage(index)"></div>
@@ -36,26 +36,16 @@
 export default {
   data() {
     return {
-      currentImage: '',
-      // images: this.$root.cloudinaryImages
-      images: this.$root.cloudinaryTestImages
-    }
-  },
-  updated() {
-    if (this.images.length && !this.currentImage) {
-      this.selectImage(0)
-    }
+      images: this.$root.cloudinaryImages
+      // images: this.$root.cloudinaryTestImages
+    };
   },
   methods: {
-    selectImage(index) {
-      this.currentImage = this.images[index].public_id
-      this.$emit('selectImage', this.images[index])
-    },
     removeImage(index) {
-      this.images.splice(index, 1)
+      this.images.splice(index, 1);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
