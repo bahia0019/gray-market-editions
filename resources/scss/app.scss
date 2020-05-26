@@ -2,6 +2,17 @@ img {
     border-radius: 0;
 }
 
+.stage img {
+    height: 100%;
+}
+
+.stage.portrait {
+    height: 100%;
+}
+.cld-image {
+    height: 100%;
+}
+
 .home.blog .site-header,
 .home.page:not(.page-template-template-homepage) .site-header,
 .home.post-type-archive-product .site-header {

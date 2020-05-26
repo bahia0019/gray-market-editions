@@ -229,9 +229,6 @@ export default {
   position: relative;
   overflow: hidden;
 }
-.stage.portrait {
-  height: 400px;
-}
 
 .frame {
   display: none;
