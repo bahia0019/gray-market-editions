@@ -3,19 +3,12 @@
     <div
       ref="stage"
       class="stage"
+      :style="{ 'height': stageHeight + 'px' }"
       :class="{ 'processing-image': $root.processingImage, 'portrait': portrait }"
     >
       <div ref="frame" class="frame"></div>
-      <cld-image
-        publicId="16_20_bg_l0wg9w.jpg"
-        ref="cldImage"
-        onload="cloudinaryOnLoad()"
-      >
-        <cld-transformation
-          :width="canvasWidth"
-          :height="canvasHeight"
-          crop="scale"
-        />
+      <cld-image publicId="assets/16_20_bg_khaqct.jpg" ref="cldImage" onload="cloudinaryOnLoad()">
+        <cld-transformation :width="canvasWidth" :height="canvasHeight" crop="scale" />
         <cld-transformation
           :overlay="image.public_id"
           :width="imageWidth"
@@ -32,10 +25,7 @@
       </svg>
     </div>
 
-    <edit-tools
-      @angleClick="setAngle"
-      @fullFrameClick="setCanvasWidth(), setCanvasHeight()"
-    ></edit-tools>
+    <edit-tools @angleClick="setAngle" @fullFrameClick="setCanvasWidth(), setCanvasHeight()"></edit-tools>
   </div>
 </template>
 
@@ -60,12 +50,12 @@ export default {
       imageWidth: "",
       imageHeight: "",
       portrait: false,
-      stageHeight: 400
+      stageHeight: ""
     };
   },
   mounted() {
     this.watchCldImage();
-    this.getStageHeight();
+    this.setStageHeight();
     this.setCanvasHeight();
     this.getFrameInfo();
     this.reflectCurrentImage();
@@ -74,9 +64,20 @@ export default {
     this.setImageHeight();
   },
   methods: {
-    getStageHeight() {
+    determineStageHeight() {
       let stage = this.$refs.stage;
-      this.stageHeight = 400;
+      let stageHeightFactor = stage.offsetWidth / 1000;
+      let stageHeight = Math.round(this.canvasHeight * stageHeightFactor);
+      this.stageHeight = stageHeight;
+    },
+    setStageHeight() {
+      let stage = this.$refs.stage;
+      // instantiate new observer
+      const myObserver = new ResizeObserver(() => {
+        this.determineStageHeight();
+      });
+      // Observe one or multiple elements
+      myObserver.observe(stage);
     },
 
     getFrameInfo() {
@@ -126,9 +127,12 @@ export default {
         let widthHeight = size.selectedOptions[0].value.split("x");
         let canvasWidth = parseInt(widthHeight[1]);
         let canvasMultiplier = 1000 / canvasWidth;
+
         this.canvasHeight = Math.round(
           parseInt(widthHeight[0]) * canvasMultiplier
         );
+        this.determineStageHeight();
+
         this.reflectCanvasHeight();
       });
     },
