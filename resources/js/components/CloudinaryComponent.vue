@@ -1,7 +1,7 @@
 <template>
   <div>
     <image-stage
-      v-for="image in images"
+      v-for="image in $root.cloudinaryImages"
       :key="image.public_id"
       :image="image"
       v-show="image.public_id === $root.currentImage.public_id"
@@ -28,41 +28,6 @@ export default {
     productType: {
       type: String,
       required: true
-    }
-  },
-  data() {
-    return {
-      images: this.$root.cloudinaryImages
-      // images: this.$root.cloudinaryTestImages
-    };
-  },
-  mounted() {
-    this.infoLinks();
-  },
-  methods: {
-    infoLinks() {
-      let labels = document.querySelectorAll(".variations .label > label");
-      for (let i = 0; i < labels.length; i++) {
-        labels[i].innerHTML =
-          labels[i].innerHTML +
-          '<a href="#tab-title-' +
-          labels[i].innerHTML.toLowerCase() +
-          '">*</a>';
-
-        labels[i].addEventListener("click", () => {
-          let wcTabs = document.querySelectorAll(".wc-tabs li");
-          for (let j = 0; j < wcTabs.length; j++) {
-            wcTabs[j].classList.remove("active");
-            wcTabs[j].scrollIntoView({ behavior: "smooth" });
-          }
-          document
-            .querySelector(
-              "#tab-title-" +
-                labels[i].innerText.replace(/\*/g, "").toLowerCase()
-            )
-            .classList.add("active");
-        });
-      }
     }
   }
 };

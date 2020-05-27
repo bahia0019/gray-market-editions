@@ -1,15 +1,15 @@
 <template>
-  <div class="image-grid" v-if="images.length">
+  <div class="image-grid" v-if="$root.cloudinaryImages.length">
     <cld-image
       class="image-grid-thumb"
-      v-for="(image, index) in images"
+      v-for="(image, index) in $root.cloudinaryImages"
       :publicId="image.public_id"
       :key="index"
       @click.native="$root.currentImage = image"
       :class="{'active': image.public_id === $root.currentImage.public_id}"
     >
       <cld-transformation height="300" width="300" crop="fill" />
-      <div class="remove-thumb" @click="removeImage(index)"></div>
+      <div class="remove-thumb" @click="removeImage(image.public_id)"></div>
     </cld-image>
     <div class="image-grid-thumb upload" @click="$root.uploadWidget">
       <svg id="icon-box-remove" viewBox="0 0 32 32">
@@ -34,15 +34,11 @@
 
 <script>
 export default {
-  data() {
-    return {
-      images: this.$root.cloudinaryImages
-      // images: this.$root.cloudinaryTestImages
-    };
-  },
   methods: {
-    removeImage(index) {
-      this.images.splice(index, 1);
+    removeImage(public_id) {
+      this.$root.cloudinaryImages = this.$root.cloudinaryImages.filter(
+        image => image.public_id !== public_id
+      );
     }
   }
 };

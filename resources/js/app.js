@@ -26,6 +26,8 @@ const app = new Vue({
         window.cloudinaryOnLoad = () => {
             this.processingImage = false;
         };
+
+        this.infoLinks();
     },
     updated() {
         if (this.cloudinaryImages.length && !this.currentImage.public_id) {
@@ -60,6 +62,30 @@ const app = new Vue({
 
             myWidget.open();
         },
+        infoLinks() {
+            let labels = document.querySelectorAll(".variations .label > label");
+            for (let i = 0; i < labels.length; i++) {
+                labels[i].innerHTML =
+                    labels[i].innerHTML +
+                    '<a href="#tab-title-' +
+                    labels[i].innerHTML.toLowerCase() +
+                    '">*</a>';
+
+                labels[i].addEventListener("click", () => {
+                    let wcTabs = document.querySelectorAll(".wc-tabs li");
+                    for (let j = 0; j < wcTabs.length; j++) {
+                        wcTabs[j].classList.remove("active");
+                        wcTabs[j].scrollIntoView({behavior: "smooth"});
+                    }
+                    document
+                        .querySelector(
+                            "#tab-title-" +
+                            labels[i].innerText.replace(/\*/g, "").toLowerCase()
+                        )
+                        .classList.add("active");
+                });
+            }
+        }
     },
     computed: {
         finalUrls() {
