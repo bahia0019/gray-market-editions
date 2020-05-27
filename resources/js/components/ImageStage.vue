@@ -8,7 +8,11 @@
     >
       <div ref="frame" class="frame"></div>
       <cld-image publicId="assets/16_20_bg_khaqct.jpg" ref="cldImage" onload="cloudinaryOnLoad()">
-        <cld-transformation :width="canvasWidth" :height="canvasHeight" crop="scale" />
+        <cld-transformation
+          :width="canvasLongDimension"
+          :height="canvasShortDimension"
+          crop="scale"
+        />
         <cld-transformation
           :overlay="image.public_id"
           :width="imageWidth"
@@ -25,7 +29,12 @@
       </svg>
     </div>
 
-    <edit-tools @angleClick="setAngle" @fullFrameClick="setCanvasWidth(), setCanvasHeight()"></edit-tools>
+    <edit-tools
+      :portrait="true"
+      @orientationClick="setOrientation"
+      @angleClick="setAngle"
+      @fullFrameClick="setFullFrame"
+    ></edit-tools>
   </div>
 </template>
 
@@ -44,21 +53,23 @@ export default {
   },
   data() {
     return {
-      angle: 0,
-      canvasWidth: 1000,
-      canvasHeight: 800,
+      stageHeight: "",
+      canvasLongDimension: "1000",
+      canvasShortDimension: "800",
+      canvasPortrait: "",
       imageWidth: "",
       imageHeight: "",
       imageProportion: "",
+      imageDPI: "",
       portrait: "",
-      stageHeight: ""
+      angle: 0
     };
   },
   mounted() {
     this.watchCldImage();
-    // this.setStageHeight();
     this.getCanvasInfo();
     this.getImageInfo();
+    this.setOrientation();
     this.getFrameInfo();
     this.reflectCurrentImage();
   },
@@ -67,58 +78,43 @@ export default {
       this.$root.processingImage = true;
       this.getCanvasInfo();
     });
+    this.dpiCheck();
   },
   methods: {
-    determineStageHeight() {
-      let stage = this.$refs.stage;
-      let stageHeightFactor = stage.offsetWidth / 1000;
-      let stageHeight = Math.round(this.canvasHeight * stageHeightFactor);
-      this.stageHeight = stageHeight;
-    },
-    setStageHeight() {
-      let stage = this.$refs.stage;
-      // instantiate new observer
-      const myObserver = new ResizeObserver(() => {
-        this.determineStageHeight();
-      });
-      // Observe one or multiple elements
-      myObserver.observe(stage);
-    },
-
     /**
      * Canvas methods
      */
-    //   Set and Reflect Canvas Width
-    setCanvasWidth() {
-      this.$root.processingImage = true;
-      this.reflectCanvasWidth();
-    },
 
     // Takes the Print Size info from the Product Size select dropdown.
     getCanvasInfo() {
-      let size = document.querySelector("select#size");
       this.$root.processingImage = true;
-      let widthHeight = size.selectedOptions[0].value.split("x");
-      let canvasWidth = parseInt(widthHeight[1]);
-      let canvasMultiplier = 1000 / canvasWidth;
 
-      this.canvasHeight = Math.round(
+      let size = document.querySelector("select#size");
+      let widthHeight = size.selectedOptions[0].value.split("x");
+      this.longInch = parseInt(widthHeight[1]);
+      this.canvasLongDimension = 1000;
+      let canvasMultiplier = 1000 / parseInt(widthHeight[1]);
+      this.canvasShortDimension = Math.round(
         parseInt(widthHeight[0]) * canvasMultiplier
       );
+      this.canvasProportion =
+        this.canvasShortDimension / this.canvasLongDimension;
+      console.log(this.canvasProportion);
 
-      this.reflectCanvasHeight();
+      this.reflectcanvasLongDimension();
+      this.reflectcanvasShortDimension();
     },
-    reflectCanvasWidth() {
+    reflectcanvasLongDimension() {
       let obj = this.$refs.cldImage.transformations.find(
         transformation => "width" in transformation
       );
-      this.$set(obj, "width", this.canvasWidth);
+      this.$set(obj, "width", this.canvasLongDimension);
     },
-    reflectCanvasHeight() {
+    reflectcanvasShortDimension() {
       let obj = this.$refs.cldImage.transformations.find(
         transformation => "height" in transformation
       );
-      this.$set(obj, "height", this.canvasHeight);
+      this.$set(obj, "height", this.canvasShortDimension);
     },
 
     /**
@@ -136,13 +132,16 @@ export default {
       if (this.image.width > this.image.height) {
         this.portrait = false;
         this.imageProportion = this.image.height / this.image.width;
-        this.imageWidth = this.canvasWidth;
-        this.imageHeight = Math.round(this.canvasWidth * this.imageProportion);
+        this.imageWidth = this.canvasLongDimension;
+        this.imageHeight = Math.round(
+          this.canvasLongDimension * this.imageProportion
+        );
+        this.dpiCheck();
         // If PORTRAIT.
       } else {
         this.portrait = true;
         this.imageProportion = this.image.width / this.image.height;
-        this.imageHeight = this.canvasWidth;
+        this.imageHeight = this.canvasLongDimension;
         this.imageWidth = Math.round(this.imageHeight * this.imageProportion);
       }
       this.reflectImageWidth();
@@ -156,11 +155,43 @@ export default {
     },
     reflectImageHeight() {
       let obj = this.$refs.cldImage.transformations.find(
-        transformation => "height" in transformation
+        transformation => "overlay" in transformation
       );
       this.$set(obj, "height", this.imageHeight);
     },
 
+    setOrientation() {
+      if (true === this.portrait) {
+        console.log("Portrait");
+        this.canvasShortDimension = 1000;
+        this.canvasLongDimension =
+          this.canvasShortDimension * this.canvasMultiplier;
+      } else {
+        console.log("Landscape");
+        this.canvasLongDimension = 1000;
+        this.canvasShortDimension =
+          this.canvasLongDimension * this.canvasMultiplier;
+      }
+    },
+    reflectOrientation() {
+      let obj = this.$refs.cldImage.transformations.find(
+        transformation => "width" in transformation
+      );
+      this.$set(obj, "height", this.canvasShortDimension);
+      this.$set(obj, "width", this.canvasLongDimension);
+    },
+    setFullFrame() {
+      console.log(this.canvasProportion + "&" + this.imageProportion);
+      if (this.canvasProportion > this.imageProportion) {
+        this.imageHeight = this.canvasShortDimension;
+      }
+    },
+    reflectFullFrame() {
+      let obj = this.$refs.cldImage.transformations.find(
+        transformation => "overlay" in transformation
+      );
+      this.$set(obj, "height", this.imageHeight);
+    },
     //   Set and Reflect Angle
     setAngle() {
       this.$root.processingImage = true;
@@ -172,6 +203,10 @@ export default {
         transformation => "angle" in transformation
       );
       this.$set(obj, "angle", this.angle);
+    },
+    dpiCheck() {
+      this.imageDPI = this.image.width / this.longInch;
+      console.log(this.imageDPI + "dpi");
     },
     watchCldImage() {
       this.$watch("$refs.cldImage.imageAttrs.src", {
