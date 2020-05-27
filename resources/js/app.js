@@ -16,7 +16,6 @@ const app = new Vue({
     data() {
         return {
             currentImage: {},
-            finalImages: [],
             cloudinaryImages: [],
             cloudinaryTestImages: require("./data.json"),
             processingImage: false,
@@ -45,11 +44,11 @@ const app = new Vue({
                 },
                 (error, result) => {
                     if (!error && result && result.event === "success") {
-                        this.cloudinaryImages.push(result.info);
-
-                        this.finalImages.push({
-                            public_id: result.info.public_id,
-                            url: result.info.secure_url,
+                        // Push images, plus append custom 'gme_final_url' 
+                        // prop to object for edit tracking
+                        this.cloudinaryImages.push({
+                            ...result.info,
+                            gme_final_url: result.info.secure_url || result.info.url
                         });
                     }
 
@@ -89,7 +88,7 @@ const app = new Vue({
     },
     computed: {
         finalUrls() {
-            return this.finalImages.map((image) => image.url);
+            return this.cloudinaryImages.map((image) => image.gme_final_url);
         },
     },
 });
