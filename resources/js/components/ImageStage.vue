@@ -29,12 +29,15 @@
       </svg>
     </div>
 
-    <edit-tools
-      :portrait="true"
-      @orientationClick="setOrientation"
-      @angleClick="setAngle"
-      @fullFrameClick="setFullFrame"
-    ></edit-tools>
+    <div class="tray">
+      <div class="notices" :style="{'color':imageDPIColor}">Your image is {{imageDPI}} dpi</div>
+      <edit-tools
+        :portrait="true"
+        @orientationClick="setOrientation"
+        @angleClick="setAngle"
+        @fullFrameClick="setFullFrame"
+      ></edit-tools>
+    </div>
   </div>
 </template>
 
@@ -61,6 +64,7 @@ export default {
       imageHeight: "",
       imageProportion: "",
       imageDPI: "",
+      imageDPIColor: "",
       portrait: "",
       angle: 0
     };
@@ -205,8 +209,12 @@ export default {
       this.$set(obj, "angle", this.angle);
     },
     dpiCheck() {
-      this.imageDPI = this.image.width / this.longInch;
-      console.log(this.imageDPI + "dpi");
+      this.imageDPI = Math.round(this.image.width / this.longInch);
+      if (200 < this.imageDPI) {
+        this.imageDPIColor = "green";
+      } else {
+        this.imageDPIColor = "red";
+      }
     },
     watchCldImage() {
       this.$watch("$refs.cldImage.imageAttrs.src", {
@@ -314,5 +322,11 @@ export default {
 
 .cld-image {
   border: 1px solid #999;
+}
+
+.tray {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>
