@@ -111,8 +111,8 @@ export default {
   grid-area: 1 / 1 / 2 / 2;
 }
 
-.image-grid-thumb:hover,
-.image-grid-thumb.active {
+.image-grid-thumb:hover img,
+.image-grid-thumb.active img {
   filter: opacity(0.5);
 }
 
