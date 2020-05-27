@@ -56,13 +56,18 @@ export default {
   },
   mounted() {
     this.watchCldImage();
-    this.setStageHeight();
-    this.setCanvasHeight();
+    // this.setStageHeight();
+    this.getCanvasInfo();
+    this.getImageInfo();
     this.getFrameInfo();
     this.reflectCurrentImage();
-    this.getImageInfo();
   },
-  updated() {},
+  updated() {
+    size.addEventListener("change", event => {
+      this.$root.processingImage = true;
+      this.getCanvasInfo();
+    });
+  },
   methods: {
     determineStageHeight() {
       let stage = this.$refs.stage;
@@ -88,28 +93,26 @@ export default {
       this.$root.processingImage = true;
       this.reflectCanvasWidth();
     },
+
+    // Takes the Print Size info from the Product Size select dropdown.
+    getCanvasInfo() {
+      let size = document.querySelector("select#size");
+      this.$root.processingImage = true;
+      let widthHeight = size.selectedOptions[0].value.split("x");
+      let canvasWidth = parseInt(widthHeight[1]);
+      let canvasMultiplier = 1000 / canvasWidth;
+
+      this.canvasHeight = Math.round(
+        parseInt(widthHeight[0]) * canvasMultiplier
+      );
+
+      this.reflectCanvasHeight();
+    },
     reflectCanvasWidth() {
       let obj = this.$refs.cldImage.transformations.find(
         transformation => "width" in transformation
       );
       this.$set(obj, "width", this.canvasWidth);
-    },
-    // Takes the Print Size info from the Product Size select dropdown.
-    setCanvasHeight() {
-      let size = document.querySelector("select#size");
-      size.addEventListener("change", event => {
-        this.$root.processingImage = true;
-        let widthHeight = size.selectedOptions[0].value.split("x");
-        let canvasWidth = parseInt(widthHeight[1]);
-        let canvasMultiplier = 1000 / canvasWidth;
-
-        this.canvasHeight = Math.round(
-          parseInt(widthHeight[0]) * canvasMultiplier
-        );
-        this.determineStageHeight();
-
-        this.reflectCanvasHeight();
-      });
     },
     reflectCanvasHeight() {
       let obj = this.$refs.cldImage.transformations.find(
