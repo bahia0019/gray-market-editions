@@ -25,9 +25,11 @@ add_filter('woocommerce_add_cart_item_data', function ($cart_item_data, $product
 		return;
 	}
 
-	$cart_item_data['cloudinary_image_urls'] = explode(',', $_POST['cloudinary_image_urls']);
+    $urls = json_decode(stripslashes($_POST['cloudinary_image_urls']), true);
 
-	return $cart_item_data;
+    $cart_item_data['cloudinary_image_urls'] = $urls;
+
+    return $cart_item_data;
 }, 10, 4);
 
 // Append the Informational Tabs
