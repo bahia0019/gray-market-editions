@@ -219,18 +219,7 @@ export default {
     watchCldImage() {
       this.$watch("$refs.cldImage.imageAttrs.src", {
         handler(newUrl, oldUrl) {
-          let existing = this.$root.finalImages.filter(
-            image => this.$root.currentImage.public_id === image.public_id
-          );
-
-          if (existing.length) {
-            this.$set(existing[0], "url", newUrl);
-          } else {
-            this.$root.finalImages.push({
-              public_id: this.image.public_id,
-              url: newUrl || oldUrl
-            });
-          }
+          this.image.gme_final_url = newUrl;
         },
         immediate: false
       });
