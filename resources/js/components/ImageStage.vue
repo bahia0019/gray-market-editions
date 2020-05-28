@@ -18,7 +18,7 @@
           :width="imageWidth"
           :height="imageHeight"
           :angle="angle"
-          crop="scale"
+          :crop="imageCrop"
         />
       </cld-image>
 
@@ -35,7 +35,7 @@
         :portrait="true"
         @orientationClick="setOrientation"
         @angleClick="setAngle"
-        @fullFrameClick="setFullFrame"
+        @fullFrameClick=" setFullFrame"
       ></edit-tools>
     </div>
   </div>
@@ -57,11 +57,12 @@ export default {
   data() {
     return {
       stageHeight: "",
-      canvasLongDimension: "1000",
-      canvasShortDimension: "800",
+      canvasLongDimension: "",
+      canvasShortDimension: "",
       canvasPortrait: "",
       imageWidth: "",
       imageHeight: "",
+      imageCrop: "",
       imageProportion: "",
       imageDPI: "",
       imageDPIColor: "",
@@ -101,9 +102,9 @@ export default {
       this.canvasShortDimension = Math.round(
         parseInt(widthHeight[0]) * canvasMultiplier
       );
+
       this.canvasProportion =
         this.canvasShortDimension / this.canvasLongDimension;
-      console.log(this.canvasProportion);
 
       this.reflectcanvasLongDimension();
       this.reflectcanvasShortDimension();
@@ -166,12 +167,10 @@ export default {
 
     setOrientation() {
       if (true === this.portrait) {
-        console.log("Portrait");
         this.canvasShortDimension = 1000;
         this.canvasLongDimension =
           this.canvasShortDimension * this.canvasMultiplier;
       } else {
-        console.log("Landscape");
         this.canvasLongDimension = 1000;
         this.canvasShortDimension =
           this.canvasLongDimension * this.canvasMultiplier;
@@ -185,16 +184,20 @@ export default {
       this.$set(obj, "width", this.canvasLongDimension);
     },
     setFullFrame() {
-      console.log(this.canvasProportion + "&" + this.imageProportion);
-      if (this.canvasProportion > this.imageProportion) {
-        this.imageHeight = this.canvasShortDimension;
-      }
+      this.$root.processingImage = true;
+
+      this.imageWidth = this.canvasLongDimension;
+      this.imageHeight = this.canvasShortDimension;
+      this.imageCrop = "fill";
+      this.reflectFullFrame();
     },
     reflectFullFrame() {
       let obj = this.$refs.cldImage.transformations.find(
         transformation => "overlay" in transformation
       );
       this.$set(obj, "height", this.imageHeight);
+      this.$set(obj, "width", this.imageWidth);
+      this.$set(obj, "crop", this.imageCrop);
     },
     //   Set and Reflect Angle
     setAngle() {

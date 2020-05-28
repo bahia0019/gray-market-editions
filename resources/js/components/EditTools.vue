@@ -119,6 +119,7 @@ export default {
   top: 34px;
   position: absolute;
   right: -30px;
+  z-index: 100;
 }
 
 .edit-tools button:hover .tool-tip {

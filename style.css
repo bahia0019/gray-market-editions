@@ -10,3 +10,8 @@ Version: 2.5.6.1589039598
 Updated: 2020-05-09 15:53:18
 
 */
+
+.entry-content {
+    width: 80ch;
+    margin: 0 auto;
+}
