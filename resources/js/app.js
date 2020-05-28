@@ -88,7 +88,9 @@ const app = new Vue({
     },
     computed: {
         finalUrls() {
-            return this.cloudinaryImages.map((image) => image.gme_final_url);
+            const urls = this.cloudinaryImages.map((image) => image.gme_final_url);
+
+            return JSON.stringify(urls);
         },
     },
 });
