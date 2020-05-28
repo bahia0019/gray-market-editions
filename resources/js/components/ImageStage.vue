@@ -55,7 +55,7 @@
         </div>
 
         <div class="tray">
-            <div class="notices" :style="{ color: imageDPIColor }">
+            <div :class="{ warning: dpiWarning }">
                 Your image is {{ imageDPI }} dpi
             </div>
             <edit-tools
@@ -92,7 +92,7 @@ export default {
             imageCrop: "",
             imageProportion: "",
             imageDPI: "",
-            imageDPIColor: "",
+            dpiWarning: false,
             portrait: false,
             angle: 0,
         }
@@ -287,10 +287,11 @@ export default {
         },
         dpiCheck() {
             this.imageDPI = Math.round(this.image.width / this.longInch)
-            if (200 < this.imageDPI) {
-                this.imageDPIColor = "green"
+            parseInt(this.imageDPI)
+            if (200 > this.imageDPI) {
+                this.dpiWarning = true
             } else {
-                this.imageDPIColor = "red"
+                this.dpiWarning = false
             }
         },
         watchCldImage() {
@@ -397,5 +398,10 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: green;
+}
+
+.warning {
+    color: orangered;
 }
 </style>
