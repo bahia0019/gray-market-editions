@@ -24,8 +24,12 @@
 
             <div class="btn-group" v-if="!isHidden">
                 <button @click="$emit('setBorder', 'zero')">0</button>
-                <button @click="$emit('setBorder', 'quarterInch')">1/4"</button>
-                <button @click="$emit('setBorder', 'halfInch')">1/2"</button>
+                <button @click="$emit('setBorder', 'quarterInch')">
+                    1/4"
+                </button>
+                <button @click="$emit('setBorder', 'halfInch')">
+                    1/2"
+                </button>
                 <button @click="$emit('setBorder', 'threeQuarterInch')">
                     3/4"
                 </button>

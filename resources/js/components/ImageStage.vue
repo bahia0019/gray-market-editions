@@ -62,7 +62,7 @@
             </div>
             <edit-tools
                 @fullFrameClick="setFullFrame"
-                @setBorder="setBorder(border)"
+                @setBorder="setBorder"
                 :portrait="portrait"
                 @angleClick="setAngle"
             ></edit-tools>
@@ -310,6 +310,9 @@ export default {
             switch (border) {
                 case "zero":
                     border = 0
+                    break
+                case "quarterInch":
+                    border = dpi * 0.25
                     break
                 case "halfInch":
                     border = dpi * 0.5
