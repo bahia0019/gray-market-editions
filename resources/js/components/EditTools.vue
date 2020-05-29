@@ -13,17 +13,30 @@
             </div>
         </button>
 
-        <button id="borders" @click="log">
-            <svg viewBox="0 0 32 32">
-                <path
-                    d="M28 0h-24c-2.2 0-4 1.8-4 4v24c0 2.2 1.8 4 4 4h24c2.2 0 4-1.8 4-4v-24c0-2.2-1.8-4-4-4zM28 28h-24v-24h24v24z"
-                />
-            </svg>
+        <div>
+            <button id="border">
+                <svg viewBox="0 0 32 32">
+                    <path
+                        d="M28 0h-24c-2.2 0-4 1.8-4 4v24c0 2.2 1.8 4 4 4h24c2.2 0 4-1.8 4-4v-24c0-2.2-1.8-4-4-4zM28 28h-24v-24h24v24z"
+                    />
+                </svg>
+            </button>
+
+            <div class="btn-group">
+                <button @click="$emit('setBorder', 'zero')">0</button>
+                <button @click="$emit('setBorder', 'quarterInch')">1/4"</button>
+                <button @click="$emit('setBorder', 'halfInch')">1/2"</button>
+                <button @click="$emit('setBorder', 'threeQuarterInch')">
+                    3/4"
+                </button>
+                <button @click="$emit('setBorder', 'inch')">1"</button>
+            </div>
+
             <div class="tool-tip">
                 <div class="triangle"></div>
-                <div class="tip">Borders</div>
+                <div class="tip">Border</div>
             </div>
-        </button>
+        </div>
 
         <button id="orientation" @click="$emit('orientationClick')">
             <!-- If image is Portrait, show Landscape icon -->
@@ -133,7 +146,17 @@ export default {
     z-index: 100;
 }
 
-.edit-tools button:hover .tool-tip {
+.edit-tools button:hover .tool-tip,
+button#border:hover .tool-tip {
+    visibility: visible;
+}
+
+#border + .btn-group {
+    visibility: hidden;
+    position: absolute;
+}
+button#border:hover + .btn-group,
+.btn-group:hover {
     visibility: visible;
 }
 

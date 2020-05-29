@@ -36,6 +36,7 @@
                     :height="imageLongDimension"
                     :angle="angle"
                     :crop="imageCrop"
+                    :border="border"
                 />
                 <cld-transformation
                     v-else
@@ -44,6 +45,7 @@
                     :height="imageShortDimension"
                     :angle="angle"
                     :crop="imageCrop"
+                    :border="border"
                 />
             </cld-image>
 
@@ -59,9 +61,10 @@
                 Your image is {{ imageDPI }} dpi
             </div>
             <edit-tools
+                @fullFrameClick="setFullFrame"
+                @setBorder="setBorder(border)"
                 :portrait="portrait"
                 @angleClick="setAngle"
-                @fullFrameClick="setFullFrame"
             ></edit-tools>
         </div>
     </div>
@@ -95,6 +98,7 @@ export default {
             dpiWarning: false,
             portrait: false,
             angle: 0,
+            border: "",
         }
     },
     mounted() {
@@ -297,6 +301,36 @@ export default {
                 },
                 immediate: false,
             })
+        },
+        setBorder(border) {
+            this.$root.processingImage = true
+
+            let dpi = 1000 / this.longInch
+
+            switch (border) {
+                case "zero":
+                    this.border = 0
+                    break
+                case "halfInch":
+                    this.border = dpi * 0.5
+                    break
+                case "threeQuarterInch":
+                    this.border = dpi * 0.75
+                    break
+                case "inch":
+                    this.border = dpi * 1
+                    break
+
+                default:
+                    this.border = 0
+            }
+
+            this.border = border + "px_solid_rgb:ffffff"
+
+            let obj2 = this.$refs.cldImage.transformations.find(
+                (transformation) => "overlay" in transformation
+            )
+            this.$set(obj2, "border", this.border)
         },
         getFrameInfo() {
             let frame = document.querySelector("select#frame")
