@@ -309,22 +309,21 @@ export default {
 
             switch (border) {
                 case "zero":
-                    this.border = 0
+                    border = 0
                     break
                 case "halfInch":
-                    this.border = dpi * 0.5
+                    border = dpi * 0.5
                     break
                 case "threeQuarterInch":
-                    this.border = dpi * 0.75
+                    border = dpi * 0.75
                     break
                 case "inch":
-                    this.border = dpi * 1
+                    border = dpi * 1
                     break
 
                 default:
-                    this.border = 0
+                    border = 0
             }
-
             this.border = border + "px_solid_rgb:ffffff"
 
             let obj2 = this.$refs.cldImage.transformations.find(

@@ -13,7 +13,7 @@
             </div>
         </button>
 
-        <div>
+        <div id="border-group" @click="isHidden = !isHidden">
             <button id="border">
                 <svg viewBox="0 0 32 32">
                     <path
@@ -22,7 +22,7 @@
                 </svg>
             </button>
 
-            <div class="btn-group">
+            <div class="btn-group" v-if="!isHidden">
                 <button @click="$emit('setBorder', 'zero')">0</button>
                 <button @click="$emit('setBorder', 'quarterInch')">1/4"</button>
                 <button @click="$emit('setBorder', 'halfInch')">1/2"</button>
@@ -34,7 +34,7 @@
 
             <div class="tool-tip">
                 <div class="triangle"></div>
-                <div class="tip">Border</div>
+                <div class="tip">Borders</div>
             </div>
         </div>
 
@@ -96,15 +96,11 @@ export default {
     data() {
         return {
             images: this.$root.cloudinaryImages,
+            isHidden: true,
         }
     },
     methods: {
-        log() {
-            console.log(
-                this.$root.currentImage,
-                this.$root.currentImage.portrait
-            )
-        },
+        showBorderGroup() {},
     },
 }
 </script>
@@ -125,6 +121,11 @@ export default {
     margin: 0;
     position: relative;
     transition: 350ms;
+}
+#border-group {
+    width: 35px;
+    height: 35px;
+    position: relative;
 }
 
 .edit-tools.processingImage button {
@@ -147,17 +148,13 @@ export default {
 }
 
 .edit-tools button:hover .tool-tip,
-button#border:hover .tool-tip {
+#border-group:hover .tool-tip {
     visibility: visible;
 }
 
 #border + .btn-group {
-    visibility: hidden;
+    // visibility: hidden;
     position: absolute;
-}
-button#border:hover + .btn-group,
-.btn-group:hover {
-    visibility: visible;
 }
 
 .triangle {
