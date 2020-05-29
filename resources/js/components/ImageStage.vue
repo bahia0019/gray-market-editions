@@ -32,7 +32,7 @@
                 <cld-transformation
                     v-if="portrait"
                     :overlay="image.public_id"
-                    :width="Math.round(imageShortDimension)"
+                    :width="imageShortDimension"
                     :height="imageLongDimension"
                     :angle="angle"
                     :crop="imageCrop"
@@ -106,16 +106,7 @@ export default {
         this.reflectCurrentImage()
         // this.getStageHeight();
     },
-    updated() {
-        size.addEventListener("change", (event) => {
-            this.$root.processingImage = true
-            this.getCanvasInfo()
-            this.getImageInfo()
-            this.reflectOrientation()
-        })
-        this.dpiCheck()
-        this.reflectOrientation()
-    },
+    updated() {},
     methods: {
         reflectCurrentImage() {
             let obj = this.$refs.cldImage.transformations.find(
@@ -129,7 +120,14 @@ export default {
         // Takes the Print Size info from the Product Size select dropdown.
         getCanvasInfo() {
             this.$root.processingImage = true
-            this.size = document.querySelector("select#size")
+            let size = document.querySelector("select#size")
+            size.addEventListener("change", (event) => {
+                this.$root.processingImage = true
+                this.getCanvasInfo()
+                this.getImageInfo()
+                this.reflectOrientation()
+            })
+
             this.widthHeight = size.selectedOptions[0].value.split("x")
             this.longInch = parseInt(this.widthHeight[1])
             this.canvasLongDimension = 1000
@@ -262,10 +260,8 @@ export default {
 
             this.imageLongDimension = this.canvasLongDimension
             this.imageShortDimension = this.canvasShortDimension
+
             this.imageCrop = "fill"
-            this.reflectFullFrame()
-        },
-        reflectFullFrame() {
             let obj2 = this.$refs.cldImage.transformations.find(
                 (transformation) => "overlay" in transformation
             )
