@@ -32,7 +32,7 @@
                 <button @click="$emit('setBorder', 'inch')">1"</button>
             </div>
 
-            <div class="tool-tip">
+            <div class="tool-tip" v-if="isHidden">
                 <div class="triangle"></div>
                 <div class="tip">Borders</div>
             </div>
@@ -99,9 +99,7 @@ export default {
             isHidden: true,
         }
     },
-    methods: {
-        showBorderGroup() {},
-    },
+    methods: {},
 }
 </script>
 
