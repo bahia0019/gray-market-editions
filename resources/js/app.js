@@ -1,6 +1,11 @@
 import Vue from "vue";
+import CloudinaryCore from "cloudinary-core";
 import CloudinaryComponent from "./components/CloudinaryComponent.vue";
 import Cloudinary, {CldImage, CldTransformation} from "cloudinary-vue";
+
+Vue.prototype.$cloudinaryCore = new CloudinaryCore.Cloudinary({
+    cloud_name: "flaunt-your-site", secure: true
+});
 
 Vue.use(Cloudinary, {
     configuration: {
