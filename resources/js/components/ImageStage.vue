@@ -67,15 +67,19 @@
                 @angleClick="setAngle"
             ></edit-tools>
         </div>
+
+        <watch-image-stage></watch-image-stage>
     </div>
 </template>
 
 <script>
 import EditTools from "./EditTools.vue"
+import WatchImageStage from "./WatchImageStage.vue"
 
 export default {
     components: {
         EditTools,
+        WatchImageStage,
     },
     props: {
         image: {
@@ -102,7 +106,6 @@ export default {
         }
     },
     mounted() {
-        this.watchCldImage()
         this.getCanvasInfo()
         this.getImageInfo()
         this.reflectOrientation()
@@ -293,14 +296,6 @@ export default {
             } else {
                 this.dpiWarning = false
             }
-        },
-        watchCldImage() {
-            this.$watch("$refs.cldImage.imageAttrs.src", {
-                handler(newUrl, oldUrl) {
-                    this.image.gme_final_url = newUrl
-                },
-                immediate: false,
-            })
         },
         setBorder(border) {
             this.$root.processingImage = true
