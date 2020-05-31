@@ -3,7 +3,6 @@
         <div
             ref="stage"
             class="stage"
-            :style="{ 'max-height': stageHeight + 'px' }"
             :class="{
                 'processing-image': $root.processingImage,
                 portrait: portrait,
@@ -90,7 +89,6 @@ export default {
     },
     data() {
         return {
-            stageHeight: "",
             canvasLongDimension: "",
             canvasShortDimension: "",
             portraitCanvasLongDimension: "",
@@ -265,34 +263,59 @@ export default {
         },
         setFullFrame() {
             this.$root.processingImage = true
-
             if (false === this.fullFrame) {
                 this.fullFrame = true
-                this.imageLongDimension = this.canvasLongDimension
-                this.imageShortDimension = this.canvasShortDimension
+                if (true === this.portrait) {
+                    this.imageLongDimension = this.portraitCanvasLongDimension
+                    this.imageShortDimension = this.portraitCanvasShortDimension
 
-                this.imageCrop = "fill"
-                let obj2 = this.$refs.cldImage.transformations.find(
-                    (transformation) => "overlay" in transformation
-                )
-                this.$set(obj2, "height", this.imageShortDimension)
-                this.$set(obj2, "width", this.imageLongDimension)
-                this.$set(obj2, "crop", this.imageCrop)
+                    this.imageCrop = "fill"
+                    let obj2 = this.$refs.cldImage.transformations.find(
+                        (transformation) => "overlay" in transformation
+                    )
+                    this.$set(obj2, "height", this.imageLongDimension)
+                    this.$set(obj2, "width", this.imageShortDimension)
+                    this.$set(obj2, "crop", this.imageCrop)
+                } else {
+                    this.imageLongDimension = this.canvasLongDimension
+                    this.imageShortDimension = this.canvasShortDimension
+
+                    this.imageCrop = "fill"
+                    let obj2 = this.$refs.cldImage.transformations.find(
+                        (transformation) => "overlay" in transformation
+                    )
+                    this.$set(obj2, "height", this.imageShortDimension)
+                    this.$set(obj2, "width", this.imageLongDimension)
+                    this.$set(obj2, "crop", this.imageCrop)
+                }
             } else {
                 this.fullFrame = false
+                if (true === this.portrait) {
+                    this.imageLongDimension = this.portraitCanvasLongDimension
+                    this.imageShortDimension = Math.floor(
+                        this.portraitCanvasLongDimension * this.imageProportion
+                    )
 
-                this.imageLongDimension = this.canvasLongDimension
-                this.imageShortDimension = Math.floor(
-                    this.canvasLongDimension * this.imageProportion
-                )
-
-                this.imageCrop = "fit"
-                let obj2 = this.$refs.cldImage.transformations.find(
-                    (transformation) => "overlay" in transformation
-                )
-                this.$set(obj2, "height", this.imageShortDimension)
-                this.$set(obj2, "width", this.imageLongDimension)
-                this.$set(obj2, "crop", this.imageCrop)
+                    this.imageCrop = "fit"
+                    let obj2 = this.$refs.cldImage.transformations.find(
+                        (transformation) => "overlay" in transformation
+                    )
+                    this.$set(obj2, "height", this.imageLongDimension)
+                    this.$set(obj2, "width", this.imageShortDimension)
+                    this.$set(obj2, "crop", this.imageCrop)
+                } else {
+                    this.imageLongDimension = this.canvasLongDimension
+                    this.imageShortDimension = Math.floor(
+                        this.canvasLongDimension * this.imageProportion
+                    )
+                    this.imageCrop = "fit"
+                    let obj2 = this.$refs.cldImage.transformations.find(
+                        (transformation) => "overlay" in transformation
+                    )
+                    this.$set(obj2, "height", this.imageShortDimension)
+                    this.$set(obj2, "width", this.imageLongDimension)
+                    this.$set(obj2, "crop", this.imageCrop)
+                }
             }
         },
         //   Set and Reflect Angle
