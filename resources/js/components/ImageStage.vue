@@ -64,6 +64,7 @@
                 @fullFrameClick="setFullFrame"
                 @setBorder="setBorder"
                 :portrait="portrait"
+                @switchOrientation="switchOrientation"
                 @angleClick="setAngle"
             ></edit-tools>
         </div>
@@ -108,7 +109,7 @@ export default {
     mounted() {
         this.getCanvasInfo()
         this.getImageInfo()
-        this.reflectOrientation()
+        this.setOrientation()
         this.getFrameInfo()
         this.reflectCurrentImage()
         // this.getStageHeight();
@@ -132,7 +133,7 @@ export default {
                 this.$root.processingImage = true
                 this.getCanvasInfo()
                 this.getImageInfo()
-                this.reflectOrientation()
+                this.setOrientation()
             })
             this.widthHeight = size.selectedOptions[0].value.split("x")
             this.longInch = parseInt(this.widthHeight[1])
@@ -213,9 +214,9 @@ export default {
         //     );
         //     console.log((this.canvasLongDimension = this.canvasLongDimension / 2));
         //   }
-        //   reflectOrientation();
+        //   setOrientation();
         // },
-        reflectOrientation() {
+        setOrientation() {
             if (true === this.portrait) {
                 // Portrait.
                 this.portraitCanvasLongDimension = this.canvasLongDimension / 2
@@ -259,6 +260,33 @@ export default {
                 )
                 this.$set(obj2, "width", this.imageLongDimension)
                 this.$set(obj2, "height", this.imageShortDimension)
+            }
+        },
+        switchOrientation() {
+            if (true === this.portrait) {
+                this.portrait = false
+                this.canvasLongDimension = 1000
+                this.canvasShortDimension = Math.round(
+                    parseInt(this.widthHeight[0]) * this.canvasMultiplier
+                )
+
+                let obj = this.$refs.cldImage.transformations.find(
+                    (transformation) => "width" in transformation
+                )
+                this.$set(obj, "width", this.canvasLongDimension)
+                this.$set(obj, "height", this.canvasShortDimension)
+            } else {
+                this.portrait = true
+                this.portraitCanvasLongDimension = this.canvasLongDimension / 2
+                this.portraitCanvasShortDimension = Math.floor(
+                    this.canvasShortDimension / 2
+                )
+
+                let obj = this.$refs.cldImage.transformations.find(
+                    (transformation) => "width" in transformation
+                )
+                this.$set(obj, "width", this.portraitCanvasShortDimension)
+                this.$set(obj, "height", this.portraitCanvasLongDimension)
             }
         },
         setFullFrame() {
