@@ -1,13 +1,26 @@
 <template>
     <div class="edit-tools" :class="{ processingImage: $root.processingImage }">
         <button id="full-frame" @click="$emit('fullFrameClick')">
-            <svg viewBox="0 0 32 32">
+            <svg v-if="fullFrame" id="icon-shrink" viewBox="0 0 32 32">
+                <path d="M18 14h13l-5-5 6-6-3-3-6 6-5-5z"></path>
+                <path d="M18 18v13l5-5 6 6 3-3-6-6 5-5z"></path>
+                <path d="M14 18h-13l5 5-6 6 3 3 6-6 5 5z"></path>
+                <path d="M14 14v-13l-5 5-6-6-3 3 6 6-5 5z"></path>
+            </svg>
+
+            <svg v-else id="full-frame" viewBox="0 0 32 32">
                 <path d="M32 0h-13l5 5-6 6 3 3 6-6 5 5z" />
                 <path d="M32 32v-13l-5 5-6-6-3 3 6 6-5 5z" />
                 <path d="M0 32h13l-5-5 6-6-3-3-6 6-5-5z" />
                 <path d="M0 0v13l5-5 6 6 3-3-6-6 5-5z" />
             </svg>
-            <div class="tool-tip">
+
+            <div v-if="fullFrame" class="tool-tip">
+                <div class="triangle"></div>
+                <div class="tip">Fit to paper</div>
+            </div>
+
+            <div v-else class="tool-tip">
                 <div class="triangle"></div>
                 <div class="tip">Full Frame</div>
             </div>
@@ -42,7 +55,7 @@
             </div>
         </div>
 
-        <button id="orientation" @click="$emit('orientationClick')">
+        <button id="orientation" @click="$emit('switchOrientation')">
             <!-- If image is Portrait, show Landscape icon -->
             <svg v-if="portrait" id="icon-landscape" viewBox="0 0 32 32">
                 <path
@@ -96,6 +109,10 @@ export default {
             type: Boolean,
             required: true,
         },
+        fullFrame: {
+            type: Boolean,
+            required: true,
+        },
     },
     data() {
         return {
@@ -111,6 +128,8 @@ export default {
 .edit-tools {
     display: flex;
     justify-content: flex-end;
+    position: relative;
+    z-index: 100;
 }
 
 .edit-tools button {
