@@ -21,8 +21,8 @@ const app = new Vue({
     data() {
         return {
             currentImage: {},
+            images: [],
             cloudinaryImages: [],
-            cloudinaryTestImages: require("./data.json"),
             processingImage: false,
         };
     },
@@ -34,8 +34,8 @@ const app = new Vue({
         this.infoLinks();
     },
     updated() {
-        if (this.cloudinaryImages.length && !this.currentImage.public_id) {
-            this.currentImage = this.cloudinaryImages[0];
+        if (this.images.length && !this.currentImage.id) {
+            this.currentImage = this.images[0];
         }
     },
     methods: {
@@ -93,9 +93,9 @@ const app = new Vue({
     },
     computed: {
         finalUrls() {
-            const urls = this.cloudinaryImages.map((image) => image.gme_final_url);
+            // const urls = this.cloudinaryImages.map((image) => image.gme_final_url);
 
-            return JSON.stringify(urls);
+            // return JSON.stringify(urls);
         },
     },
 });
