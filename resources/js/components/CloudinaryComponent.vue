@@ -1,11 +1,13 @@
 <template>
   <div>
     <image-stage
-      v-for="image in $root.cloudinaryImages"
-      :key="image.public_id"
+      v-for="image in $root.images"
+      :key="image.id"
       :image="image"
-      v-show="image.public_id === $root.currentImage.public_id"
+      v-show="image.id === $root.currentImage.id"
     ></image-stage>
+
+    <image-upload></image-upload>
 
     <image-grid></image-grid>
 
@@ -14,12 +16,14 @@
 </template>
 
 <script>
+import ImageUpload from "./ImageUpload.vue";
 import ImageStage from "./ImageStage.vue";
 import ImageGrid from "./ImageGrid.vue";
 import PosterTemplates from "./PosterTemplates.vue";
 
 export default {
   components: {
+    ImageUpload,
     ImageStage,
     ImageGrid,
     PosterTemplates

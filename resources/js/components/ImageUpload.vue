@@ -91,7 +91,7 @@ export default {
       const url = `${GME_DATA.ajax_url}?action=gme_ajax_image_upload&nonce=${GME_DATA.nonce}`;
 
       return axios.post(url, formData).then(({ data }) => {
-        this.$root.cloudinaryImages = data.map(({ url }) => url);
+        this.$root.images = data.map(data => data);
       });
     }
   },

@@ -8,14 +8,16 @@
                 portrait: portrait,
             }"
         >
-            <div ref="frame" class="frame"></div>
+            <img :src="image.editor_image.url" />
+
+            <!-- <div ref="frame" class="frame"></div>
             <cld-image
                 publicId="assets/16_20_bg_khaqct.jpg"
                 ref="cldImage"
                 onload="cloudinaryOnLoad()"
-            >
+            > -->
                 <!-- Canvas Transformations -->
-                <cld-transformation
+                <!-- <cld-transformation
                     v-if="portrait"
                     :width="portraitCanvasShortDimension"
                     :height="portraitCanvasLongDimension"
@@ -26,9 +28,9 @@
                     :width="canvasLongDimension"
                     :height="canvasShortDimension"
                     crop="scale"
-                />
+                /> -->
                 <!-- Overlay/Image Transformations -->
-                <cld-transformation
+                <!-- <cld-transformation
                     v-if="portrait"
                     :overlay="image.public_id"
                     :width="imageShortDimension"
@@ -46,7 +48,7 @@
                     :crop="imageCrop"
                     :border="border"
                 />
-            </cld-image>
+            </cld-image> -->
 
             <svg viewBox="0 0 32 32" class="spinner">
                 <path
