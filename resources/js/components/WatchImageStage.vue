@@ -3,7 +3,7 @@ export default {
   render() {
     if (this.$parent.$options._componentTag !== "image-stage") return;
 
-    this.watchCldImageTrans();
+    // this.watchCldImageTrans();
   },
   methods: {
     watchCldImageTrans() {
