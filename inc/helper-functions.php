@@ -3,6 +3,8 @@
 if (!function_exists('gme_image_upload')) {
     function gme_image_upload($file, $image_size = 'editor_image', $post_id = 0)
     {
+        define('GME_AJAX_UPLOADING', true);
+
         $upload = wp_upload_bits($file['name'], null, file_get_contents($file['tmp_name']));
 
         $wp_filetype = wp_check_filetype(basename($upload['file']), null);
@@ -26,6 +28,8 @@ if (!function_exists('gme_image_upload')) {
         $thumbnail        = wp_get_attachment_image_src($attach_id);
         $image            = wp_get_attachment_image_src($attach_id, $image_size);
         $image_dimensions = getimagesize($image[0]);
+
+        define('GME_AJAX_UPLOADING', false);
 
         return [
             'id'           => $attach_id,
