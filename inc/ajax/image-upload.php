@@ -11,7 +11,7 @@ function gme_ajax_image_upload()
     }
 
     $uploads = array_map(function ($file) {
-        return gme_image_upload($file, 'editor_image');
+        return gme_image_upload($file);
     }, $_FILES);
 
     wp_send_json($uploads);
