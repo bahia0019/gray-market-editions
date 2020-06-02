@@ -1,11 +1,13 @@
 <?php
 
 if (!function_exists('gme_image_upload')) {
-    function gme_image_upload($file, $image_size = 'thumbnail', $post_id = 0)
+    function gme_image_upload($file, $image_size = 'editor_image', $post_id = 0)
     {
         $upload = wp_upload_bits($file['name'], null, file_get_contents($file['tmp_name']));
 
         $wp_filetype = wp_check_filetype(basename($upload['file']), null);
+
+        $original_dimensions = getimagesize($upload['file']);
 
         $attachment = [
             'post_mime_type' => $wp_filetype['type'],
@@ -22,7 +24,6 @@ if (!function_exists('gme_image_upload')) {
         wp_update_attachment_metadata($attach_id, $attach_data);
 
         $thumbnail = wp_get_attachment_image_src($attach_id);
-        $original  = wp_get_attachment_image_src($attach_id, 'full');
         $image     = wp_get_attachment_image_src($attach_id, $image_size);
 
         return [
@@ -38,9 +39,9 @@ if (!function_exists('gme_image_upload')) {
                 'height' => $thumbnail[2],
             ],
             'original' => [
-                'url'    => $original[0],
-                'width'  => $attach_data['width'],
-                'height' => $attach_data['height'],
+                'url'    => $upload['url'],
+                'width'  => $original_dimensions[0],
+                'height' => $original_dimensions[1],
             ],
         ];
     }
