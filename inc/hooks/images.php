@@ -22,10 +22,10 @@ add_filter('intermediate_image_sizes', function ($sizes) {
         return $sizes;
     }
 
-    $keep_sizes = [];
+    $sizes = [
+        'thumbnail',
+        'editor_image',
+    ];
 
-    array_push($keep_sizes, 'thumbnail');
-    array_push($keep_sizes, 'editor_image');
-
-    return $keep_sizes;
+    return $sizes;
 });
