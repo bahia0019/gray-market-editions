@@ -1,6 +1,6 @@
 import Vue from "vue"
 import CloudinaryCore from "cloudinary-core"
-import CloudinaryComponent from "./components/CloudinaryComponent.vue"
+import EditorComponent from "./components/EditorComponent.vue"
 import Cloudinary, { CldImage, CldTransformation } from "cloudinary-vue"
 
 Vue.prototype.$cloudinaryCore = new CloudinaryCore.Cloudinary({
@@ -15,7 +15,7 @@ Vue.use(Cloudinary, {
     components: [CldImage, CldTransformation],
 })
 
-Vue.component("cloudinary-component", CloudinaryComponent)
+Vue.component("editor-component", EditorComponent)
 
 const app = new Vue({
     el: "#vue-app",

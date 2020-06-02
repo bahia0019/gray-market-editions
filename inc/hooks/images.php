@@ -16,17 +16,16 @@ add_filter('upload_mimes', function ($mimes) {
     return $mimes;
 });
 
-// Mutate $sizes to return only needed images
+// Mutate $sizes to return only needed images during AJAX image upload
 add_filter('intermediate_image_sizes', function ($sizes) {
-    $keep_sizes = [];
+    if (!defined('GME_AJAX_UPLOADING') || GME_AJAX_UPLOADING === false) {
+        return $sizes;
+    }
 
-    array_push($keep_sizes, 'full');
-    array_push($keep_sizes, 'thumbnail');
-    array_push($keep_sizes, 'editor_image');
-    array_push($keep_sizes, 'shop_single');
-    array_push($keep_sizes, 'shop_thumbnail');
-    array_push($keep_sizes, 'woocommerce_single');
-    array_push($keep_sizes, 'woocommerce_thumbnail');
+    $sizes = [
+        'thumbnail',
+        'editor_image',
+    ];
 
-    return $keep_sizes;
+    return $sizes;
 });

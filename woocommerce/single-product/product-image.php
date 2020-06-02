@@ -42,7 +42,7 @@ $product_types = ['Exhibition Prints', 'Posters', 'Outdoor/Vinyl Prints', 'Frame
 
 <div class="<?php echo esc_attr(implode(' ', array_map('sanitize_html_class', $wrapper_classes))); ?>" data-columns="<?php echo esc_attr($columns); ?>">
     <?php if (in_array($product->get_name(), $product_types)): ?>
-        <cloudinary-component product-type="<?php echo $product->get_name(); ?>"></cloudinary-component>
+        <editor-component product-type="<?php echo $product->get_name(); ?>"></editor-component>
     <?php else: ?>
         <figure class="woocommerce-product-gallery__wrapper">
             <?php

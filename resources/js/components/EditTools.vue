@@ -116,7 +116,6 @@ export default {
     },
     data() {
         return {
-            images: this.$root.cloudinaryImages,
             isHidden: true,
         }
     },
