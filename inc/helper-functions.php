@@ -23,15 +23,16 @@ if (!function_exists('gme_image_upload')) {
         $attach_data = wp_generate_attachment_metadata($attach_id, $upload['file']);
         wp_update_attachment_metadata($attach_id, $attach_data);
 
-        $thumbnail = wp_get_attachment_image_src($attach_id);
-        $image     = wp_get_attachment_image_src($attach_id, $image_size);
+        $thumbnail        = wp_get_attachment_image_src($attach_id);
+        $image            = wp_get_attachment_image_src($attach_id, $image_size);
+        $image_dimensions = getimagesize($image[0]);
 
         return [
             'id'           => $attach_id,
             'editor_image' => [
                 'url'    => $image[0],
-                'width'  => $image[1],
-                'height' => $image[2],
+                'width'  => $image_dimensions[0],
+                'height' => $image_dimensions[1],
             ],
             'thumbnail'  => [
                 'url'    => $thumbnail[0],

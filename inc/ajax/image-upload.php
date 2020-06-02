@@ -4,9 +4,9 @@ function gme_ajax_image_upload()
 {
     check_ajax_referer('gme_ajax_nonce', 'nonce');
 
-    if (!isset($_FILES) || !is_array($_FILES)) {
+    if (!isset($_FILES) || !is_array($_FILES) || count($_FILES) > 50) {
         wp_send_json_error([
-            'message' => 'images files missing/error',
+            'message' => 'files missing/too many files',
         ], 422);
     }
 
