@@ -34,11 +34,6 @@ const app = new Vue({
 
         this.infoLinks()
     },
-    updated() {
-        if (this.images.length && !this.currentImage.id) {
-            this.currentImage = this.images[0]
-        }
-    },
     methods: {
         uploadWidget() {
             var myWidget = cloudinary.createUploadWidget(

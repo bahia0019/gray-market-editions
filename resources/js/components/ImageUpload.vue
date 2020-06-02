@@ -92,6 +92,10 @@ export default {
 
       return axios.post(url, formData).then(({ data }) => {
         this.$root.images = data.map(data => data);
+
+        if (this.$root.images.length && !this.$root.currentImage.id) {
+          this.$root.currentImage = this.$root.images[0];
+        }
       });
     }
   },
