@@ -1,55 +1,24 @@
 <template>
     <div>
         <div
-            ref="stage"
             class="stage"
             :class="{
                 'processing-image': $root.processingImage,
-                portrait: portrait,
             }"
         >
-            <img :src="image.editor_image.url" />
-
-            <!-- <div ref="frame" class="frame"></div>
-            <cld-image
-                publicId="assets/16_20_bg_khaqct.jpg"
-                ref="cldImage"
-                onload="cloudinaryOnLoad()"
-            > -->
-                <!-- Canvas Transformations -->
-                <!-- <cld-transformation
-                    v-if="portrait"
-                    :width="portraitCanvasShortDimension"
-                    :height="portraitCanvasLongDimension"
-                    crop="scale"
-                />
-                <cld-transformation
-                    v-else
-                    :width="canvasLongDimension"
-                    :height="canvasShortDimension"
-                    crop="scale"
-                /> -->
-                <!-- Overlay/Image Transformations -->
-                <!-- <cld-transformation
-                    v-if="portrait"
-                    :overlay="image.public_id"
-                    :width="imageShortDimension"
-                    :height="imageLongDimension"
-                    :angle="angle"
-                    :crop="imageCrop"
-                    :border="border"
-                />
-                <cld-transformation
-                    v-else
-                    :overlay="image.public_id"
-                    :width="imageLongDimension"
-                    :height="imageShortDimension"
-                    :angle="angle"
-                    :crop="imageCrop"
-                    :border="border"
-                />
-            </cld-image> -->
-
+            <img
+                id="canvas"
+                :src="canvas"
+                :style="canvasStyles"
+                :width="canvasLongDimension"
+                :height="canvasShortDimension"
+            />
+            <img
+                :width="imageLongDimension"
+                :height="imageShortDimension"
+                :style="imageStyles"
+                :src="image.editor_image.url"
+            />
             <svg viewBox="0 0 32 32" class="spinner">
                 <path
                     d="M32 12h-12l4.485-4.485c-2.267-2.266-5.28-3.515-8.485-3.515s-6.219 1.248-8.485 3.515c-2.266 2.267-3.515 5.28-3.515 8.485s1.248 6.219 3.515 8.485c2.267 2.266 5.28 3.515 8.485 3.515s6.219-1.248 8.485-3.515c0.189-0.189 0.371-0.384 0.546-0.583l3.010 2.634c-2.933 3.349-7.239 5.464-12.041 5.464-8.837 0-16-7.163-16-16s7.163-16 16-16c4.418 0 8.418 1.791 11.313 4.687l4.687-4.687v12z"
@@ -92,6 +61,7 @@ export default {
     },
     data() {
         return {
+            canvas: "",
             canvasLongDimension: "",
             canvasShortDimension: "",
             portraitCanvasLongDimension: "",
@@ -110,28 +80,40 @@ export default {
     },
     mounted() {
         this.getCanvasInfo()
+        this.getCanvas()
         this.getImageInfo()
         this.setOrientation()
-        this.getFrameInfo()
-        this.reflectCurrentImage()
     },
-    updated() {},
-    methods: {
-        reflectCurrentImage() {
-            let obj = this.$refs.cldImage.transformations.find(
-                (transformation) => "overlay" in transformation
-            )
-            this.$set(obj, "overlay", this.image.public_id.replace("/", ":"))
+    updated() {
+        this.getCanvasWidth()
+    },
+    computed: {
+        canvasStyles() {
+            return {
+                position: "relative",
+                backgroundColor: "#fff",
+                border: "1px solid #666",
+            }
         },
+        imageStyles() {
+            return {
+                backgroundColor: "#fff",
+                objectFit: this.imageCrop,
+                position: "absolute",
+                zIndex: 1000,
+            }
+        },
+    },
+    methods: {
         // Takes the Print Size info from the Product Size select dropdown.
         getCanvasInfo() {
-            this.$root.processingImage = true
             let size = document.querySelector("select#size")
-            size.addEventListener("change", (event) => {
-                this.$root.processingImage = true
+            size.addEventListener("change", () => {
                 this.getCanvasInfo()
+                this.getCanvas()
                 this.getImageInfo()
                 this.setOrientation()
+                console.log(this.canvasProportion)
             })
             this.widthHeight = size.selectedOptions[0].value.split("x")
             this.longInch = parseInt(this.widthHeight[1])
@@ -143,9 +125,40 @@ export default {
             this.canvasProportion =
                 this.canvasShortDimension / this.canvasLongDimension
         },
+        getCanvas() {
+            switch (this.canvasProportion) {
+                case 0.714:
+                    this.canvas =
+                        "http://gray-market-editions.local/wp-content/uploads/2020/06/714.png"
+                    break
+                case 0.786:
+                    this.canvas =
+                        "http://gray-market-editions.local/wp-content/uploads/2020/06/786.png"
+                    break
+                case 0.8:
+                    this.canvas =
+                        "http://gray-market-editions.local/wp-content/uploads/2020/06/800.png"
+                    break
+                case 0.833:
+                    this.canvas =
+                        "http://gray-market-editions.local/wp-content/uploads/2020/06/833.png"
+                    break
+
+                default:
+                    this.canvas =
+                        "http://gray-market-editions.local/wp-content/uploads/2020/06/800.png"
+            }
+        },
+        getCanvasWidth() {
+            window.addEventListener("resize", function() {
+                this.modHeight = document.querySelector("#canvas").offsetWidth
+            })
+        },
         getImageInfo() {
             // If LANDSCAPE.
-            if (this.image.width > this.image.height) {
+            if (
+                this.image.editor_image.width > this.image.editor_image.height
+            ) {
                 this.portrait = false
                 this.dpiCheck()
                 // If PORTRAIT.
@@ -161,42 +174,22 @@ export default {
                     this.canvasShortDimension / 2
                 )
                 this.imageProportion = (
-                    this.image.width / this.image.height
+                    this.image.editor_image.width /
+                    this.image.editor_image.height
                 ).toFixed(4)
                 this.imageLongDimension = 500
                 this.imageShortDimension = Math.floor(
                     this.imageLongDimension * this.imageProportion
                 )
-                let obj = this.$refs.cldImage.transformations.find(
-                    (transformation) => "width" in transformation
-                )
-                this.$set(obj, "width", this.portraitCanvasShortDimension)
-                this.$set(obj, "height", this.portraitCanvasLongDimension)
-
-                let obj2 = this.$refs.cldImage.transformations.find(
-                    (transformation) => "overlay" in transformation
-                )
-                this.$set(obj2, "width", this.imageShortDimension)
-                this.$set(obj2, "height", this.imageLongDimension)
             } else {
                 //   Landscape
-                this.imageProportion = this.image.height / this.image.width
+                this.imageProportion =
+                    this.image.editor_image.height /
+                    this.image.editor_image.width
                 this.imageLongDimension = this.canvasLongDimension
                 this.imageShortDimension = Math.floor(
                     this.canvasLongDimension * this.imageProportion
                 )
-                // set Canvas & Image to Landscape.
-                let obj = this.$refs.cldImage.transformations.find(
-                    (transformation) => "width" in transformation
-                )
-                this.$set(obj, "height", this.canvasShortDimension)
-                this.$set(obj, "width", this.canvasLongDimension)
-
-                let obj2 = this.$refs.cldImage.transformations.find(
-                    (transformation) => "overlay" in transformation
-                )
-                this.$set(obj2, "width", this.imageLongDimension)
-                this.$set(obj2, "height", this.imageShortDimension)
             }
         },
         switchOrientation() {
@@ -206,28 +199,15 @@ export default {
                 this.canvasShortDimension = Math.round(
                     parseInt(this.widthHeight[0]) * this.canvasMultiplier
                 )
-
-                let obj = this.$refs.cldImage.transformations.find(
-                    (transformation) => "width" in transformation
-                )
-                this.$set(obj, "width", this.canvasLongDimension)
-                this.$set(obj, "height", this.canvasShortDimension)
             } else {
                 this.portrait = true
                 this.portraitCanvasLongDimension = this.canvasLongDimension / 2
                 this.portraitCanvasShortDimension = Math.floor(
                     this.canvasShortDimension / 2
                 )
-
-                let obj = this.$refs.cldImage.transformations.find(
-                    (transformation) => "width" in transformation
-                )
-                this.$set(obj, "width", this.portraitCanvasShortDimension)
-                this.$set(obj, "height", this.portraitCanvasLongDimension)
             }
         },
         setFullFrame() {
-            this.$root.processingImage = true
             if (false === this.fullFrame) {
                 this.fullFrame = true
                 if (true === this.portrait) {
@@ -235,23 +215,11 @@ export default {
                     this.imageShortDimension = this.portraitCanvasShortDimension
 
                     this.imageCrop = "fill"
-                    let obj2 = this.$refs.cldImage.transformations.find(
-                        (transformation) => "overlay" in transformation
-                    )
-                    this.$set(obj2, "height", this.imageLongDimension)
-                    this.$set(obj2, "width", this.imageShortDimension)
-                    this.$set(obj2, "crop", this.imageCrop)
                 } else {
                     this.imageLongDimension = this.canvasLongDimension
                     this.imageShortDimension = this.canvasShortDimension
 
                     this.imageCrop = "fill"
-                    let obj2 = this.$refs.cldImage.transformations.find(
-                        (transformation) => "overlay" in transformation
-                    )
-                    this.$set(obj2, "height", this.imageShortDimension)
-                    this.$set(obj2, "width", this.imageLongDimension)
-                    this.$set(obj2, "crop", this.imageCrop)
                 }
             } else {
                 this.fullFrame = false
@@ -262,41 +230,25 @@ export default {
                     )
 
                     this.imageCrop = "fit"
-                    let obj2 = this.$refs.cldImage.transformations.find(
-                        (transformation) => "overlay" in transformation
-                    )
-                    this.$set(obj2, "height", this.imageLongDimension)
-                    this.$set(obj2, "width", this.imageShortDimension)
-                    this.$set(obj2, "crop", this.imageCrop)
                 } else {
                     this.imageLongDimension = this.canvasLongDimension
                     this.imageShortDimension = Math.floor(
                         this.canvasLongDimension * this.imageProportion
                     )
                     this.imageCrop = "fit"
-                    let obj2 = this.$refs.cldImage.transformations.find(
-                        (transformation) => "overlay" in transformation
-                    )
-                    this.$set(obj2, "height", this.imageShortDimension)
-                    this.$set(obj2, "width", this.imageLongDimension)
-                    this.$set(obj2, "crop", this.imageCrop)
                 }
             }
         },
         //   Set and Reflect Angle
         setAngle() {
-            this.$root.processingImage = true
             this.angle = this.angle === 270 ? 0 : this.angle + 90
             this.reflectAngle()
         },
-        reflectAngle() {
-            let obj = this.$refs.cldImage.transformations.find(
-                (transformation) => "angle" in transformation
-            )
-            this.$set(obj, "angle", this.angle)
-        },
+
         dpiCheck() {
-            this.imageDPI = Math.round(this.image.width / this.longInch)
+            this.imageDPI = Math.round(
+                this.image.editor_image.width / this.longInch
+            )
             parseInt(this.imageDPI)
             if (200 > this.imageDPI) {
                 this.dpiWarning = true
@@ -305,8 +257,6 @@ export default {
             }
         },
         setBorder(border) {
-            this.$root.processingImage = true
-
             let dpi = 1000 / this.longInch
 
             switch (border) {
@@ -330,11 +280,6 @@ export default {
                     border = 0
             }
             this.border = border + "px_solid_rgb:ffffff"
-
-            let obj2 = this.$refs.cldImage.transformations.find(
-                (transformation) => "overlay" in transformation
-            )
-            this.$set(obj2, "border", this.border)
         },
     },
 }
