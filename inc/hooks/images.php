@@ -13,6 +13,7 @@ add_filter('jpeg_quality', function () {
 // Specify MIME types
 add_filter('upload_mimes', function ($mimes) {
     // TODO
+    return $mimes;
 });
 
 // Mutate $sizes to return only needed images
