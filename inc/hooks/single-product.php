@@ -44,7 +44,7 @@ add_filter('woocommerce_product_tabs', function ( $array ) {
 			'title'    => ucfirst( $option ) . ' Options',
 			'priority' => $order++,
 			'callback' => function ( $tab, $context ) {
-				require BB_TEMPLATES_PATH . 'tab.php';
+				require GME_TEMPLATES_PATH . 'tab.php';
 			},
 		];
 	}

@@ -6,5 +6,5 @@ add_action('woocommerce_before_order_itemmeta', function ($item_id, $item, $prod
         return;
     }
 
-    require BB_TEMPLATES_PATH . 'gme-image-mini-grid.php';
+    require GME_TEMPLATES_PATH . 'gme-image-mini-grid.php';
 }, 10, 3);
