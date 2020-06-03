@@ -1,19 +1,5 @@
 import Vue from "vue"
-import CloudinaryCore from "cloudinary-core"
 import EditorComponent from "./components/EditorComponent.vue"
-import Cloudinary, { CldImage, CldTransformation } from "cloudinary-vue"
-
-Vue.prototype.$cloudinaryCore = new CloudinaryCore.Cloudinary({
-    cloud_name: "flaunt-your-site",
-    secure: true,
-})
-
-Vue.use(Cloudinary, {
-    configuration: {
-        cloudName: "flaunt-your-site",
-    },
-    components: [CldImage, CldTransformation],
-})
 
 Vue.component("editor-component", EditorComponent)
 
@@ -21,48 +7,15 @@ const app = new Vue({
     el: "#vue-app",
     data() {
         return {
-            currentImage: {},
             images: [],
-            cloudinaryImages: [],
+            currentImage: {},
             processingImage: false,
         }
     },
     mounted() {
-        window.cloudinaryOnLoad = () => {
-            this.processingImage = false
-        }
-
         this.infoLinks()
     },
     methods: {
-        uploadWidget() {
-            var myWidget = cloudinary.createUploadWidget(
-                {
-                    cloudName: "flaunt-your-site",
-                    uploadPreset: "ptv4bkw2",
-                    showPoweredBy: false,
-                    sources: ["local"],
-                },
-                (error, result) => {
-                    if (!error && result && result.event === "success") {
-                        // Push images, plus append custom 'gme_final_url'
-                        // prop to object for edit tracking
-                        this.cloudinaryImages.push({
-                            ...result.info,
-                            gme_final_url:
-                                result.info.secure_url || result.info.url,
-                        })
-                    }
-
-                    if (error) {
-                        console.log("Cloudinary upload error")
-                        console.log(error)
-                    }
-                }
-            )
-
-            myWidget.open()
-        },
         infoLinks() {
             let labels = document.querySelectorAll(".variations .label > label")
             for (let i = 0; i < labels.length; i++) {
@@ -101,7 +54,7 @@ const app = new Vue({
     },
     computed: {
         finalUrls() {
-            // const urls = this.cloudinaryImages.map((image) => image.gme_final_url);
+            // const urls = this.images.map((image) => image.gme_final_url);
             // return JSON.stringify(urls);
         },
     },

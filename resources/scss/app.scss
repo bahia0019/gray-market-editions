@@ -47,23 +47,23 @@ img {
     }
 }
 
-/* Cloudinary mini grid */
-.cloudinary-mini-grid {
+/* GME mini grid */
+.gme-image-mini-grid {
     margin-top: 1rem;
 }
 
-.cloudinary-mini-grid__title {
+.gme-image-mini-grid__title {
     font-weight: bold;
     color: gray;
     margin-bottom: 0.1rem;
 }
 
-.cloudinary-mini-grid__grid {
+.gme-image-mini-grid__grid {
     display: grid;
     grid-gap: 1rem;
     grid-template-columns: repeat(4, 1fr);
 }
 
-.cloudinary-mini-grid__image {
+.gme-image-mini-grid__image {
     width: 100%;
 }
