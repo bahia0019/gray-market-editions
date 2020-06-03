@@ -7,6 +7,16 @@
             }"
         >
             <img
+                v-if="portrait"
+                :class="{ scale: scale }"
+                :width="imageShortDimension"
+                :height="imageLongDimension"
+                :style="imageStyles"
+                :src="image.editor_image.url"
+            />
+            <img
+                v-else
+                :class="{ scale: scale }"
                 :width="imageLongDimension"
                 :height="imageShortDimension"
                 :style="imageStyles"
@@ -26,10 +36,10 @@
             <edit-tools
                 :fullFrame="fullFrame"
                 @fullFrameClick="setFullFrame"
-                @setBorder="setBorder"
+                @setBorder="setBorders"
                 :portrait="portrait"
-                @switchOrientation="switchOrientation"
-                @angleClick="setAngle"
+                @toggleOrientation="toggleOrientation"
+                @angleClick="rotate"
             ></edit-tools>
         </div>
 
@@ -56,6 +66,7 @@ export default {
         return {
             canvasLongDimension: "",
             canvasShortDimension: "",
+            border: "",
             borderTop: "",
             borderRight: "",
             borderBottom: "",
@@ -64,7 +75,7 @@ export default {
             portraitCanvasShortDimension: "",
             imageLongDimension: "",
             imageShortDimension: "",
-            imageCrop: "",
+            scaleFactor: "",
             imageProportion: "",
             imageDPI: "",
             dpiWarning: false,
@@ -74,10 +85,10 @@ export default {
         }
     },
     mounted() {
-        this.getCanvasInfo()
         this.getImageInfo()
         this.setOrientation()
-        this.getPadding()
+        this.setBorders()
+        this.dpiCheck()
     },
     updated() {},
     computed: {
@@ -85,24 +96,25 @@ export default {
             return {
                 backgroundColor: "#fff",
                 border: "1px solid #666",
-                objectFit: this.imageCrop,
                 position: "",
                 paddingTop: this.borderTop + "%",
                 paddingRight: this.borderRight + "%",
                 paddingBottom: this.borderBottom + "%",
                 paddingLeft: this.borderLeft + "%",
+                transform: `scale(${this.scaleFactor})`,
+                transform: `rotate(${this.angle}deg)`,
             }
         },
     },
     methods: {
         // Takes the Print Size info from the Product Size select dropdown.
-        getCanvasInfo() {
+        getImageInfo() {
             let size = document.querySelector("select#size")
             size.addEventListener("change", () => {
-                this.getCanvasInfo()
                 this.getImageInfo()
                 this.setOrientation()
-                this.getPadding()
+                this.setBorders()
+                this.dpiCheck()
             })
             this.widthHeight = size.selectedOptions[0].value.split("x")
             this.longInch = parseInt(this.widthHeight[1])
@@ -114,35 +126,24 @@ export default {
             this.canvasProportion =
                 this.canvasShortDimension / this.canvasLongDimension
         },
-        getImageInfo() {
-            // If LANDSCAPE.
-            if (
-                this.image.editor_image.width > this.image.editor_image.height
-            ) {
-                this.portrait = false
-                this.dpiCheck()
-                // If PORTRAIT.
-            } else {
-                this.portrait = true
-            }
-        },
         setOrientation() {
-            if (true === this.portrait) {
+            if (
+                this.image.editor_image.height > this.image.editor_image.width
+            ) {
+                this.portrait = true
                 // Portrait.
-                this.portraitCanvasLongDimension = this.canvasLongDimension / 2
-                this.portraitCanvasShortDimension = Math.floor(
-                    this.canvasShortDimension / 2
-                )
                 this.imageProportion = (
                     this.image.editor_image.width /
                     this.image.editor_image.height
                 ).toFixed(4)
+
                 this.imageLongDimension = 500
                 this.imageShortDimension = Math.floor(
                     this.imageLongDimension * this.imageProportion
                 )
             } else {
-                //   Landscape
+                // Landscape
+                this.portrait = false
                 this.imageProportion =
                     this.image.editor_image.height /
                     this.image.editor_image.width
@@ -152,22 +153,20 @@ export default {
                 )
             }
         },
-        getPadding() {
-            this.padding =
-                (this.canvasShortDimension - this.imageShortDimension) / 2 / 2
-        },
-        switchOrientation() {
+        toggleOrientation() {
             if (true === this.portrait) {
+                //Set -> Landscape
                 this.portrait = false
-                this.canvasLongDimension = 1000
-                this.canvasShortDimension = Math.round(
-                    parseInt(this.widthHeight[0]) * this.canvasMultiplier
+                this.imageLongDimension = this.canvasLongDimension
+                this.imageShortDimension = Math.floor(
+                    this.canvasLongDimension * this.imageProportion
                 )
             } else {
+                //Set -> Portrait
                 this.portrait = true
-                this.portraitCanvasLongDimension = this.canvasLongDimension / 2
-                this.portraitCanvasShortDimension = Math.floor(
-                    this.canvasShortDimension / 2
+                this.imageLongDimension = 500
+                this.imageShortDimension = Math.floor(
+                    this.imageLongDimension * this.imageProportion
                 )
             }
         },
@@ -175,38 +174,21 @@ export default {
             if (false === this.fullFrame) {
                 this.fullFrame = true
                 if (true === this.portrait) {
-                    this.imageLongDimension = this.portraitCanvasLongDimension
-                    this.imageShortDimension = this.portraitCanvasShortDimension
-
-                    this.imageCrop = "fill"
+                    this.scaleFactor =
+                        this.portraitCanvasShortDimension /
+                        this.imageShortDimension
                 } else {
-                    this.imageLongDimension = this.canvasLongDimension
-                    this.imageShortDimension = this.canvasShortDimension
-
-                    this.imageCrop = "fill"
+                    this.scaleFactor =
+                        this.canvasShortDimension / this.imageShortDimension //GOOD!
                 }
             } else {
                 this.fullFrame = false
-                if (true === this.portrait) {
-                    this.imageLongDimension = this.portraitCanvasLongDimension
-                    this.imageShortDimension = Math.floor(
-                        this.portraitCanvasLongDimension * this.imageProportion
-                    )
-
-                    this.imageCrop = "fit"
-                } else {
-                    this.imageLongDimension = this.canvasLongDimension
-                    this.imageShortDimension = Math.floor(
-                        this.canvasLongDimension * this.imageProportion
-                    )
-                    this.imageCrop = "fit"
-                }
+                this.scaleFactor = 1
             }
         },
         //   Set and Reflect Angle
-        setAngle() {
+        rotate() {
             this.angle = this.angle === 270 ? 0 : this.angle + 90
-            this.reflectAngle()
         },
 
         dpiCheck() {
@@ -220,37 +202,61 @@ export default {
                 this.dpiWarning = false
             }
         },
-        setBorder(border) {
-            switch (border) {
-                case "zero":
-                    border = 0
-                    break
-                case "quarterInch":
-                    border =
-                        0.25 * (this.canvasLongDimension / this.longInch) * 0.1
-                    break
-                case "halfInch":
-                    border =
-                        0.5 * (this.canvasLongDimension / this.longInch) * 0.1
-                    break
-                case "threeQuarterInch":
-                    border =
-                        0.75 * (this.canvasLongDimension / this.longInch) * 0.1
-                    break
-                case "inch":
-                    border =
-                        1 * (this.canvasLongDimension / this.longInch) * 0.1
-                    break
+        setBorders(border) {
+            if (!border) {
+                //if no borders are selected, checks for difference in aspect ratio.
+                if (true === this.portrait) {
+                    this.borderTop = this.borderBottom =
+                        ((this.portraitCanvasLongDimension -
+                            this.imageLongDimension) /
+                            2 /
+                            this.portraitCanvasLongDimension) *
+                        100
+                } else {
+                    this.borderTop = this.borderBottom =
+                        ((this.canvasProportion - this.imageProportion) / 2) *
+                        100 //GOOD!
+                }
+            } else {
+                //if any borders are selected
+                switch (border) {
+                    case "zero":
+                        border = 0
+                        break
+                    case "quarterInch":
+                        border =
+                            0.25 *
+                            (this.canvasLongDimension / this.longInch) *
+                            0.1
+                        break
+                    case "halfInch":
+                        border =
+                            0.5 *
+                            (this.canvasLongDimension / this.longInch) *
+                            0.1
+                        break
+                    case "threeQuarterInch":
+                        border =
+                            0.75 *
+                            (this.canvasLongDimension / this.longInch) *
+                            0.1
+                        break
+                    case "inch":
+                        border =
+                            1 * (this.canvasLongDimension / this.longInch) * 0.1
+                        break
 
-                default:
-                    border = 0
+                    default:
+                        border = 0
+                }
+                this.border = border
+                this.borderTop = this.border
+                this.borderRight = this.border
+                this.borderBottom = this.border
+                this.borderLeft = this.border
             }
-            this.border = border
-            this.borderTop = this.border
-            this.borderRight = this.border
-            this.borderBottom = this.border
-            this.borderLeft = this.border
         },
+
         getFrameInfo() {
             let frame = document.querySelector("select#frame")
             let regex = /[!"#$%&'()*+,./:;<=>?@[\]^_`{|}~]/g

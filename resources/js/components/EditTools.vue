@@ -55,7 +55,7 @@
             </div>
         </div>
 
-        <button id="orientation" @click="$emit('switchOrientation')">
+        <button id="orientation" @click="$emit('toggleOrientation')">
             <!-- If image is Portrait, show Landscape icon -->
             <svg v-if="portrait" id="icon-landscape" viewBox="0 0 32 32">
                 <path
