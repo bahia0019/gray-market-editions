@@ -17,5 +17,5 @@ add_action('woocommerce_after_cart_item_name', function ($cart_item, $cart_item_
 
     $image_urls = $cart_item['gme_image_urls'];
 
-    require BB_TEMPLATES_PATH . 'gme-image-mini-grid.php';
+    require GME_TEMPLATES_PATH . 'gme-image-mini-grid.php';
 }, 10, 2);
