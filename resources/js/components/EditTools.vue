@@ -36,17 +36,17 @@
             </button>
 
             <div class="btn-group" v-if="!isHidden">
-                <button @click="$emit('setBorder', 'zero')">0</button>
-                <button @click="$emit('setBorder', 'quarterInch')">
+                <button @click="$emit('setBorder', 0)">0</button>
+                <button @click="$emit('setBorder', 0.25)">
                     1/4"
                 </button>
-                <button @click="$emit('setBorder', 'halfInch')">
+                <button @click="$emit('setBorder', 0.5)">
                     1/2"
                 </button>
-                <button @click="$emit('setBorder', 'threeQuarterInch')">
+                <button @click="$emit('setBorder', 0.75)">
                     3/4"
                 </button>
-                <button @click="$emit('setBorder', 'inch')">1"</button>
+                <button @click="$emit('setBorder', 1)">1"</button>
             </div>
 
             <div class="tool-tip" v-if="isHidden">
