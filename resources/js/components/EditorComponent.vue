@@ -1,13 +1,16 @@
 <template>
-  <div>
+  <div class="wrapper">
+    <image-upload
+      :show="$root.showUploader"
+      :is-overlay="$root.images.length ? true : false"
+    ></image-upload>
+
     <image-stage
       v-for="image in $root.images"
       :key="image.id"
       :image="image"
       v-show="image.id === $root.currentImage.id"
     ></image-stage>
-
-    <image-upload></image-upload>
 
     <image-grid></image-grid>
 
@@ -37,4 +40,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.wrapper {
+  position: relative;
+}
+</style>

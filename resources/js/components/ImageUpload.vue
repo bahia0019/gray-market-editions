@@ -1,6 +1,6 @@
 <template>
-  <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
-    <div class="dropbox">
+  <form enctype="multipart/form-data" novalidate v-if="show">
+    <div class="dropbox" :class="{'is-overlay': isOverlay}">
       <input
         type="file"
         multiple
@@ -9,13 +9,22 @@
         accept="image/*"
         class="input-file"
       />
-      <div class="dropbox__body" v-if="isInitial">
+      <div
+        class="dropbox__body"
+        :class="{'is-overlay': isOverlay}"
+        v-if="!isSaving"
+      >
         <svg viewBox="0 0 32 32">
           <path
             d="M26 2h-20l-6 6v21c0 0.552 0.448 1 1 1h30c0.552 0 1-0.448 1-1v-21l-6-6zM20 20v6h-8v-6h-6l10-8 10 8h-6zM4.828 6l2-2h18.343l2 2h-22.343z"
           />
         </svg>
-        <span>Upload Images</span>
+        <span>{{ isOverlay ? 'Upload More' : 'Upload Images' }}</span>
+        <span
+          class="cancel"
+          @click="$root.showUploader = false"
+          v-if="isOverlay"
+        >cancel</span>
       </div>
       <p v-if="isSaving">Uploading {{ fileCount }} files...</p>
     </div>
@@ -31,12 +40,25 @@ const STATUS_SUCCESS = 2;
 const STATUS_FAILED = 3;
 
 export default {
+  props: {
+    show: {
+      type: Boolean,
+      default: true
+    },
+    isOverlay: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       uploadedFiles: [],
       uploadError: null,
       currentStatus: null
     };
+  },
+  mounted() {
+    this.reset();
   },
   computed: {
     isInitial() {
@@ -91,22 +113,22 @@ export default {
       const url = `${GME_DATA.ajax_url}?action=gme_ajax_image_upload&nonce=${GME_DATA.nonce}`;
 
       return axios.post(url, formData).then(({ data }) => {
-        this.$root.images = data.map(data => data);
+        this.$root.images.push(...data.map(data => data));
 
         if (this.$root.images.length && !this.$root.currentImage.id) {
           this.$root.currentImage = this.$root.images[0];
         }
+
+        this.$root.showUploader = false;
       });
     }
-  },
-  mounted() {
-    this.reset();
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .dropbox {
+  position: relative;
   outline: 2px dashed #ffffff;
   outline-offset: -10px;
   background: #999999;
@@ -117,18 +139,30 @@ export default {
   justify-content: center;
   align-items: center;
 
+  &.is-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+  }
+
   .dropbox__body {
     display: flex;
     flex-direction: column;
     align-items: center;
 
     svg {
-      width: 50px;
+      width: 40px;
       fill: #ffffff;
     }
 
     span {
       margin-top: 5px;
+    }
+
+    .cancel {
+      z-index: 9999;
+      padding: 5px 20px;
     }
   }
 }

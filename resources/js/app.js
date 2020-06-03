@@ -9,6 +9,7 @@ const app = new Vue({
         return {
             images: [],
             currentImage: {},
+            showUploader: true,
             processingImage: false,
         }
     },
