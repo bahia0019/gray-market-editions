@@ -7,13 +7,16 @@
             }"
         >
             <img
-                id="canvas"
-                :src="canvas"
-                :style="canvasStyles"
-                :width="canvasLongDimension"
-                :height="canvasShortDimension"
+                v-if="portrait"
+                :class="{ scale: scale }"
+                :width="imageShortDimension"
+                :height="imageLongDimension"
+                :style="imageStyles"
+                :src="image.editor_image.url"
             />
             <img
+                v-else
+                :class="{ scale: scale }"
                 :width="imageLongDimension"
                 :height="imageShortDimension"
                 :style="imageStyles"
@@ -33,10 +36,10 @@
             <edit-tools
                 :fullFrame="fullFrame"
                 @fullFrameClick="setFullFrame"
-                @setBorder="setBorder"
+                @setBorder="setBorders"
                 :portrait="portrait"
-                @switchOrientation="switchOrientation"
-                @angleClick="setAngle"
+                @toggleOrientation="toggleOrientation"
+                @angleClick="rotate"
             ></edit-tools>
         </div>
 
@@ -61,59 +64,57 @@ export default {
     },
     data() {
         return {
-            canvas: "",
             canvasLongDimension: "",
             canvasShortDimension: "",
+            border: "",
+            borderTop: "",
+            borderRight: "",
+            borderBottom: "",
+            borderLeft: "",
             portraitCanvasLongDimension: "",
             portraitCanvasShortDimension: "",
             imageLongDimension: "",
             imageShortDimension: "",
-            imageCrop: "",
+            scaleFactor: "",
             imageProportion: "",
             imageDPI: "",
             dpiWarning: false,
             fullFrame: false,
             portrait: false,
             angle: 0,
-            border: "",
         }
     },
     mounted() {
-        this.getCanvasInfo()
-        this.getCanvas()
         this.getImageInfo()
         this.setOrientation()
+        this.setBorders()
+        this.dpiCheck()
     },
-    updated() {
-        this.getCanvasWidth()
-    },
+    updated() {},
     computed: {
-        canvasStyles() {
-            return {
-                position: "relative",
-                backgroundColor: "#fff",
-                border: "1px solid #666",
-            }
-        },
         imageStyles() {
             return {
                 backgroundColor: "#fff",
-                objectFit: this.imageCrop,
-                position: "absolute",
-                zIndex: 1000,
+                border: "1px solid #666",
+                position: "",
+                paddingTop: this.borderTop + "%",
+                paddingRight: this.borderRight + "%",
+                paddingBottom: this.borderBottom + "%",
+                paddingLeft: this.borderLeft + "%",
+                transform: `scale(${this.scaleFactor})`,
+                transform: `rotate(${this.angle}deg)`,
             }
         },
     },
     methods: {
         // Takes the Print Size info from the Product Size select dropdown.
-        getCanvasInfo() {
+        getImageInfo() {
             let size = document.querySelector("select#size")
             size.addEventListener("change", () => {
-                this.getCanvasInfo()
-                this.getCanvas()
                 this.getImageInfo()
                 this.setOrientation()
-                console.log(this.canvasProportion)
+                this.setBorders()
+                this.dpiCheck()
             })
             this.widthHeight = size.selectedOptions[0].value.split("x")
             this.longInch = parseInt(this.widthHeight[1])
@@ -125,64 +126,24 @@ export default {
             this.canvasProportion =
                 this.canvasShortDimension / this.canvasLongDimension
         },
-        getCanvas() {
-            switch (this.canvasProportion) {
-                case 0.714:
-                    this.canvas =
-                        "http://gray-market-editions.local/wp-content/uploads/2020/06/714.png"
-                    break
-                case 0.786:
-                    this.canvas =
-                        "http://gray-market-editions.local/wp-content/uploads/2020/06/786.png"
-                    break
-                case 0.8:
-                    this.canvas =
-                        "http://gray-market-editions.local/wp-content/uploads/2020/06/800.png"
-                    break
-                case 0.833:
-                    this.canvas =
-                        "http://gray-market-editions.local/wp-content/uploads/2020/06/833.png"
-                    break
-
-                default:
-                    this.canvas =
-                        "http://gray-market-editions.local/wp-content/uploads/2020/06/800.png"
-            }
-        },
-        getCanvasWidth() {
-            window.addEventListener("resize", function() {
-                this.modHeight = document.querySelector("#canvas").offsetWidth
-            })
-        },
-        getImageInfo() {
-            // If LANDSCAPE.
-            if (
-                this.image.editor_image.width > this.image.editor_image.height
-            ) {
-                this.portrait = false
-                this.dpiCheck()
-                // If PORTRAIT.
-            } else {
-                this.portrait = true
-            }
-        },
         setOrientation() {
-            if (true === this.portrait) {
+            if (
+                this.image.editor_image.height > this.image.editor_image.width
+            ) {
+                this.portrait = true
                 // Portrait.
-                this.portraitCanvasLongDimension = this.canvasLongDimension / 2
-                this.portraitCanvasShortDimension = Math.floor(
-                    this.canvasShortDimension / 2
-                )
                 this.imageProportion = (
                     this.image.editor_image.width /
                     this.image.editor_image.height
                 ).toFixed(4)
+
                 this.imageLongDimension = 500
                 this.imageShortDimension = Math.floor(
                     this.imageLongDimension * this.imageProportion
                 )
             } else {
-                //   Landscape
+                // Landscape
+                this.portrait = false
                 this.imageProportion =
                     this.image.editor_image.height /
                     this.image.editor_image.width
@@ -192,18 +153,20 @@ export default {
                 )
             }
         },
-        switchOrientation() {
+        toggleOrientation() {
             if (true === this.portrait) {
+                //Set -> Landscape
                 this.portrait = false
-                this.canvasLongDimension = 1000
-                this.canvasShortDimension = Math.round(
-                    parseInt(this.widthHeight[0]) * this.canvasMultiplier
+                this.imageLongDimension = this.canvasLongDimension
+                this.imageShortDimension = Math.floor(
+                    this.canvasLongDimension * this.imageProportion
                 )
             } else {
+                //Set -> Portrait
                 this.portrait = true
-                this.portraitCanvasLongDimension = this.canvasLongDimension / 2
-                this.portraitCanvasShortDimension = Math.floor(
-                    this.canvasShortDimension / 2
+                this.imageLongDimension = 500
+                this.imageShortDimension = Math.floor(
+                    this.imageLongDimension * this.imageProportion
                 )
             }
         },
@@ -211,38 +174,21 @@ export default {
             if (false === this.fullFrame) {
                 this.fullFrame = true
                 if (true === this.portrait) {
-                    this.imageLongDimension = this.portraitCanvasLongDimension
-                    this.imageShortDimension = this.portraitCanvasShortDimension
-
-                    this.imageCrop = "fill"
+                    this.scaleFactor =
+                        this.portraitCanvasShortDimension /
+                        this.imageShortDimension
                 } else {
-                    this.imageLongDimension = this.canvasLongDimension
-                    this.imageShortDimension = this.canvasShortDimension
-
-                    this.imageCrop = "fill"
+                    this.scaleFactor =
+                        this.canvasShortDimension / this.imageShortDimension //GOOD!
                 }
             } else {
                 this.fullFrame = false
-                if (true === this.portrait) {
-                    this.imageLongDimension = this.portraitCanvasLongDimension
-                    this.imageShortDimension = Math.floor(
-                        this.portraitCanvasLongDimension * this.imageProportion
-                    )
-
-                    this.imageCrop = "fit"
-                } else {
-                    this.imageLongDimension = this.canvasLongDimension
-                    this.imageShortDimension = Math.floor(
-                        this.canvasLongDimension * this.imageProportion
-                    )
-                    this.imageCrop = "fit"
-                }
+                this.scaleFactor = 1
             }
         },
         //   Set and Reflect Angle
-        setAngle() {
+        rotate() {
             this.angle = this.angle === 270 ? 0 : this.angle + 90
-            this.reflectAngle()
         },
 
         dpiCheck() {
@@ -256,30 +202,87 @@ export default {
                 this.dpiWarning = false
             }
         },
-        setBorder(border) {
-            let dpi = 1000 / this.longInch
+        setBorders(border) {
+            if (!border) {
+                //if no borders are selected, checks for difference in aspect ratio.
+                if (true === this.portrait) {
+                    this.borderTop = this.borderBottom =
+                        ((this.portraitCanvasLongDimension -
+                            this.imageLongDimension) /
+                            2 /
+                            this.portraitCanvasLongDimension) *
+                        100
+                } else {
+                    this.borderTop = this.borderBottom =
+                        ((this.canvasProportion - this.imageProportion) / 2) *
+                        100 //GOOD!
+                }
+            } else {
+                //if any borders are selected
+                switch (border) {
+                    case "zero":
+                        border = 0
+                        break
+                    case "quarterInch":
+                        border =
+                            0.25 *
+                            (this.canvasLongDimension / this.longInch) *
+                            0.1
+                        break
+                    case "halfInch":
+                        border =
+                            0.5 *
+                            (this.canvasLongDimension / this.longInch) *
+                            0.1
+                        break
+                    case "threeQuarterInch":
+                        border =
+                            0.75 *
+                            (this.canvasLongDimension / this.longInch) *
+                            0.1
+                        break
+                    case "inch":
+                        border =
+                            1 * (this.canvasLongDimension / this.longInch) * 0.1
+                        break
 
-            switch (border) {
-                case "zero":
-                    border = 0
-                    break
-                case "quarterInch":
-                    border = dpi * 0.25
-                    break
-                case "halfInch":
-                    border = dpi * 0.5
-                    break
-                case "threeQuarterInch":
-                    border = dpi * 0.75
-                    break
-                case "inch":
-                    border = dpi * 1
-                    break
-
-                default:
-                    border = 0
+                    default:
+                        border = 0
+                }
+                this.border = border
+                this.borderTop = this.border
+                this.borderRight = this.border
+                this.borderBottom = this.border
+                this.borderLeft = this.border
             }
-            this.border = border + "px_solid_rgb:ffffff"
+        },
+
+        getFrameInfo() {
+            let frame = document.querySelector("select#frame")
+            let regex = /[!"#$%&'()*+,./:;<=>?@[\]^_`{|}~]/g
+            let frameStyle
+            frame.addEventListener("change", (event) => {
+                frameStyle = frame.selectedOptions[0].value
+                    .toLowerCase()
+                    .replace(regex, "")
+                    .replace(/ +/g, "-")
+
+                switch (frameStyle) {
+                    case "black":
+                        this.$refs.frame.classList = "frame"
+                        this.$refs.frame.classList.add("frame-black", "active")
+                        break
+                    case "down-n-dirty":
+                        this.$refs.frame.classList = "frame"
+                        this.$refs.frame.classList.add(
+                            "frame-down-n-dirty",
+                            "active"
+                        )
+                        break
+                    default:
+                        this.$refs.frame.classList = "frame"
+                }
+            })
         },
     },
 }
