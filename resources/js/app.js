@@ -98,33 +98,6 @@ const app = new Vue({
                 })
             }
         },
-        getFrameInfo() {
-            let frame = document.querySelector("select#frame")
-            let regex = /[!"#$%&'()*+,./:;<=>?@[\]^_`{|}~]/g
-            let frameStyle
-            frame.addEventListener("change", (event) => {
-                frameStyle = frame.selectedOptions[0].value
-                    .toLowerCase()
-                    .replace(regex, "")
-                    .replace(/ +/g, "-")
-
-                switch (frameStyle) {
-                    case "black":
-                        this.$refs.frame.classList = "frame"
-                        this.$refs.frame.classList.add("frame-black", "active")
-                        break
-                    case "down-n-dirty":
-                        this.$refs.frame.classList = "frame"
-                        this.$refs.frame.classList.add(
-                            "frame-down-n-dirty",
-                            "active"
-                        )
-                        break
-                    default:
-                        this.$refs.frame.classList = "frame"
-                }
-            })
-        },
     },
     computed: {
         finalUrls() {

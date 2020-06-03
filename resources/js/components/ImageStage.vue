@@ -7,13 +7,6 @@
             }"
         >
             <img
-                id="canvas"
-                :src="canvas"
-                :style="canvasStyles"
-                :width="canvasLongDimension"
-                :height="canvasShortDimension"
-            />
-            <img
                 :width="imageLongDimension"
                 :height="imageShortDimension"
                 :style="imageStyles"
@@ -61,9 +54,12 @@ export default {
     },
     data() {
         return {
-            canvas: "",
             canvasLongDimension: "",
             canvasShortDimension: "",
+            borderTop: "",
+            borderRight: "",
+            borderBottom: "",
+            borderLeft: "",
             portraitCanvasLongDimension: "",
             portraitCanvasShortDimension: "",
             imageLongDimension: "",
@@ -75,32 +71,26 @@ export default {
             fullFrame: false,
             portrait: false,
             angle: 0,
-            border: "",
         }
     },
     mounted() {
         this.getCanvasInfo()
-        this.getCanvas()
         this.getImageInfo()
         this.setOrientation()
+        this.getPadding()
     },
-    updated() {
-        this.getCanvasWidth()
-    },
+    updated() {},
     computed: {
-        canvasStyles() {
-            return {
-                position: "relative",
-                backgroundColor: "#fff",
-                border: "1px solid #666",
-            }
-        },
         imageStyles() {
             return {
                 backgroundColor: "#fff",
+                border: "1px solid #666",
                 objectFit: this.imageCrop,
-                position: "absolute",
-                zIndex: 1000,
+                position: "",
+                paddingTop: this.borderTop + "%",
+                paddingRight: this.borderRight + "%",
+                paddingBottom: this.borderBottom + "%",
+                paddingLeft: this.borderLeft + "%",
             }
         },
     },
@@ -110,10 +100,9 @@ export default {
             let size = document.querySelector("select#size")
             size.addEventListener("change", () => {
                 this.getCanvasInfo()
-                this.getCanvas()
                 this.getImageInfo()
                 this.setOrientation()
-                console.log(this.canvasProportion)
+                this.getPadding()
             })
             this.widthHeight = size.selectedOptions[0].value.split("x")
             this.longInch = parseInt(this.widthHeight[1])
@@ -124,35 +113,6 @@ export default {
             )
             this.canvasProportion =
                 this.canvasShortDimension / this.canvasLongDimension
-        },
-        getCanvas() {
-            switch (this.canvasProportion) {
-                case 0.714:
-                    this.canvas =
-                        "http://gray-market-editions.local/wp-content/uploads/2020/06/714.png"
-                    break
-                case 0.786:
-                    this.canvas =
-                        "http://gray-market-editions.local/wp-content/uploads/2020/06/786.png"
-                    break
-                case 0.8:
-                    this.canvas =
-                        "http://gray-market-editions.local/wp-content/uploads/2020/06/800.png"
-                    break
-                case 0.833:
-                    this.canvas =
-                        "http://gray-market-editions.local/wp-content/uploads/2020/06/833.png"
-                    break
-
-                default:
-                    this.canvas =
-                        "http://gray-market-editions.local/wp-content/uploads/2020/06/800.png"
-            }
-        },
-        getCanvasWidth() {
-            window.addEventListener("resize", function() {
-                this.modHeight = document.querySelector("#canvas").offsetWidth
-            })
         },
         getImageInfo() {
             // If LANDSCAPE.
@@ -191,6 +151,10 @@ export default {
                     this.canvasLongDimension * this.imageProportion
                 )
             }
+        },
+        getPadding() {
+            this.padding =
+                (this.canvasShortDimension - this.imageShortDimension) / 2 / 2
         },
         switchOrientation() {
             if (true === this.portrait) {
@@ -257,29 +221,62 @@ export default {
             }
         },
         setBorder(border) {
-            let dpi = 1000 / this.longInch
-
             switch (border) {
                 case "zero":
                     border = 0
                     break
                 case "quarterInch":
-                    border = dpi * 0.25
+                    border =
+                        0.25 * (this.canvasLongDimension / this.longInch) * 0.1
                     break
                 case "halfInch":
-                    border = dpi * 0.5
+                    border =
+                        0.5 * (this.canvasLongDimension / this.longInch) * 0.1
                     break
                 case "threeQuarterInch":
-                    border = dpi * 0.75
+                    border =
+                        0.75 * (this.canvasLongDimension / this.longInch) * 0.1
                     break
                 case "inch":
-                    border = dpi * 1
+                    border =
+                        1 * (this.canvasLongDimension / this.longInch) * 0.1
                     break
 
                 default:
                     border = 0
             }
-            this.border = border + "px_solid_rgb:ffffff"
+            this.border = border
+            this.borderTop = this.border
+            this.borderRight = this.border
+            this.borderBottom = this.border
+            this.borderLeft = this.border
+        },
+        getFrameInfo() {
+            let frame = document.querySelector("select#frame")
+            let regex = /[!"#$%&'()*+,./:;<=>?@[\]^_`{|}~]/g
+            let frameStyle
+            frame.addEventListener("change", (event) => {
+                frameStyle = frame.selectedOptions[0].value
+                    .toLowerCase()
+                    .replace(regex, "")
+                    .replace(/ +/g, "-")
+
+                switch (frameStyle) {
+                    case "black":
+                        this.$refs.frame.classList = "frame"
+                        this.$refs.frame.classList.add("frame-black", "active")
+                        break
+                    case "down-n-dirty":
+                        this.$refs.frame.classList = "frame"
+                        this.$refs.frame.classList.add(
+                            "frame-down-n-dirty",
+                            "active"
+                        )
+                        break
+                    default:
+                        this.$refs.frame.classList = "frame"
+                }
+            })
         },
     },
 }
