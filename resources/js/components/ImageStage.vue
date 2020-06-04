@@ -94,16 +94,13 @@ export default {
             frame: false,
             frameWidth: "",
             woodFrameWidth: "",
-        }
-        return {
             fin: {
+                dpi: "",
                 width: "",
                 height: "",
+                imageWidth: "",
+                imageHeight: "",
                 fullFrame: "",
-                borderTop: "",
-                borderRight: "",
-                borderBottom: "",
-                borderLeft: "",
                 angle: 0,
             },
         }
@@ -115,6 +112,7 @@ export default {
         this.setBorders()
         this.dpiCheck()
         this.getFrameInfo()
+        this.finalPrintOutput()
     },
     updated() {},
     computed: {
@@ -150,6 +148,7 @@ export default {
                 this.setCanvasOrientation()
                 this.setBorders()
                 this.dpiCheck()
+                this.finalPrintOutput()
             })
             this.widthHeight = size.selectedOptions[0].value.split("x")
             this.longInch = parseInt(this.widthHeight[1])
@@ -163,8 +162,11 @@ export default {
                 this.canvasShortDimension / this.canvasLongDimension
         },
         finalPrintOutput() {
-            this.fin.width = this.longInch * 200
-            this.fin.height = this.shortInch * 200
+            this.fin.dpi = 200
+            this.fin.width = this.longInch * this.fin.dpi
+            this.fin.height = this.shortInch * this.fin.dpi
+            this.fin.imageWidth = this.fin.width - this.fin.border
+            this.fin.imageHeight = this.fin.height - this.fin.border
         },
         setOrientation() {
             if (
@@ -254,6 +256,8 @@ export default {
             }
         },
         setBorders(border) {
+            this.fin.border = border * this.fin.dpi
+
             //Sets a 3/4" rabbit on frames (solely cosmetic for the editor).
             let frameRabbit = 0
             /**
