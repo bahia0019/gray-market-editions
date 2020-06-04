@@ -2,7 +2,7 @@
 
 // Display GME images below each item in order
 add_action('woocommerce_before_order_itemmeta', function ($item_id, $item, $product) {
-    if (!$image_urls = $item->get_meta('gme_image_urls')) {
+    if (!$gme_image_data = $item->get_meta('gme_image_data')) {
         return;
     }
 
