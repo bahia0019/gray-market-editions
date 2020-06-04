@@ -16,18 +16,16 @@ add_filter('woocommerce_quantity_input_args', function ($args, $product) {
 
 // Add hidden input field to bind to Vue data for capturing GME image URL's to send along with $_POST data
 add_action('woocommerce_after_variations_form', function () {
-    echo '<input type="hidden" name="gme_image_urls" v-model="finalUrls" />';
+    echo '<input type="hidden" name="gme_image_data" v-model="finData" />';
 });
 
-// Append GME image to cart item during 'add to cart'
+// Append GME image data to cart item during 'add to cart'
 add_filter('woocommerce_add_cart_item_data', function ($cart_item_data, $product_id, $variation_id, $quantity) {
-	if (!isset($_POST['gme_image_urls'])) {
+	if (empty($_POST['gme_image_data'])) {
 		return;
 	}
 
-    $urls = json_decode(stripslashes($_POST['gme_image_urls']), true);
-
-    $cart_item_data['gme_image_urls'] = $urls;
+	$cart_item_data['gme_image_data'] = json_decode(stripslashes($_POST['gme_image_data']), true);
 
     return $cart_item_data;
 }, 10, 4);

@@ -47,9 +47,15 @@ img {
     }
 }
 
+/* Vue helpers */
+[v-cloak] {
+    display: none;
+}
+
 /* GME mini grid */
-.gme-image-mini-grid {
+#gme-image-mini-grid {
     margin-top: 1rem;
+    width: 250px;
 }
 
 .gme-image-mini-grid__title {
@@ -66,4 +72,12 @@ img {
 
 .gme-image-mini-grid__image {
     width: 100%;
+}
+
+.gme-image-mini-grid__button {
+    margin-top: 1rem !important;
+}
+
+.gme-image-mini-grid__downloads {
+    margin-top: 0.5rem;
 }

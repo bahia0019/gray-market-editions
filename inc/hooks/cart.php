@@ -9,13 +9,26 @@ add_filter('woocommerce_add_to_cart_validation', function ($is_valid, $product_i
 
 // Display GME images below each cart item
 add_action('woocommerce_after_cart_item_name', function ($cart_item, $cart_item_key) {
-    if (!isset($cart_item['gme_image_urls'][0])) {
-        var_dump('No GME images found. Please address issue.');
-
+    if (!isset($cart_item['gme_image_data'][0])) {
         return;
     }
 
-    $image_urls = $cart_item['gme_image_urls'];
+    $gme_image_data = $cart_item['gme_image_data'];
 
-    require GME_TEMPLATES_PATH . 'gme-image-mini-grid.php';
+    require GME_TEMPLATES_PATH . 'gme-mini-grid.php';
 }, 10, 2);
+
+// Delete GME images if cart item is removed
+add_action('woocommerce_remove_cart_item', function ($cart_item_key) {
+    if (!$cart_data = WC()->cart->get_cart_item($cart_item_key)) {
+        return;
+    };
+
+    $gme_image_data = isset($cart_data['gme_image_data'])
+        ? $cart_data['gme_image_data']
+        : [];
+
+    foreach ($gme_image_data as $item) {
+        wp_delete_attachment($item['attachment_id'], true);
+    }
+});

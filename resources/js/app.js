@@ -58,5 +58,19 @@ const app = new Vue({
             // const urls = this.images.map((image) => image.gme_final_url);
             // return JSON.stringify(urls);
         },
+        finData() {
+            const data = this.images.map(image => {
+                return {
+                    attachment_id: image.id,
+                    transformations: {
+                        width: 800,
+                        height: 500,
+                        rotate: 90,
+                    }
+                }
+            });
+            
+            return JSON.stringify(data);
+        }
     },
 })
