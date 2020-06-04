@@ -39,8 +39,8 @@
                 :fullFrame="fullFrame"
                 @fullFrameClick="setFullFrame"
                 @setBorder="setBorders"
-                :portrait="portrait"
-                @toggleOrientation="toggleOrientation"
+                :canvasPortrait="canvasPortrait"
+                @toggleCanvasOrientation="toggleCanvasOrientation"
                 @angleClick="rotate"
             ></edit-tools>
         </div>
@@ -68,6 +68,8 @@ export default {
         return {
             canvasLongDimension: "",
             canvasShortDimension: "",
+            canvasWidth: "",
+            canvasHeight: "",
             border: "",
             borderTop: "",
             borderRight: "",
@@ -86,7 +88,8 @@ export default {
             imageDPI: "",
             dpiWarning: false,
             fullFrame: false,
-            portrait: false,
+            portrait: "",
+            canvasPortrait: "",
             angle: 0,
             frame: false,
         }
@@ -103,16 +106,18 @@ export default {
     mounted() {
         this.getImageInfo()
         this.setOrientation()
+        this.setCanvasOrientation()
         this.setBorders()
         this.dpiCheck()
         this.getFrameInfo()
+        console.log(this.finalPrint)
     },
     updated() {},
     computed: {
         imageStyles() {
             return {
-                height: this.height + "px",
-                width: this.width + "px",
+                // height: this.height + "px",
+                // width: this.width + "px",
                 position: "",
                 transform: `scale(${this.scaleFactor})`,
                 // transform: `rotate(${this.angle}deg)`,
@@ -122,6 +127,8 @@ export default {
             return {
                 border: "1px solid #666",
                 backgroundColor: "#fff",
+                width: this.canvasWidth,
+                height: this.canvasHeight,
                 paddingTop: this.borderTop + "%",
                 paddingRight: this.borderRight + "%",
                 paddingBottom: this.borderBottom + "%",
@@ -136,11 +143,15 @@ export default {
             size.addEventListener("change", () => {
                 this.getImageInfo()
                 this.setOrientation()
+                this.setCanvasOrientation()
                 this.setBorders()
                 this.dpiCheck()
+                console.log(this.finalPrint)
             })
             this.widthHeight = size.selectedOptions[0].value.split("x")
             this.longInch = parseInt(this.widthHeight[1])
+            this.shortInch = parseInt(this.widthHeight[0])
+            this.finalPrint = this.shortInch * 200 + "x" + this.longInch * 200
             this.canvasLongDimension = 1000
             this.canvasMultiplier = 1000 / parseInt(this.widthHeight[1])
             this.canvasShortDimension = Math.round(
@@ -176,21 +187,34 @@ export default {
                 )
             }
         },
-        toggleOrientation() {
+        setCanvasOrientation() {
             if (true === this.portrait) {
+                // Portrait
+                this.canvasPortrait = true
+                this.canvasWidth = this.canvasShortDimension / 2
+                this.canvasHeight = 500
+                console.log(this.canvasWidth + "&" + this.canvasHeight)
+            } else {
+                this.canvasPortrait = false
+                //Landscape
+                this.canvasWidth = this.canvasLongDimension
+                this.canvasHeight = ""
+                console.log(this.canvasWidth + "&" + this.canvasHeight)
+            }
+        },
+        toggleCanvasOrientation() {
+            if (true === this.canvasPortrait) {
                 //Set -> Landscape
-                this.portrait = false
-                this.width = this.imageLongDimension = this.canvasLongDimension
-                this.height = this.imageShortDimension = Math.floor(
-                    this.imageLongDimension * this.imageProportion
-                )
-                console.log(this.width + "&" + this.height)
+                this.canvasPortrait = false
+                this.canvasWidth = this.canvasLongDimension + "px"
+                this.canvasHeight = "initial"
+                console.log(this.canvasWidth + "&" + this.canvasHeight)
             } else {
                 //Set -> Portrait
-                this.portrait = true
-                this.height = 500
-                this.width = this.imageShortDimension / 2
-                console.log(this.width + "&" + this.height)
+                this.canvasPortrait = true
+                this.canvasWidth = this.canvasShortDimension / 2 + "px"
+                this.canvasHeight = this.canvasLongDimension / 2 + "px"
+                console.log(this.canvasWidth + "&" + this.canvasHeight)
             }
         },
         setFullFrame() {
@@ -268,25 +292,23 @@ export default {
             if (border) {
                 //If aspect ration padding is 0 or less than selected border, use the border.
                 if (0 === this.paddingTop || border > this.paddingTop) {
-                    this.borderTop = border
-                    //If the border is less than the padding, subtract the border from the padding
+                    this.borderTop = border + frameRabbit
+                    //If the border is less than the padding, subtract the border from the padding.
                 } else if (border < this.paddingTop) {
-                    this.borderTop = this.paddingTop
+                    this.borderTop = this.paddingTop + frameRabbit
                 }
                 if (0 === this.paddingRight || border > this.paddingRight) {
-                    this.borderRight = border
+                    this.borderRight = border + frameRabbit
                 } else if (border < this.paddingRight) {
-                    this.borderRight = this.paddingRight
+                    this.borderRight = this.paddingRight + frameRabbit
                 }
-
                 if (0 === this.paddingBottom || border > this.paddingBottom) {
-                    this.borderBottom = border
+                    this.borderBottom = border + frameRabbit
                 } else if (border < this.paddingBottom) {
-                    this.borderBottom = this.paddingBottom
+                    this.borderBottom = this.paddingBottom + frameRabbit
                 }
-
                 if (0 === this.paddingLeft || border > this.paddingLeft) {
-                    this.borderLeft = border
+                    this.borderLeft = border + frameRabbit
                 } else if (border < this.paddingLeft) {
                     this.borderLeft = this.paddingLeft
                 }
@@ -320,7 +342,9 @@ export default {
                         this.setBorders()
                         break
                     default:
-                        this.$refs.frame.classList = "frame"
+                        this.frame = false
+                        this.setBorders()
+                        this.$refs.frame.classList = ""
                 }
             })
         },

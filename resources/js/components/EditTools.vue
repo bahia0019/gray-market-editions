@@ -55,9 +55,9 @@
             </div>
         </div>
 
-        <button id="orientation" @click="$emit('toggleOrientation')">
+        <button id="orientation" @click="$emit('toggleCanvasOrientation')">
             <!-- If image is Portrait, show Landscape icon -->
-            <svg v-if="portrait" id="icon-landscape" viewBox="0 0 32 32">
+            <svg v-if="canvasPortrait" id="icon-landscape" viewBox="0 0 32 32">
                 <path
                     d="M29.996 4c0.001 0.001 0.003 0.002 0.004 0.004v23.993c-0.001 0.001-0.002 0.003-0.004 0.004h-27.993c-0.001-0.001-0.003-0.002-0.004-0.004v-23.993c0.001-0.001 0.002-0.003 0.004-0.004h27.993zM30 2h-28c-1.1 0-2 0.9-2 2v24c0 1.1 0.9 2 2 2h28c1.1 0 2-0.9 2-2v-24c0-1.1-0.9-2-2-2v0z"
                 />
@@ -78,7 +78,7 @@
                 </g>
             </svg>
 
-            <div v-if="portrait" class="tool-tip">
+            <div v-if="canvasPortrait" class="tool-tip">
                 <div class="triangle"></div>
                 <div class="tip">Switch to Landscape layout</div>
             </div>
@@ -105,7 +105,7 @@
 <script>
 export default {
     props: {
-        portrait: {
+        canvasPortrait: {
             type: Boolean,
             required: true,
         },
