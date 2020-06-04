@@ -19,4 +19,4 @@ require_once get_stylesheet_directory() . '/inc/hooks/my-account.php';
 require_once get_stylesheet_directory() . '/inc/hooks/admin-order.php';
 require_once get_stylesheet_directory() . '/inc/hooks/admin-media.php';
 require_once get_stylesheet_directory() . '/inc/hooks/single-product.php';
-require_once get_stylesheet_directory() . '/inc/ajax/image-upload.php';
+require_once get_stylesheet_directory() . '/inc/ajax/images.php';
