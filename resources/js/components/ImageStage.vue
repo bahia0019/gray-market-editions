@@ -6,7 +6,9 @@
                 'processing-image': $root.processingImage,
             }"
         >
+            <div ref="frame" class="frame"></div>
             <div id="canvas" :style="canvasStyles">
+                <!-- <div id="mat"></div> -->
                 <img
                     v-if="portrait"
                     :width="imageShortDimension"
@@ -86,6 +88,7 @@ export default {
             fullFrame: false,
             portrait: false,
             angle: 0,
+            frame: false,
         }
         return {
             fin: {
@@ -102,6 +105,7 @@ export default {
         this.setOrientation()
         this.setBorders()
         this.dpiCheck()
+        this.getFrameInfo()
     },
     updated() {},
     computed: {
@@ -222,15 +226,34 @@ export default {
             }
         },
         setBorders(border) {
+            //Sets a 3/4" rabbit on frames (solely cosmetic for the editor).
+            let frameRabbit =
+                0.75 * (this.canvasLongDimension / this.longInch) * 0.1
+            let aspectFactor =
+                ((this.canvasProportion - this.imageProportion) / 2) * 100 //GOOD!
             //if no borders are selected, checks for difference in aspect ratio.
             if (true === this.portrait) {
-                this.paddingTop = this.paddingBottom = 0
-                this.paddingLeft = this.paddingRight =
-                    ((this.canvasProportion - this.imageProportion) / 2) * 100 //GOOD!
+                if (true === this.frame) {
+                    this.paddingTop = this.paddingBottom = frameRabbit
+                    this.paddingLeft = this.paddingRight = Math.max(
+                        aspectFactor,
+                        frameRabbit
+                    )
+                } else {
+                    this.paddingTop = this.paddingBottom = 0
+                    this.paddingLeft = this.paddingRight = aspectFactor
+                }
             } else {
-                this.paddingTop = this.paddingBottom =
-                    ((this.canvasProportion - this.imageProportion) / 2) * 100 //GOOD!
-                this.paddingLeft = this.paddingRight = 0
+                if (true === this.frame) {
+                    this.paddingTop = this.paddingBottom = Math.max(
+                        aspectFactor,
+                        frameRabbit
+                    )
+                    this.paddingLeft = this.paddingRight = frameRabbit
+                } else {
+                    this.paddingTop = this.paddingBottom = aspectFactor
+                    this.paddingLeft = this.paddingRight = 0
+                }
             }
             //Set Borders
             this.borderTop = this.paddingTop
@@ -241,6 +264,7 @@ export default {
             //If a border is selected...
             //Set border %
             border = border * (this.canvasLongDimension / this.longInch) * 0.1
+
             if (border) {
                 //If aspect ration padding is 0 or less than selected border, use the border.
                 if (0 === this.paddingTop || border > this.paddingTop) {
@@ -283,6 +307,8 @@ export default {
                     case "black":
                         this.$refs.frame.classList = "frame"
                         this.$refs.frame.classList.add("frame-black", "active")
+                        this.frame = true
+                        this.setBorders()
                         break
                     case "down-n-dirty":
                         this.$refs.frame.classList = "frame"
@@ -290,6 +316,8 @@ export default {
                             "frame-down-n-dirty",
                             "active"
                         )
+                        this.frame = true
+                        this.setBorders()
                         break
                     default:
                         this.$refs.frame.classList = "frame"
@@ -315,6 +343,7 @@ export default {
     border: 30px solid transparent;
     width: 100%;
     height: 100%;
+    z-index: 100;
 }
 .frame-black {
     border-color: #000;
@@ -325,6 +354,17 @@ export default {
 }
 .frame.active {
     display: block;
+}
+
+#mat {
+    border: 10px solid #fff;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    z-index: 10;
+    border-style: solid inset solid solid;
+    left: 0;
 }
 
 @keyframes spinner {
