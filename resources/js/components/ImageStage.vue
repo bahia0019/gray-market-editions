@@ -116,11 +116,11 @@ export default {
     computed: {
         imageStyles() {
             return {
-                // height: this.height + "px",
-                // width: this.width + "px",
+                height: this.imageHeight + "px",
+                width: this.imageWidth + "px",
                 position: "",
-                transform: `scale(${this.scaleFactor})`,
-                // transform: `rotate(${this.angle}deg)`,
+                // transform: `scale(${this.scaleFactor})`,
+                transform: `rotate(${this.angle}deg)`,
             }
         },
         canvasStyles() {
@@ -235,7 +235,7 @@ export default {
         },
         //   Set and Reflect Angle
         rotate() {
-            this.angle = this.angle === 270 ? 0 : this.angle + 90
+            this.angle = this.angle + 90
         },
 
         dpiCheck() {
@@ -378,6 +378,12 @@ export default {
 }
 .frame.active {
     display: block;
+}
+
+#canvas {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #mat {
