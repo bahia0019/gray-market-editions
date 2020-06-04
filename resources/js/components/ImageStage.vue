@@ -92,14 +92,19 @@ export default {
             canvasPortrait: "",
             angle: 0,
             frame: false,
+            frameWidth: "",
+            woodFrameWidth: "",
         }
         return {
             fin: {
+                width: "",
+                height: "",
                 fullFrame: "",
                 borderTop: "",
                 borderRight: "",
                 borderBottom: "",
                 borderLeft: "",
+                angle: 0,
             },
         }
     },
@@ -110,7 +115,6 @@ export default {
         this.setBorders()
         this.dpiCheck()
         this.getFrameInfo()
-        console.log(this.finalPrint)
     },
     updated() {},
     computed: {
@@ -146,12 +150,10 @@ export default {
                 this.setCanvasOrientation()
                 this.setBorders()
                 this.dpiCheck()
-                console.log(this.finalPrint)
             })
             this.widthHeight = size.selectedOptions[0].value.split("x")
             this.longInch = parseInt(this.widthHeight[1])
             this.shortInch = parseInt(this.widthHeight[0])
-            this.finalPrint = this.shortInch * 200 + "x" + this.longInch * 200
             this.canvasLongDimension = 1000
             this.canvasMultiplier = 1000 / parseInt(this.widthHeight[1])
             this.canvasShortDimension = Math.round(
@@ -159,6 +161,10 @@ export default {
             )
             this.canvasProportion =
                 this.canvasShortDimension / this.canvasLongDimension
+        },
+        finalPrintOutput() {
+            this.fin.width = this.longInch * 200
+            this.fin.height = this.shortInch * 200
         },
         setOrientation() {
             if (
@@ -193,13 +199,11 @@ export default {
                 this.canvasPortrait = true
                 this.canvasWidth = this.canvasShortDimension / 2
                 this.canvasHeight = 500
-                console.log(this.canvasWidth + "&" + this.canvasHeight)
             } else {
                 this.canvasPortrait = false
                 //Landscape
                 this.canvasWidth = this.canvasLongDimension
                 this.canvasHeight = ""
-                console.log(this.canvasWidth + "&" + this.canvasHeight)
             }
         },
         toggleCanvasOrientation() {
@@ -208,13 +212,11 @@ export default {
                 this.canvasPortrait = false
                 this.canvasWidth = this.canvasLongDimension + "px"
                 this.canvasHeight = "initial"
-                console.log(this.canvasWidth + "&" + this.canvasHeight)
             } else {
                 //Set -> Portrait
                 this.canvasPortrait = true
                 this.canvasWidth = this.canvasShortDimension / 2 + "px"
                 this.canvasHeight = this.canvasLongDimension / 2 + "px"
-                console.log(this.canvasWidth + "&" + this.canvasHeight)
             }
         },
         setFullFrame() {
@@ -236,12 +238,14 @@ export default {
         //   Set and Reflect Angle
         rotate() {
             this.angle = this.angle + 90
+            this.setOrientation()
         },
 
         dpiCheck() {
             this.imageDPI = Math.round(
                 this.image.editor_image.width / this.longInch
             )
+            console.log(this.imageDPI)
             parseInt(this.imageDPI)
             if (200 > this.imageDPI) {
                 this.dpiWarning = true
@@ -251,33 +255,31 @@ export default {
         },
         setBorders(border) {
             //Sets a 3/4" rabbit on frames (solely cosmetic for the editor).
-            let frameRabbit =
-                0.75 * (this.canvasLongDimension / this.longInch) * 0.1
+            let frameRabbit = 0
+            /**
+             * Come back to this and solve for frames.
+             */
+            // if (true === this.frame) {
+            //     frameRabbit =
+            //         0.75 * (this.canvasLongDimension / this.longInch) * 0.1
+            // } else {
+            //     frameRabbit = 0
+            // }
+
             let aspectFactor =
                 ((this.canvasProportion - this.imageProportion) / 2) * 100 //GOOD!
+
             //if no borders are selected, checks for difference in aspect ratio.
             if (true === this.portrait) {
-                if (true === this.frame) {
-                    this.paddingTop = this.paddingBottom = frameRabbit
-                    this.paddingLeft = this.paddingRight = Math.max(
-                        aspectFactor,
-                        frameRabbit
-                    )
-                } else {
-                    this.paddingTop = this.paddingBottom = 0
-                    this.paddingLeft = this.paddingRight = aspectFactor
-                }
+                //Adds Frame Rabbit value and Aspect ratio
+                this.paddingTop = this.paddingBottom = frameRabbit
+                this.paddingLeft = this.paddingRight =
+                    aspectFactor + frameRabbit
             } else {
-                if (true === this.frame) {
-                    this.paddingTop = this.paddingBottom = Math.max(
-                        aspectFactor,
-                        frameRabbit
-                    )
-                    this.paddingLeft = this.paddingRight = frameRabbit
-                } else {
-                    this.paddingTop = this.paddingBottom = aspectFactor
-                    this.paddingLeft = this.paddingRight = 0
-                }
+                //Adds Frame Rabbit value and Aspect ratio
+                this.paddingTop = this.paddingBottom =
+                    aspectFactor + frameRabbit
+                this.paddingLeft = this.paddingRight = frameRabbit
             }
             //Set Borders
             this.borderTop = this.paddingTop
@@ -329,6 +331,7 @@ export default {
                     case "black":
                         this.$refs.frame.classList = "frame"
                         this.$refs.frame.classList.add("frame-black", "active")
+                        this.frameWidth = this.imageDPI + "px"
                         this.frame = true
                         this.setBorders()
                         break
@@ -338,6 +341,7 @@ export default {
                             "frame-down-n-dirty",
                             "active"
                         )
+                        this.woodFrameWidth = this.imageDPI + "px"
                         this.frame = true
                         this.setBorders()
                         break
@@ -363,8 +367,10 @@ export default {
 
 .frame {
     display: none;
+    border-width: 30px;
+    border-color: transparent;
+    border-style: solid;
     position: absolute;
-    border: 30px solid transparent;
     width: 100%;
     height: 100%;
     z-index: 100;
@@ -374,7 +380,7 @@ export default {
 }
 .frame-down-n-dirty {
     border-image: url(https://img.freepik.com/free-photo/wooden-textured-background_53876-14865.jpg?size=626&ext=jpg)
-        50 round;
+        30 round;
 }
 .frame.active {
     display: block;
