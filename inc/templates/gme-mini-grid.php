@@ -1,4 +1,4 @@
-<div id="gme-image-mini-grid" v-cloak>
+<div id="gme-image-mini-grid">
     <p class="gme-image-mini-grid__title">Images</p>
     <div class="gme-image-mini-grid__grid">
         <?php foreach ($gme_image_data as $data): ?>
