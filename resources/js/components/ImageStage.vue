@@ -66,11 +66,17 @@ export default {
     },
     data() {
         return {
+            canvasLongInches: "",
+            canvasShortInches: "",
             canvasLongDimension: "",
             canvasShortDimension: "",
+            portraitCanvasLongDimension: "",
+            portraitCanvasShortDimension: "",
+            imageLongDimension: "",
+            imageShortDimension: "",
+            imageProportion: "",
             canvasWidth: "",
             canvasHeight: "",
-            border: "",
             borderTop: "",
             borderRight: "",
             borderBottom: "",
@@ -79,12 +85,7 @@ export default {
             paddingRight: "",
             paddingBottom: "",
             paddingLeft: "",
-            portraitCanvasLongDimension: "",
-            portraitCanvasShortDimension: "",
-            imageLongDimension: "",
-            imageShortDimension: "",
             scaleFactor: "",
-            imageProportion: "",
             imageDPI: "",
             dpiWarning: false,
             fullFrame: false,
@@ -95,12 +96,13 @@ export default {
             frameWidth: "",
             woodFrameWidth: "",
             fin: {
-                dpi: "",
-                canvasWidth: "",
-                canvasHeight: "",
-                overlayWidth: "",
-                overlayHeight: "",
-                fullFrame: "",
+                dpi: 0,
+                border: 0,
+                canvasWidth: 0,
+                canvasHeight: 0,
+                overlayWidth: 0,
+                overlayHeight: 0,
+                fullFrame: false,
                 angle: 0,
             },
         }
@@ -114,7 +116,9 @@ export default {
         this.getFrameInfo()
         this.finalPrintOutput()
     },
-    updated() {},
+    updated() {
+        this.finalPrintOutput()
+    },
     computed: {
         imageStyles() {
             return {
@@ -151,8 +155,8 @@ export default {
                 this.finalPrintOutput()
             })
             this.widthHeight = size.selectedOptions[0].value.split("x")
-            this.longInch = parseInt(this.widthHeight[1])
-            this.shortInch = parseInt(this.widthHeight[0])
+            this.canvasLongInches = parseInt(this.widthHeight[1])
+            this.canvasShortInches = parseInt(this.widthHeight[0])
             this.canvasLongDimension = 1000
             this.canvasMultiplier = 1000 / parseInt(this.widthHeight[1])
             this.canvasShortDimension = Math.round(
@@ -162,11 +166,38 @@ export default {
                 this.canvasShortDimension / this.canvasLongDimension
         },
         finalPrintOutput() {
+            // Output DPI determined by John Mireles.
             this.fin.dpi = 200
-            this.fin.canvasWidth = this.longInch * this.fin.dpi
-            this.fin.canvasHeight = this.shortInch * this.fin.dpi
-            this.fin.overlayWidth = this.fin.canvasWidth - this.fin.border
-            this.fin.overlayHeight = this.fin.canvasHeight - this.fin.border
+            // Angle of the Image
+            this.fin.angle = this.angle
+
+            // Set Canvas orientation & Image size.
+            // If Portrait
+            if (true === this.portrait) {
+                this.fin.canvasWidth = this.canvasShortInches * this.fin.dpi
+                this.fin.canvasHeight = this.canvasLongInches * this.fin.dpi
+                //Get image width and height
+                if (true === fullframe) {
+                    // this.fin.overlayWidth = this.image.editor_image.width * X
+                    // this.fin.overlayHeight = this.fin.canvasHeight
+                } else {
+                    // this.fin.overlayWidth = this.fin.canvasWidth
+                    // this.fin.overlayHeight = this.fin.canvasHeight
+                }
+                // If Landscape
+            } else {
+                this.fin.canvasWidth = this.canvasLongInches * this.fin.dpi
+                this.fin.canvasHeight = this.canvasShortInches * this.fin.dpi
+                //Get image width and height
+                if (true === fullframe) {
+                    // this.fin.overlayWidth = this.image.editor_image.width * X
+                    // this.fin.overlayHeight = this.fin.canvasHeight
+                } else {
+                    // this.fin.overlayWidth = this.fin.canvasWidth
+                    // this.fin.overlayHeight =
+                    //     this.fin.overlayWidth * this.imageProportion
+                }
+            }
         },
         setOrientation() {
             if (
@@ -225,7 +256,7 @@ export default {
             if (false === this.fullFrame) {
                 this.fullFrame = true
                 if (true === this.portrait) {
-                    this.scaleFactor =
+                    this.this.scaleFactor =
                         this.portraitCanvasShortDimension /
                         this.imageShortDimension
                 } else {
@@ -239,13 +270,13 @@ export default {
         },
         //   Set and Reflect Angle
         rotate() {
-            this.angle = this.angle + 90
-            this.setOrientation()
+            this.angle = (this.angle + 90) % 360
+            // this.setOrientation()
         },
 
         dpiCheck() {
             this.imageDPI = Math.round(
-                this.image.editor_image.width / this.longInch
+                this.image.editor_image.width / this.canvasLongInches
             )
             console.log(this.imageDPI)
             parseInt(this.imageDPI)
@@ -256,7 +287,8 @@ export default {
             }
         },
         setBorders(border) {
-            this.fin.border = border * this.fin.dpi
+            // Final border width *2 for Intervention.
+            this.fin.border = border * this.fin.dpi * 2
 
             //Sets a 3/4" rabbit on frames (solely cosmetic for the editor).
             let frameRabbit = 0
@@ -265,7 +297,7 @@ export default {
              */
             // if (true === this.frame) {
             //     frameRabbit =
-            //         0.75 * (this.canvasLongDimension / this.longInch) * 0.1
+            //         0.75 * (this.canvasLongDimension / this.canvasLongInches) * 0.1
             // } else {
             //     frameRabbit = 0
             // }
@@ -293,7 +325,10 @@ export default {
 
             //If a border is selected...
             //Set border %
-            border = border * (this.canvasLongDimension / this.longInch) * 0.1
+            border =
+                border *
+                (this.canvasLongDimension / this.canvasLongInches) *
+                0.1
 
             if (border) {
                 //If aspect ration padding is 0 or less than selected border, use the border.
