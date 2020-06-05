@@ -96,10 +96,10 @@ export default {
             woodFrameWidth: "",
             fin: {
                 dpi: "",
-                width: "",
-                height: "",
-                imageWidth: "",
-                imageHeight: "",
+                canvasWidth: "",
+                canvasHeight: "",
+                overlayWidth: "",
+                overlayHeight: "",
                 fullFrame: "",
                 angle: 0,
             },
@@ -163,10 +163,10 @@ export default {
         },
         finalPrintOutput() {
             this.fin.dpi = 200
-            this.fin.width = this.longInch * this.fin.dpi
-            this.fin.height = this.shortInch * this.fin.dpi
-            this.fin.imageWidth = this.fin.width - this.fin.border
-            this.fin.imageHeight = this.fin.height - this.fin.border
+            this.fin.canvasWidth = this.longInch * this.fin.dpi
+            this.fin.canvasHeight = this.shortInch * this.fin.dpi
+            this.fin.overlayWidth = this.fin.canvasWidth - this.fin.border
+            this.fin.overlayHeight = this.fin.canvasHeight - this.fin.border
         },
         setOrientation() {
             if (
