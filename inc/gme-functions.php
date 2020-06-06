@@ -11,6 +11,14 @@ if (!function_exists('gme_image_upload')) {
 
         $original_dimensions = getimagesize($upload['file']);
 
+        if ($original_dimensions[0] > $original_dimensions[1]) {
+            $original_long_dimension  = $original_dimensions[0];
+            $original_short_dimension = $original_dimensions[1];
+        } else {
+            $original_long_dimension  = $original_dimensions[1];
+            $original_short_dimension = $original_dimensions[0];
+        }
+
         $attachment = [
             'post_mime_type' => $wp_filetype['type'],
             'post_title'     => sanitize_file_name($file['name']),
@@ -25,18 +33,27 @@ if (!function_exists('gme_image_upload')) {
         $attach_data = wp_generate_attachment_metadata($attach_id, $upload['file']);
         wp_update_attachment_metadata($attach_id, $attach_data);
 
-        $thumbnail        = wp_get_attachment_image_src($attach_id);
-        $image            = wp_get_attachment_image_src($attach_id, $image_size);
-        $image_dimensions = getimagesize($image[0]);
+        $thumbnail               = wp_get_attachment_image_src($attach_id);
+        $editor_image            = wp_get_attachment_image_src($attach_id, $image_size);
+        $editor_image_dimensions = getimagesize($editor_image[0]);
+
+        // If width is longer than height (it's landscape)
+        if ($editor_image_dimensions[0] > $editor_image_dimensions[1]) {
+            $original_width  = $original_long_dimension;
+            $original_height = $original_short_dimension;
+        } else { // Else height is longer than width (it's portrait)
+            $original_width  = $original_short_dimension;
+            $original_height = $original_long_dimension;
+        }
 
         define('GME_AJAX_UPLOADING', false);
 
         return [
             'id'           => $attach_id,
             'editor_image' => [
-                'url'    => $image[0],
-                'width'  => $image_dimensions[0],
-                'height' => $image_dimensions[1],
+                'url'    => $editor_image[0],
+                'width'  => $editor_image_dimensions[0],
+                'height' => $editor_image_dimensions[1],
             ],
             'thumbnail'  => [
                 'url'    => $thumbnail[0],
@@ -45,8 +62,8 @@ if (!function_exists('gme_image_upload')) {
             ],
             'original' => [
                 'url'    => $upload['url'],
-                'width'  => $original_dimensions[0],
-                'height' => $original_dimensions[1],
+                'width'  => $original_width,
+                'height' => $original_height,
             ],
         ];
     }

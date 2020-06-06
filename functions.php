@@ -8,7 +8,7 @@ if (!defined('WPINC')) {
 // Helper paths
 define('GME_TEMPLATES_PATH', get_stylesheet_directory() . '/inc/templates/');
 
-require_once get_stylesheet_directory() . '/inc/helper-functions.php';
+require_once get_stylesheet_directory() . '/inc/gme-functions.php';
 require_once get_stylesheet_directory() . '/inc/wp-enqueue.php';
 require_once get_stylesheet_directory() . '/inc/hooks/acf.php';
 require_once get_stylesheet_directory() . '/inc/hooks/cart.php';
