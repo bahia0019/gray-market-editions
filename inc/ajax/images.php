@@ -1,5 +1,7 @@
 <?php
 
+use BoxyBird\GME\Intervention\GMEImageFactory;
+
 function gme_ajax_image_upload()
 {
     check_ajax_referer('gme_ajax_nonce', 'nonce');
@@ -28,7 +30,7 @@ function gme_ajax_image_process()
         : [];
 
     $res = array_map(function ($item) {
-        $gme_image = new \BoxyBird\GME\GMEImageFactory($item['attachment_id']);
+        $gme_image = new GMEImageFactory($item['attachment_id']);
         $gme_image->process();
 
         return $gme_image->processed_image_url;
