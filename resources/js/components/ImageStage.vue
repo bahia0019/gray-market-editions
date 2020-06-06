@@ -95,7 +95,7 @@ export default {
       frameWidth: "",
       woodFrameWidth: "",
       fin: {
-        dpi: 0,
+        dpi: 200,
         border: 0,
         canvasWidth: 0,
         canvasHeight: 0,
@@ -112,19 +112,16 @@ export default {
     this.setCanvasOrientation();
     this.dpiCheck();
     this.getFrameInfo();
-    this.finalPrintOutput();
     this.defaultPrintSize();
   },
-  updated() {
-    this.finalPrintOutput();
-  },
+  updated() {},
   computed: {
     imageStyles() {
       return {
         height: this.imageHeight + "px",
         width: this.imageWidth + "px",
-        position: ""
-        // transform: `rotate(${this.angle}deg)`
+        position: "",
+        transform: `rotate(${this.angle}deg)`
         // transform: `scale(${this.scaleFactor})`
       };
     },
@@ -150,7 +147,6 @@ export default {
         this.setOrientation();
         this.setCanvasOrientation();
         this.dpiCheck();
-        this.finalPrintOutput();
         this.defaultPrintSize();
       });
       this.widthHeight = size.selectedOptions[0].value.split("x");
@@ -163,24 +159,6 @@ export default {
       );
       this.canvasAspectRatio =
         this.canvasShortDimension / this.canvasLongDimension;
-    },
-
-    finalPrintOutput() {
-      // Output DPI determined by John Mireles.
-      this.fin.dpi = 200;
-      // Angle of the Image
-      this.fin.angle = this.angle;
-
-      // Set Canvas orientation & size.
-      if (true === this.canvasPortrait) {
-        // If Portrait
-        this.fin.canvasWidth = this.canvasShortInches * this.fin.dpi;
-        this.fin.canvasHeight = this.canvasLongInches * this.fin.dpi;
-      } else {
-        // If Landscape
-        this.fin.canvasWidth = this.canvasLongInches * this.fin.dpi;
-        this.fin.canvasHeight = this.canvasShortInches * this.fin.dpi;
-      }
     },
     defaultPrintSize() {
       // Default (Not Fullframe)
@@ -238,7 +216,6 @@ export default {
           this.canvasLongDimension * this.imageAspectRatio
         );
       }
-      console.log(this.imageAspectRatio);
     },
     setCanvasOrientation() {
       if (true === this.portrait) {
@@ -246,11 +223,17 @@ export default {
         this.canvasPortrait = true;
         this.canvasWidth = this.canvasShortDimension / 2;
         this.canvasHeight = 500;
+        // Final print dimensions.
+        this.fin.canvasWidth = this.canvasShortInches * this.fin.dpi;
+        this.fin.canvasHeight = this.canvasLongInches * this.fin.dpi;
       } else {
         this.canvasPortrait = false;
         //Landscape
         this.canvasWidth = this.canvasLongDimension;
         this.canvasHeight = "";
+        // Final print dimensions.
+        this.fin.canvasWidth = this.canvasLongInches * this.fin.dpi;
+        this.fin.canvasHeight = this.canvasShortInches * this.fin.dpi;
       }
     },
     toggleCanvasOrientation() {
@@ -259,11 +242,17 @@ export default {
         this.canvasPortrait = false;
         this.canvasWidth = this.canvasLongDimension + "px";
         this.canvasHeight = "initial";
+        // Final print dimensions.
+        this.fin.canvasWidth = this.canvasLongInches * this.fin.dpi;
+        this.fin.canvasHeight = this.canvasShortInches * this.fin.dpi;
       } else {
         //Set -> Portrait
         this.canvasPortrait = true;
         this.canvasWidth = this.canvasShortDimension / 2 + "px";
         this.canvasHeight = this.canvasLongDimension / 2 + "px";
+        // Final print dimensions.
+        this.fin.canvasWidth = this.canvasShortInches * this.fin.dpi;
+        this.fin.canvasHeight = this.canvasLongInches * this.fin.dpi;
       }
     },
     setFullFrame() {
@@ -308,6 +297,7 @@ export default {
     },
     //   Set and Reflect Angle
     rotate() {
+      this.fin.angle = (this.fin.angle + 90) % 360;
       this.angle = (this.angle + 90) % 360;
       // this.setOrientation()
     },
