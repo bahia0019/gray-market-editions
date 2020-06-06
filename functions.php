@@ -5,8 +5,15 @@ if (!defined('WPINC')) {
     die;
 }
 
+require_once __DIR__ . '/vendor/autoload.php';
+
 // Helper paths
+define('GME_UPLOADS_URL', wp_upload_dir()['baseurl'] . '/gme_images/');
+define('GME_UPLOADS_PATH', wp_upload_dir()['basedir'] . '/gme_images/');
 define('GME_TEMPLATES_PATH', get_stylesheet_directory() . '/inc/templates/');
+
+// Make custom directory
+wp_mkdir_p(GME_UPLOADS_PATH);
 
 require_once get_stylesheet_directory() . '/inc/gme-functions.php';
 require_once get_stylesheet_directory() . '/inc/wp-enqueue.php';
