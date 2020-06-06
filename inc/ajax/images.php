@@ -14,19 +14,6 @@ function gme_ajax_image_upload()
         return gme_image_upload($file);
     }, $_FILES);
 
-    // Testing
-    // array_walk($uploads, function ($upload) {
-    //     update_post_meta($upload['id'], 'gme_image_transformations', [
-    //         'width'  => random_int(500, 600),
-    //         'height' => random_int(500, 600),
-    //         'rotate' => [0, 90, 180, 270][random_int(0, 3)],
-    //     ]);
-
-    //     $gme_image = new \BoxyBird\GME\GMEImageFactory($upload['id']);
-
-    //     $gme_image->process();
-    // });
-
     wp_send_json($uploads);
 }
 add_action('wp_ajax_gme_ajax_image_upload', 'gme_ajax_image_upload');

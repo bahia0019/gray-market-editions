@@ -42,19 +42,15 @@
         @angleClick="rotate"
       ></edit-tools>
     </div>
-
-    <watch-image-stage></watch-image-stage>
   </div>
 </template>
 
 <script>
 import EditTools from "./EditTools.vue";
-import WatchImageStage from "./WatchImageStage.vue";
 
 export default {
   components: {
-    EditTools,
-    WatchImageStage
+    EditTools
   },
   props: {
     image: {
@@ -412,7 +408,19 @@ export default {
         }
       });
     }
-  }
+  },
+  watch: {
+    fin: {
+      handler(value) {
+        let image = this.$root.images.find(
+          image => image.id === this.image.id
+        )
+
+        this.$set(image, 'transformations', value);
+      },
+      deep: true
+    }
+  },
 };
 </script>
 
