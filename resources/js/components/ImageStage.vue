@@ -418,7 +418,8 @@ export default {
 
         this.$set(image, 'transformations', value);
       },
-      deep: true
+      deep: true,
+      immediate: true,
     }
   },
 };
