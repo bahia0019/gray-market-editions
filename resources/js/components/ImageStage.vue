@@ -68,11 +68,12 @@ export default {
       canvasShortInches: "",
       canvasLongDimension: "",
       canvasShortDimension: "",
+      canvasAspectRatio: 0,
       portraitCanvasLongDimension: "",
       portraitCanvasShortDimension: "",
       imageLongDimension: "",
       imageShortDimension: "",
-      imageProportion: "",
+      imageAspectRatio: 0,
       canvasWidth: "",
       canvasHeight: "",
       borderTop: "",
@@ -112,6 +113,7 @@ export default {
     this.dpiCheck();
     this.getFrameInfo();
     this.finalPrintOutput();
+    this.defaultPrintSize();
   },
   updated() {
     this.finalPrintOutput();
@@ -121,8 +123,9 @@ export default {
       return {
         height: this.imageHeight + "px",
         width: this.imageWidth + "px",
-        position: "",
-        transform: `rotate(${this.angle}deg) scale(${this.scaleFactor})`
+        position: ""
+        // transform: `rotate(${this.angle}deg)`
+        // transform: `scale(${this.scaleFactor})`
       };
     },
     canvasStyles() {
@@ -148,6 +151,7 @@ export default {
         this.setCanvasOrientation();
         this.dpiCheck();
         this.finalPrintOutput();
+        this.defaultPrintSize();
       });
       this.widthHeight = size.selectedOptions[0].value.split("x");
       this.canvasLongInches = parseInt(this.widthHeight[1]);
@@ -157,39 +161,53 @@ export default {
       this.canvasShortDimension = Math.round(
         parseInt(this.widthHeight[0]) * this.canvasMultiplier
       );
-      this.canvasProportion =
+      this.canvasAspectRatio =
         this.canvasShortDimension / this.canvasLongDimension;
     },
+
     finalPrintOutput() {
       // Output DPI determined by John Mireles.
       this.fin.dpi = 200;
       // Angle of the Image
       this.fin.angle = this.angle;
 
-      // Set Canvas orientation & Image size.
-      // If Portrait
-      if (true === this.portrait) {
+      // Set Canvas orientation & size.
+      if (true === this.canvasPortrait) {
+        // If Portrait
         this.fin.canvasWidth = this.canvasShortInches * this.fin.dpi;
         this.fin.canvasHeight = this.canvasLongInches * this.fin.dpi;
-        //Get image width and height
-        if (true === this.fullframe) {
-          // this.fin.overlayWidth = this.image.editor_image.width * X
-          // this.fin.overlayHeight = this.fin.canvasHeight
-        } else {
-          // this.fin.overlayWidth = this.fin.canvasWidth
-          // this.fin.overlayHeight = this.fin.canvasHeight
-        }
-        // If Landscape
       } else {
+        // If Landscape
         this.fin.canvasWidth = this.canvasLongInches * this.fin.dpi;
         this.fin.canvasHeight = this.canvasShortInches * this.fin.dpi;
-        //Get image width and height
-        if (true === this.fullframe) {
-          // this.fin.overlayWidth = this.image.editor_image.width * X
-          // this.fin.overlayHeight = this.fin.canvasHeight
+      }
+    },
+    defaultPrintSize() {
+      // Default (Not Fullframe)
+      this.fullFrame = this.fin.fullFrame = false;
+      this.scaleFactor = 1;
+
+      if (true === this.portrait) {
+        // Portrait
+        if (this.imageAspectRatio < this.canvasAspectRatio) {
+          this.fin.overlayHeight = this.canvasLongInches * this.fin.dpi;
+          this.fin.overlayWidth =
+            this.fin.overlayHeight * this.imageAspectRatio;
         } else {
-          this.fin.overlayWidth = this.fin.canvasWidth;
-          this.fin.overlayHeight = this.fin.overlayWidth * this.imageProportion;
+          this.fin.overlayWidth = this.canvasShortInches * this.fin.dpi;
+          this.fin.overlayHeight =
+            this.fin.overlayWidth / this.imageAspectRatio;
+        }
+      } else {
+        // Landscape
+        if (this.imageAspectRatio < this.canvasAspectRatio) {
+          this.fin.overlayWidth = this.canvasLongInches * this.fin.dpi;
+          this.fin.overlayHeight =
+            this.fin.overlayWidth * this.imageAspectRatio;
+        } else {
+          this.fin.overlayHeight = this.canvasShortInches * this.fin.dpi;
+          this.fin.overlayWidth =
+            this.fin.overlayHeight / this.imageAspectRatio;
         }
       }
     },
@@ -197,24 +215,30 @@ export default {
       if (this.image.editor_image.height > this.image.editor_image.width) {
         this.portrait = true;
         // Portrait.
-        this.imageProportion = (
-          this.image.editor_image.width / this.image.editor_image.height
-        ).toFixed(4);
+        this.imageAspectRatio = Number(
+          (
+            this.image.editor_image.width / this.image.editor_image.height
+          ).toFixed(4)
+        );
 
         this.imageLongDimension = 500;
         this.imageShortDimension = Math.floor(
-          this.imageLongDimension * this.imageProportion
+          this.imageLongDimension * this.imageAspectRatio
         );
       } else {
         // Landscape
         this.portrait = false;
-        this.imageProportion =
-          this.image.editor_image.height / this.image.editor_image.width;
+        this.imageAspectRatio = Number(
+          (
+            this.image.editor_image.height / this.image.editor_image.width
+          ).toFixed(4)
+        );
         this.imageLongDimension = this.canvasLongDimension;
         this.imageShortDimension = Math.floor(
-          this.canvasLongDimension * this.imageProportion
+          this.canvasLongDimension * this.imageAspectRatio
         );
       }
+      console.log(this.imageAspectRatio);
     },
     setCanvasOrientation() {
       if (true === this.portrait) {
@@ -243,18 +267,43 @@ export default {
       }
     },
     setFullFrame() {
+      // Set -> Fullframe
       if (false === this.fullFrame) {
-        this.fullFrame = true;
+        this.fullFrame = this.fin.fullFrame = true;
         if (true === this.portrait) {
-          this.this.scaleFactor =
+          // Set scale factor for Editor
+          this.scaleFactor =
             this.portraitCanvasShortDimension / this.imageShortDimension;
+
+          //Provide image size info for Final Print.
+          if (this.imageAspectRatio < this.canvasAspectRatio) {
+            this.fin.overlayWidth = this.canvasShortInches * this.fin.dpi;
+            this.fin.overlayHeight =
+              this.fin.overlayWidth / this.imageAspectRatio;
+          } else {
+            this.fin.overlayHeight = this.canvasLongInches * this.fin.dpi;
+            this.fin.overlayWidth =
+              this.fin.overlayHeight * this.imageAspectRatio;
+          }
         } else {
+          // Set scale factor for Editor
           this.scaleFactor =
             this.canvasShortDimension / this.imageShortDimension; //GOOD!
+
+          //Provide image size info for Final Print.
+          if (this.imageAspectRatio < this.canvasAspectRatio) {
+            this.fin.overlayHeight = this.canvasShortInches * this.fin.dpi;
+            this.fin.overlayWidth =
+              this.fin.overlayHeight / this.imageAspectRatio;
+          } else {
+            this.fin.overlayWidth = this.canvasLongInches * this.fin.dpi;
+            this.fin.overlayHeight =
+              this.fin.overlayWidth * this.imageAspectRatio;
+          }
         }
       } else {
-        this.fullFrame = false;
-        this.scaleFactor = 1;
+        //   Revert to default.
+        this.defaultPrintSize();
       }
     },
     //   Set and Reflect Angle
@@ -265,7 +314,7 @@ export default {
 
     dpiCheck() {
       this.imageDPI = Math.round(
-        this.image.editor_image.width / this.canvasLongInches
+        this.image.original.width / this.canvasLongInches
       );
       console.log(this.imageDPI);
       parseInt(this.imageDPI);
@@ -292,7 +341,7 @@ export default {
       // }
 
       let aspectFactor =
-        ((this.canvasProportion - this.imageProportion) / 2) * 100; //GOOD!
+        ((this.canvasAspectRatio - this.imageAspectRatio) / 2) * 100; //GOOD!
 
       //if no borders are selected, checks for difference in aspect ratio.
       if (true === this.portrait) {
