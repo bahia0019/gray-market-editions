@@ -377,13 +377,19 @@ export default {
       this.fin.angle = (this.fin.angle + 90) % 360;
       this.angle = (this.angle + 90) % 360;
 
+      // Canvas rotate methods
       this.ctx.save();
-      //   this.ctx.translate(canvas.width / 2, canvas.height / 2);
+      this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+      this.ctx.translate(this.canvasWidth / 2, this.canvasHeight / 2);
       this.ctx.rotate((this.angle * Math.PI) / 180);
-      this.drawCanvas();
+      this.ctx.drawImage(
+        this.$refs.currentimage,
+        -(this.imageWidth / 2),
+        -(this.imageHeight / 2),
+        this.imageWidth,
+        this.imageHeight
+      );
       this.ctx.restore();
-      //   this.updateImageOrientation();
-      //   this.drawCanvas();
     },
 
     dpiCheck() {
