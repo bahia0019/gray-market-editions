@@ -91,7 +91,6 @@ export default {
         canvasHeight: 0,
         overlayWidth: 0,
         overlayHeight: 0,
-        fullFrame: false,
         angle: 0
       }
     };
@@ -163,8 +162,7 @@ export default {
 
     defaultPrintSize() {
       // Default (Not Fullframe)
-      this.fullFrame = this.fin.fullFrame = false;
-      this.scaleFactor = 1;
+      this.fullFrame = false;
 
       if ("portrait" === this.imageOrientation) {
         // Portrait
@@ -320,41 +318,57 @@ export default {
     },
     setFullFrame() {
       // Set -> Fullframe
-      if (false === this.fullFrame) {
-        this.fullFrame = this.fin.fullFrame = true;
-        if ("portrait" === this.imageOrientation) {
-          // Set scale factor for Editor
-          this.scaleFactor =
-            this.portraitCanvasShortDimension / this.imageShortDimension;
+      this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
-          //Provide image size info for Final Print.
+      if (false === this.fullFrame) {
+        this.fullFrame = true;
+        if ("portrait" === this.imageOrientation) {
           if (this.imageAspectRatio < this.canvasAspectRatio) {
+            //   Editor
+            this.imageWidth = this.canvasShortDimension / 2;
+            this.imageHeight = this.imageWidth / this.imageAspectRatio;
+            // Fin Output
             this.fin.overlayWidth = this.canvasShortInches * this.fin.dpi;
             this.fin.overlayHeight =
               this.fin.overlayWidth / this.imageAspectRatio;
           } else {
+            //   Editor
+            this.imageHeight = this.canvasLongDimension / 2;
+            this.imageWidth = this.imageHeight / this.imageAspectRatio;
+            // Fin out put.
             this.fin.overlayHeight = this.canvasLongInches * this.fin.dpi;
             this.fin.overlayWidth =
               this.fin.overlayHeight * this.imageAspectRatio;
           }
         } else {
-          // Set scale factor for Editor
-          this.scaleFactor =
-            this.canvasShortDimension / this.imageShortDimension; //GOOD!
-
-          //Provide image size info for Final Print.
+          // Landscape
           if (this.imageAspectRatio < this.canvasAspectRatio) {
+            //   Editor
+            this.imageHeight = this.canvasShortDimension;
+            this.imageWidth = this.imageHeight / this.imageAspectRatio;
+
+            // Fin Output
             this.fin.overlayHeight = this.canvasShortInches * this.fin.dpi;
             this.fin.overlayWidth =
               this.fin.overlayHeight / this.imageAspectRatio;
           } else {
+            //   Editor
+            this.imageWidth = this.canvasLongDimensions;
+            this.imageHeight = this.imageWidth * this.imageAspectRatio;
+
+            // Fin output.
             this.fin.overlayWidth = this.canvasLongInches * this.fin.dpi;
             this.fin.overlayHeight =
               this.fin.overlayWidth * this.imageAspectRatio;
           }
         }
+        this.drawCanvas();
       } else {
         //   Revert to default.
+        this.fullFrame = false;
+        this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+        this.setImageOrientation();
+        this.drawCanvas();
         this.defaultPrintSize();
       }
     },
@@ -384,9 +398,6 @@ export default {
       }
     },
     setBorders(border) {
-      // Final border width *2 for Intervention.
-      this.fin.border = border * this.fin.dpi * 2;
-
       //Sets a 3/4" rabbit on frames (solely cosmetic for the editor).
       let frameRabbit;
       if (true === this.frame) {
@@ -403,7 +414,10 @@ export default {
       } else {
         border = 0;
       }
+      //
       this.border = border + frameRabbit;
+      // Final border width *2 for Intervention.
+      this.fin.border = border * this.fin.dpi * 2;
     },
     getFrameInfo() {
       let frame = document.querySelector("select#frame");
