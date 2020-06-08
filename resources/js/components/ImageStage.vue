@@ -86,6 +86,7 @@ export default {
       fullFrame: false,
       imageOrientation: "",
       canvasOrientation: "",
+      canvasPortrait: "",
       angle: 0,
       frame: false,
       frameWidth: "",
@@ -105,7 +106,7 @@ export default {
   mounted() {
     this.getImageInfo();
     this.setImageOrientation();
-    this.setCanvasOrientation();
+    this.setInitialCanvasOrientation();
     this.dpiCheck();
     this.getFrameInfo();
     this.defaultPrintSize();
@@ -118,7 +119,7 @@ export default {
       size.addEventListener("change", () => {
         this.getImageInfo();
         this.setImageOrientation();
-        this.setCanvasOrientation();
+        this.setInitialCanvasOrientation();
         this.dpiCheck();
         this.defaultPrintSize();
         this.drawCanvas();
@@ -136,6 +137,7 @@ export default {
     },
 
     drawCanvas() {
+      //   this.$root.processingImage = true;
       const image = new window.Image();
       image.src = this.$refs.currentimage.src;
       image.onload = () => {
@@ -214,10 +216,38 @@ export default {
         this.imageHeight = this.imageWidth = this.canvasShortDimension;
       }
     },
-    setCanvasOrientation() {
+    updateImageOrientation() {
+      if (
+        "portrait" === this.canvasOrientation &&
+        "landscape" === this.imageOrientation
+      ) {
+        this.imageWidth = this.canvasWidth;
+        this.imageHeight = this.imageWidth * this.imageAspectRatio;
+      } else if (
+        "landscape" === this.canvasOrientation &&
+        "portrait" === this.imageOrientation
+      ) {
+        this.imageWidth = this.canvasHeight * this.imageAspectRatio;
+        this.imageHeight = this.canvasHeight;
+      } else if (
+        "landscape" === this.canvasOrientation &&
+        "landscape" === this.imageOrientation
+      ) {
+        this.imageWidth = this.canvasWidth;
+        this.imageHeight = this.imageWidth * this.imageAspectRatio;
+      } else if (
+        "portrait" === this.canvasOrientation &&
+        "portrait" === this.imageOrientation
+      ) {
+        this.imageWidth = this.canvasHeight * this.imageAspectRatio;
+        this.imageHeight = this.canvasHeight;
+      }
+    },
+    setInitialCanvasOrientation() {
       if ("portrait" === this.imageOrientation) {
         // Portrait
         this.canvasOrientation = "portrait";
+        this.canvasPortrait = true;
         this.canvasWidth = this.canvasShortDimension / 2;
         this.canvasHeight = 500;
         // Final print dimensions.
@@ -226,6 +256,7 @@ export default {
       } else if ("landscape" === this.imageOrientation) {
         //Landscape
         this.canvasOrientation = "landscape";
+        this.canvasPortrait = false;
         this.canvasWidth = this.canvasLongDimension;
         this.canvasHeight = this.canvasShortDimension;
         // Final print dimensions.
@@ -234,9 +265,35 @@ export default {
       } else if ("square" === this.imageOrientation) {
         //   Square
         this.canvasOrientation = "square";
+        this.canvasPortrait = false;
         this.canvasWidth = this.canvasLongDimension;
         this.canvasHeight = this.canvasShortDimension;
       }
+    },
+    toggleCanvasOrientation() {
+      if (true === this.canvasPortrait) {
+        //Set -> Landscape
+        this.canvasOrientation = "landscape";
+        this.canvasPortrait = false;
+        this.canvasWidth = this.canvasLongDimension;
+        this.canvasHeight = this.canvasShortDimension;
+
+        // Final print dimensions.
+        this.fin.canvasWidth = this.canvasLongInches * this.fin.dpi;
+        this.fin.canvasHeight = this.canvasShortInches * this.fin.dpi;
+      } else {
+        //Set -> Portrait
+        this.canvasOrientation = "portrait";
+        this.canvasPortrait = true;
+        this.canvasWidth = this.canvasShortDimension / 2;
+        this.canvasHeight = 500;
+
+        // Final print dimensions.
+        this.fin.canvasWidth = this.canvasShortInches * this.fin.dpi;
+        this.fin.canvasHeight = this.canvasLongInches * this.fin.dpi;
+      }
+      this.updateImageOrientation();
+      this.drawCanvas();
     },
     centerImage() {
       //   Determine X center
@@ -254,25 +311,6 @@ export default {
         this.yCenter = (this.imageHeight - this.canvasHeight) / -2;
       } else if (this.imageHeight === this.canvasHeight) {
         this.yCenter = 0;
-      }
-    },
-    toggleCanvasOrientation() {
-      if ("portrait" === this.canvasOrientation) {
-        //Set -> Landscape
-        this.canvasOrientation = "landscape";
-        this.canvasWidth = this.canvasLongDimension + "px";
-        this.canvasHeight = "initial";
-        // Final print dimensions.
-        this.fin.canvasWidth = this.canvasLongInches * this.fin.dpi;
-        this.fin.canvasHeight = this.canvasShortInches * this.fin.dpi;
-      } else {
-        //Set -> Portrait
-        this.canvasOrientation = "portrait";
-        this.canvasWidth = this.canvasShortDimension / 2 + "px";
-        this.canvasHeight = this.canvasLongDimension / 2 + "px";
-        // Final print dimensions.
-        this.fin.canvasWidth = this.canvasShortInches * this.fin.dpi;
-        this.fin.canvasHeight = this.canvasLongInches * this.fin.dpi;
       }
     },
     setFullFrame() {
