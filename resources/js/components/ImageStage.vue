@@ -11,7 +11,7 @@
         ref="canvas"
         :width="this.canvasWidth"
         :height="this.canvasHeight"
-        style="border: 1px solid #666; max-width:100%; display:block; margin:0 auto;"
+        :style="canvasStyles"
       >
         <img
           ref="currentimage"
@@ -72,14 +72,7 @@ export default {
       imageWidth: "",
       imageHeight: "",
       imageAspectRatio: 0,
-      borderTop: "",
-      borderRight: "",
-      borderBottom: "",
-      borderLeft: "",
-      paddingTop: "",
-      paddingRight: "",
-      paddingBottom: "",
-      paddingLeft: "",
+      border: "",
       scaleFactor: "",
       imageDPI: "",
       dpiWarning: false,
@@ -112,6 +105,17 @@ export default {
     this.defaultPrintSize();
     this.drawCanvas();
   },
+  computed: {
+    canvasStyles() {
+      return {
+        border: "1px solid #666",
+        maxWidth: "100%",
+        display: "block",
+        margin: "0 auto",
+        padding: this.border + "%"
+      };
+    }
+  },
   methods: {
     // Takes the Print Size info from the Product Size select dropdown.
     getImageInfo() {
@@ -123,6 +127,7 @@ export default {
         this.dpiCheck();
         this.defaultPrintSize();
         this.drawCanvas();
+        this.setBorders(border);
       });
       this.widthHeight = size.selectedOptions[0].value.split("x");
       this.canvasLongInches = parseInt(this.widthHeight[1]);
@@ -144,9 +149,9 @@ export default {
         // set image only when it is loaded
         this.centerImage();
         let canvas = this.$refs.canvas;
-        let ctx = canvas.getContext("2d");
+        this.ctx = canvas.getContext("2d");
         let image = this.$refs.currentimage;
-        ctx.drawImage(
+        this.ctx.drawImage(
           image,
           this.xCenter,
           this.yCenter,
@@ -357,7 +362,14 @@ export default {
     rotate() {
       this.fin.angle = (this.fin.angle + 90) % 360;
       this.angle = (this.angle + 90) % 360;
-      // this.setOrientation()
+
+      this.ctx.save();
+      //   this.ctx.translate(canvas.width / 2, canvas.height / 2);
+      this.ctx.rotate((this.angle * Math.PI) / 180);
+      this.drawCanvas();
+      this.ctx.restore();
+      //   this.updateImageOrientation();
+      //   this.drawCanvas();
     },
 
     dpiCheck() {
@@ -376,67 +388,23 @@ export default {
       this.fin.border = border * this.fin.dpi * 2;
 
       //Sets a 3/4" rabbit on frames (solely cosmetic for the editor).
-      let frameRabbit = 0;
-      /**
-       * Come back to this and solve for frames.
-       */
-      // if (true === this.frame) {
-      //     frameRabbit =
-      //         0.75 * (this.canvasLongDimension / this.canvasLongInches) * 0.1
-      // } else {
-      //     frameRabbit = 0
-      // }
-
-      let aspectFactor =
-        ((this.canvasAspectRatio - this.imageAspectRatio) / 2) * 100; //GOOD!
-
-      //if no borders are selected, checks for difference in aspect ratio.
-      if ("portrait" === this.imageOrientation) {
-        //Adds Frame Rabbit value and Aspect ratio
-        this.paddingTop = this.paddingBottom = frameRabbit;
-        this.paddingLeft = this.paddingRight = aspectFactor + frameRabbit;
+      let frameRabbit;
+      if (true === this.frame) {
+        frameRabbit =
+          0.75 * (this.canvasLongDimension / this.canvasLongInches) * 0.1;
       } else {
-        //Adds Frame Rabbit value and Aspect ratio
-        this.paddingTop = this.paddingBottom = aspectFactor + frameRabbit;
-        this.paddingLeft = this.paddingRight = frameRabbit;
+        frameRabbit = 0;
       }
-      //Set Borders
-      this.borderTop = this.paddingTop;
-      this.borderRight = this.paddingRight;
-      this.borderBottom = this.paddingBottom;
-      this.borderLeft = this.paddingLeft;
-
       //If a border is selected...
       //Set border %
-      border =
-        border * (this.canvasLongDimension / this.canvasLongInches) * 0.1;
-
       if (border) {
-        //If aspect ration padding is 0 or less than selected border, use the border.
-        if (0 === this.paddingTop || border > this.paddingTop) {
-          this.borderTop = border + frameRabbit;
-          //If the border is less than the padding, subtract the border from the padding.
-        } else if (border < this.paddingTop) {
-          this.borderTop = this.paddingTop + frameRabbit;
-        }
-        if (0 === this.paddingRight || border > this.paddingRight) {
-          this.borderRight = border + frameRabbit;
-        } else if (border < this.paddingRight) {
-          this.borderRight = this.paddingRight + frameRabbit;
-        }
-        if (0 === this.paddingBottom || border > this.paddingBottom) {
-          this.borderBottom = border + frameRabbit;
-        } else if (border < this.paddingBottom) {
-          this.borderBottom = this.paddingBottom + frameRabbit;
-        }
-        if (0 === this.paddingLeft || border > this.paddingLeft) {
-          this.borderLeft = border + frameRabbit;
-        } else if (border < this.paddingLeft) {
-          this.borderLeft = this.paddingLeft;
-        }
+        border =
+          border * (this.canvasLongDimension / this.canvasLongInches) * 0.1;
+      } else {
+        border = 0;
       }
+      this.border = border + frameRabbit;
     },
-
     getFrameInfo() {
       let frame = document.querySelector("select#frame");
       let regex = /[!"#$%&'()*+,./:;<=>?@[\]^_`{|}~]/g;
@@ -485,13 +453,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// .stage {
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   position: relative;
-//   overflow: hidden;
-// }
+.stage {
+  position: relative;
+}
 
 .frame {
   display: none;
