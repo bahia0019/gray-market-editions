@@ -15,8 +15,21 @@ const app = new Vue({
     },
     mounted() {
         this.infoLinks()
+        this.addToCartValidation()
+    },
+    updated() {
+        this.addToCartValidation()
     },
     methods: {
+        addToCartValidation() {
+            if (this.$refs.addToCart) {
+                // Disable add-to-cart button if no images have been added
+                const addtoCartBtn = this.$refs.addToCart.querySelector('.variations_form [type="submit"]')
+                this.images.length === 0
+                    ? addtoCartBtn.setAttribute('disabled', true)
+                    : addtoCartBtn.removeAttribute('disabled');
+            }
+        },
         infoLinks() {
             let labels = document.querySelectorAll(".variations .label > label")
             for (let i = 0; i < labels.length; i++) {
@@ -36,7 +49,7 @@ const app = new Vue({
                         wcTabs[j].classList.remove("active")
                         let tab = wcTabs[j].id.replace(/tab-title-/g, "")
                         if (link === tab) {
-                            wcTabs[j].scrollIntoView({ behavior: "smooth" })
+                            wcTabs[j].scrollIntoView({behavior: "smooth"})
                             wcTabs[j].classList.add("active")
                             console.log(wcTabs[j])
                         }
@@ -44,9 +57,9 @@ const app = new Vue({
                     document
                         .querySelector(
                             "#tab-title-" +
-                                labels[i].innerText
-                                    .replace(/\*/g, "")
-                                    .toLowerCase()
+                            labels[i].innerText
+                                .replace(/\*/g, "")
+                                .toLowerCase()
                         )
                         .classList.add("active")
                 })
