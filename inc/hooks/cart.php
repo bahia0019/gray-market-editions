@@ -37,3 +37,12 @@ add_action('woocommerce_remove_cart_item', function ($cart_item_key) {
         wp_delete_attachment($item['attachment_id'], true);
     }
 });
+
+// If Exhibition Prints, replace quantity input with quantity as number
+add_filter('woocommerce_cart_item_quantity', function ($product_quantity, $cart_item_key, $cart_item) {
+    if ($cart_item['data']->get_name() !== 'Exhibition Prints') {
+        return $product_quantity;
+    }
+
+    return '<span>' . $cart_item['quantity'] . '</span>';
+}, 10, 3);

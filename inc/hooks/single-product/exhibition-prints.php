@@ -42,6 +42,27 @@ add_action('woocommerce_after_variations_form', function () {
     echo '<input type="hidden" name="gme_exhibition_quantity" v-model="exhibitionQuantity" />';
 });
 
+// Hide woo input field and use Vue binding to handle quantity based on number of images
+add_action('woocommerce_before_quantity_input_field', function () {
+    global $product;
+
+    if (!is_product() || $product->get_name() !== 'Exhibition Prints') {
+        return;
+    }
+
+    echo '<div style="display: none;">';
+});
+
+add_action('woocommerce_after_quantity_input_field', function () {
+    global $product;
+
+    if (!is_product() || $product->get_name() !== 'Exhibition Prints') {
+        return;
+    }
+
+    echo '</div>';
+});
+
 // Append GME image data to cart item during 'add to cart'
 add_filter('woocommerce_add_cart_item_data', function ($cart_item_data, $product_id, $variation_id, $quantity) {
     if (empty($_POST['gme_image_data'])) {
