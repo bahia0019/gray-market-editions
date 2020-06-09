@@ -15,6 +15,9 @@ Updated: 2020-05-09 15:53:18
     width: 80ch;
     margin: 0 auto;
 }
+.woocommerce-page .entry-content {
+    width: 100%;
+}
 
 body,
 html {
