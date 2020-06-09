@@ -36,6 +36,13 @@ img {
 }
 
 /* Woocommerce */
+
+.single-product {
+    #main {
+        margin: 95px 0 0;
+    }
+}
+
 @media (min-width: 768px) {
     .storefront-full-width-content.single-product
         div.product

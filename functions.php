@@ -27,6 +27,7 @@ require_once get_stylesheet_directory() . '/inc/hooks/admin-order.php';
 require_once get_stylesheet_directory() . '/inc/hooks/admin-media.php';
 require_once get_stylesheet_directory() . '/inc/ajax/images.php';
 
+require_once get_stylesheet_directory() . '/inc/hooks/single-product/single-product.php';
 require_once get_stylesheet_directory() . '/inc/hooks/single-product/posters.php';
 require_once get_stylesheet_directory() . '/inc/hooks/single-product/exhibition-prints.php';
 require_once get_stylesheet_directory() . '/inc/hooks/single-product/woocommerce-tabs.php';
