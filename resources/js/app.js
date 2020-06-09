@@ -67,6 +67,9 @@ const app = new Vue({
         },
     },
     computed: {
+        exhibitionQuantity() {
+            return parseInt(this.images.length);
+        },
         finData() {
             const data = this.images.map(image => {
                 return {
