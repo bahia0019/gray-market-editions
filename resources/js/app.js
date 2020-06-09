@@ -1,6 +1,8 @@
 import Vue from "vue"
 import EditorComponent from "./components/EditorComponent.vue"
 
+require('./theme-scripts.js');
+
 Vue.component("editor-component", EditorComponent)
 
 const app = new Vue({
