@@ -475,6 +475,8 @@ export default {
 <style lang="scss" scoped>
 .stage {
   position: relative;
+  width: fit-content;
+  margin: 0 auto;
 }
 
 .frame {
