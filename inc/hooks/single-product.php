@@ -2,14 +2,35 @@
 
 // Control min/max when adding product to cart
 add_filter('woocommerce_available_variation', function ($args, $product) {
-    $args['min_qty'] = 6;
+    // Posters quantity
+    if ($product->get_name() === 'Posters') {
+        $args['step'] = 6;
+        $args['min_qty'] = 6;
+        $args['min_value'] = 6;
+    }
+
+    // Exhibition Prints quantity
+    if ($product->get_name() === 'Exhibition Prints') {
+        $args['step'] = 6;
+        $args['min_qty'] = 6;
+        $args['min_value'] = 6;
+    }
 
     return $args;
 }, 10, 2);
 
 add_filter('woocommerce_quantity_input_args', function ($args, $product) {
-    $args['step'] = 6;
-    $args['min_value'] = 6;
+    // Posters quantity
+    if ($product->get_name() === 'Posters') {
+        $args['step'] = 6;
+        $args['min_value'] = 6;
+    }
+
+    // Exhibition Prints quantity
+    if ($product->get_name() === 'Exhibition Prints') {
+        $args['step'] = 6;
+        $args['min_value'] = 6;
+    }
 
     return $args;
 }, 10, 2);
@@ -31,7 +52,7 @@ add_action('woocommerce_after_add_to_cart_button', function () {
     if ($product->get_name() !== 'Exhibition Prints') {
         return;
     }
-    
+
     echo '</div>';
 });
 

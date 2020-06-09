@@ -2,7 +2,17 @@
 
 // Validate item quantity being add to cart
 add_filter('woocommerce_add_to_cart_validation', function ($is_valid, $product_id, $quantity) {
-    $is_valid = (int) $quantity % 6 === 0 ? true : false;
+    $product_name = wc_get_product($product_id)->get_name();
+
+    // Posters quantity
+    if ($product_name === 'Posters') {
+        $is_valid = (int) $quantity % 6 === 0 ? true : false;
+    }
+
+    // Exhibition Prints quantity
+    if ($product_name === 'Exhibition Prints') {
+        $is_valid = (int) $quantity % 6 === 0 ? true : false;
+    }
 
     return $is_valid;
 }, 10, 3);
