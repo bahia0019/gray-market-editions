@@ -1,17 +1,18 @@
 <?php
 
-// Control min/max when adding product to cart
-add_filter('woocommerce_available_variation', function ($args, $product) {
-    $args['min_qty'] = 6;
+// Adjust Exhibition Prints quantity based on number of images
+add_filter('woocommerce_add_to_cart_quantity', function ($quantity, $product_id) {
+    $product = wc_get_product($product_id);
 
-    return $args;
-}, 10, 2);
+    if ($product->get_name() !== 'Exhibition Prints') {
+        return $quantity;
+    }
 
-add_filter('woocommerce_quantity_input_args', function ($args, $product) {
-    $args['step'] = 6;
-    $args['min_value'] = 6;
+    $gme_quantity = isset($_POST['gme_exhibition_quantity'])
+        ? (int) $_POST['gme_exhibition_quantity']
+        : 0;
 
-    return $args;
+    return $gme_quantity;
 }, 10, 2);
 
 // Conditionally Add Vue ref around 'add to cart'
@@ -31,13 +32,35 @@ add_action('woocommerce_after_add_to_cart_button', function () {
     if ($product->get_name() !== 'Exhibition Prints') {
         return;
     }
-    
+
     echo '</div>';
 });
 
 // Add hidden input field to bind to Vue data for capturing GME image URL's to send along with $_POST data
 add_action('woocommerce_after_variations_form', function () {
     echo '<input type="hidden" name="gme_image_data" v-model="finData" />';
+    echo '<input type="hidden" name="gme_exhibition_quantity" v-model="exhibitionQuantity" />';
+});
+
+// Hide woo input field and use Vue binding to handle quantity based on number of images
+add_action('woocommerce_before_quantity_input_field', function () {
+    global $product;
+
+    if (!is_product() || $product->get_name() !== 'Exhibition Prints') {
+        return;
+    }
+
+    echo '<div style="display: none;">';
+});
+
+add_action('woocommerce_after_quantity_input_field', function () {
+    global $product;
+
+    if (!is_product() || $product->get_name() !== 'Exhibition Prints') {
+        return;
+    }
+
+    echo '</div>';
 });
 
 // Append GME image data to cart item during 'add to cart'
@@ -50,25 +73,3 @@ add_filter('woocommerce_add_cart_item_data', function ($cart_item_data, $product
 
     return $cart_item_data;
 }, 10, 4);
-
-// Append the Informational Tabs
-add_filter('woocommerce_product_tabs', function ($array) {
-    $options = ['frame', 'paper', 'ink'];
-    $order   = 1;
-    $tabs    = [];
-
-    foreach ($options as $option) {
-        $tabs[$option] = [
-            'title'    => ucfirst($option) . ' Options',
-            'priority' => $order++,
-            'callback' => function ($tab, $context) {
-                require GME_TEMPLATES_PATH . 'tab.php';
-            },
-        ];
-    }
-
-    return array_merge($array, $tabs);
-});
-
-// Remove the variable price range.
-remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_price', 10);

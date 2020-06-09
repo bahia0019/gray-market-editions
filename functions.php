@@ -25,5 +25,11 @@ require_once get_stylesheet_directory() . '/inc/hooks/vue-wraps.php';
 require_once get_stylesheet_directory() . '/inc/hooks/my-account.php';
 require_once get_stylesheet_directory() . '/inc/hooks/admin-order.php';
 require_once get_stylesheet_directory() . '/inc/hooks/admin-media.php';
-require_once get_stylesheet_directory() . '/inc/hooks/single-product.php';
 require_once get_stylesheet_directory() . '/inc/ajax/images.php';
+
+require_once get_stylesheet_directory() . '/inc/hooks/single-product/posters.php';
+require_once get_stylesheet_directory() . '/inc/hooks/single-product/exhibition-prints.php';
+require_once get_stylesheet_directory() . '/inc/hooks/single-product/woocommerce-tabs.php';
+
+// Remove the variable price range.
+remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_price', 10);

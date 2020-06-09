@@ -110,9 +110,12 @@ export default {
       this.save(formData);
     },
     upload(formData) {
+      // Start loader
       const url = `${GME_DATA.ajax_url}?action=gme_ajax_image_upload&nonce=${GME_DATA.nonce}`;
 
       return axios.post(url, formData).then(({ data }) => {
+        // Stop loader
+        
         this.$root.images.push(...data.map(data => data));
 
         if (this.$root.images.length && !this.$root.currentImage.id) {
