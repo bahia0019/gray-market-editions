@@ -22,3 +22,13 @@ add_filter('woocommerce_quantity_input_args', function ($args, $product) {
 
     return $args;
 }, 10, 2);
+
+add_action('gme_after_editor', function () {
+    global $product;
+
+    if ($product->get_name() !== 'Posters') {
+        return;
+    }
+
+    require GME_TEMPLATES_PATH . 'posters-download-grid.php';
+}, 5);

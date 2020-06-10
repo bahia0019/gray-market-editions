@@ -60,4 +60,5 @@ $product_types = ['Exhibition Prints', 'Posters', 'Outdoor/Vinyl Prints', 'Frame
             ?>
         </figure>
     <?php endif; ?>
+    <?php do_action( 'gme_after_editor' ); ?>
 </div>

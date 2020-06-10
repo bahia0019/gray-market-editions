@@ -13,8 +13,6 @@
     ></image-stage>
 
     <image-grid></image-grid>
-
-    <poster-templates v-if="productType === 'Posters'"></poster-templates>
   </div>
 </template>
 
@@ -22,14 +20,12 @@
 import ImageUpload from "./ImageUpload.vue";
 import ImageStage from "./ImageStage.vue";
 import ImageGrid from "./ImageGrid.vue";
-import PosterTemplates from "./PosterTemplates.vue";
 
 export default {
   components: {
     ImageUpload,
     ImageStage,
     ImageGrid,
-    PosterTemplates
   },
   props: {
     productType: {
