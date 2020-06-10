@@ -1,6 +1,7 @@
 {
   "require": {
-    "intervention/image": "^2.5"
+    "intervention/image": "^2.5",
+    "nelexa/zip": "^3.3"
   },
   "autoload": {
     "psr-4": {
