@@ -1,23 +1,22 @@
 <?php
 
+use Intervention\Image\ImageManager;
+
 if (!function_exists('gme_image_upload')) {
     function gme_image_upload($file, $image_size = 'editor_image', $post_id = 0)
     {
         define('GME_AJAX_UPLOADING', true);
 
-        $upload = wp_upload_bits($file['name'], null, file_get_contents($file['tmp_name']));
+        $image_data = (new ImageManager)
+            ->make($file['tmp_name'])
+            ->orientate()
+            ->response();
+
+        $upload = wp_upload_bits($file['name'], null, $image_data);
 
         $wp_filetype = wp_check_filetype(basename($upload['file']), null);
 
         $original_dimensions = getimagesize($upload['file']);
-
-        if ($original_dimensions[0] > $original_dimensions[1]) {
-            $original_long_dimension  = $original_dimensions[0];
-            $original_short_dimension = $original_dimensions[1];
-        } else {
-            $original_long_dimension  = $original_dimensions[1];
-            $original_short_dimension = $original_dimensions[0];
-        }
 
         $attachment = [
             'post_mime_type' => $wp_filetype['type'],
@@ -37,15 +36,6 @@ if (!function_exists('gme_image_upload')) {
         $editor_image            = wp_get_attachment_image_src($attach_id, $image_size);
         $editor_image_dimensions = getimagesize($editor_image[0]);
 
-        // If width is longer than height (it's landscape)
-        if ($editor_image_dimensions[0] > $editor_image_dimensions[1]) {
-            $original_width  = $original_long_dimension;
-            $original_height = $original_short_dimension;
-        } else { // Else height is longer than width (it's portrait)
-            $original_width  = $original_short_dimension;
-            $original_height = $original_long_dimension;
-        }
-
         define('GME_AJAX_UPLOADING', false);
 
         return [
@@ -62,8 +52,8 @@ if (!function_exists('gme_image_upload')) {
             ],
             'original' => [
                 'url'    => $upload['url'],
-                'width'  => $original_width,
-                'height' => $original_height,
+                'width'  => $original_dimensions[0],
+                'height' => $original_dimensions[1],
             ],
         ];
     }
