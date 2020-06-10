@@ -1,0 +1,24 @@
+.template-grid-wrapper {
+    margin-top: 2rem;
+
+    p {
+        margin-bottom: 1rem;
+    }
+
+    .template-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 2.5rem;
+
+        .template-grid__item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+
+            a {
+                margin-top: 0.25rem;
+            }
+        }
+    }
+}

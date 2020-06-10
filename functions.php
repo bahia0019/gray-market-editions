@@ -29,6 +29,7 @@ require_once get_stylesheet_directory() . '/inc/ajax/images.php';
 
 require_once get_stylesheet_directory() . '/inc/hooks/single-product/single-product.php';
 require_once get_stylesheet_directory() . '/inc/hooks/single-product/posters.php';
+require_once get_stylesheet_directory() . '/inc/hooks/single-product/vinyl.php';
 require_once get_stylesheet_directory() . '/inc/hooks/single-product/exhibition-prints.php';
 require_once get_stylesheet_directory() . '/inc/hooks/single-product/woocommerce-tabs.php';
 
