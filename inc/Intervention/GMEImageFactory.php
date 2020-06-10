@@ -52,6 +52,7 @@ class GMEImageFactory
             ->canvas($canvas_width, $canvas_height, '#ffffff');
 
         $overlay = $this->image
+            ->orientate()
             ->resize($overlay_width, $overlay_height)
             ->rotate(-$angle, '#ffffff'); // Invert rotates counter-clockwise appending (-)
 
