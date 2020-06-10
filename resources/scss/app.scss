@@ -1,6 +1,8 @@
-img {
-    border-radius: 0;
-}
+@import './_global.scss';
+@import './_vue.scss';
+@import './_gme-mini-grid.scss';
+@import './_poster-download-grid.scss';
+
 .stage.portrait {
     height: 100%;
 }
@@ -52,39 +54,4 @@ img {
     .storefront-full-width-content.single-product div.product .summary {
         width: 25%;
     }
-}
-
-/* Vue helpers */
-[v-cloak] {
-    display: none;
-}
-
-/* GME mini grid */
-#gme-image-mini-grid {
-    margin-top: 1rem;
-    width: 250px;
-}
-
-.gme-image-mini-grid__title {
-    font-weight: bold;
-    color: gray;
-    margin-bottom: 0.1rem;
-}
-
-.gme-image-mini-grid__grid {
-    display: grid;
-    grid-gap: 1rem;
-    grid-template-columns: repeat(4, 1fr);
-}
-
-.gme-image-mini-grid__image {
-    width: 100%;
-}
-
-.gme-image-mini-grid__button {
-    margin-top: 1rem !important;
-}
-
-.gme-image-mini-grid__downloads {
-    margin-top: 0.5rem;
 }
