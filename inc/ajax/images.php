@@ -1,5 +1,6 @@
 <?php
 
+use PhpZip\ZipFile;
 use BoxyBird\GME\Intervention\GMEImageFactory;
 
 function gme_ajax_image_upload()
@@ -29,13 +30,24 @@ function gme_ajax_image_process()
         ? json_decode(stripslashes($_POST['gme_image_data']), true)
         : [];
 
-    $res = array_map(function ($item) {
+    $zip_file = new ZipFile;
+
+    $images = array_map(function ($item) use ($zip_file) {
         $gme_image = new GMEImageFactory($item['attachment_id']);
         $gme_image->process();
+
+        $zip_file->addFile($gme_image->processed_image_path);
 
         return $gme_image->processed_image_url;
     }, $gme_image_data);
 
-    wp_send_json($res);
+    $zip_url  = GME_UPLOADS_URL . $_POST['zip_file_name'] . '.zip';
+    $zip_path = GME_UPLOADS_PATH . $_POST['zip_file_name'] . '.zip';
+    $zip_file->saveAsFile($zip_path);
+
+    wp_send_json([
+        'zip'    => $zip_url,
+        'images' => $images,
+    ]);
 }
 add_action('wp_ajax_gme_ajax_image_process', 'gme_ajax_image_process');
