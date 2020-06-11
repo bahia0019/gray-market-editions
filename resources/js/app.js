@@ -38,7 +38,10 @@ const app = new Vue({
         infoLinks() {
             let labels = document.querySelectorAll(".variations .label > label")
             let infoTabWrapper = document.querySelector(".wc-tabs-wrapper")
-            infoTabWrapper.setAttribute("id", "info-tab-wrapper")
+
+            if (infoTabWrapper) {
+                infoTabWrapper.setAttribute("id", "info-tab-wrapper")
+            }
 
             for (let i = 0; i < labels.length; i++) {
                 labels[i].innerHTML =
