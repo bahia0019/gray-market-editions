@@ -3,6 +3,7 @@
     <image-upload
       :show="$root.showUploader"
       :is-overlay="$root.images.length ? true : false"
+      :is-multiple="isExhibitionPrints"
     ></image-upload>
 
     <image-stage
@@ -25,12 +26,17 @@ export default {
   components: {
     ImageUpload,
     ImageStage,
-    ImageGrid,
+    ImageGrid
   },
   props: {
     productType: {
       type: String,
       required: true
+    }
+  },
+  computed: {
+    isExhibitionPrints() {
+      return this.productType === "Exhibition Prints" ? true : false;
     }
   }
 };
