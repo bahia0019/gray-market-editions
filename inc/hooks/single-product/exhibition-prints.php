@@ -50,7 +50,7 @@ add_action('woocommerce_before_quantity_input_field', function () {
         return;
     }
 
-    echo '<div style="display: none;">';
+    // echo '<div style="display: none;">';
 });
 
 add_action('woocommerce_after_quantity_input_field', function () {
@@ -60,7 +60,7 @@ add_action('woocommerce_after_quantity_input_field', function () {
         return;
     }
 
-    echo '</div>';
+    // echo '</div>';
 });
 
 // Append GME image data to cart item during 'add to cart'
