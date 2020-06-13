@@ -28,7 +28,9 @@
     </div>
 
     <div class="tray">
-      <div :class="{ warning: dpiWarning }">Your image is {{ imageDPI }} dpi</div>
+      <div
+        :class="{ warning: dpiWarning }"
+      >Your image is {{ imageDPI }} dpi, we recommend a resolution of 200dpi or more.</div>
       <edit-tools
         :fullFrame="fullFrame"
         @fullFrameClick="setFullFrame"
