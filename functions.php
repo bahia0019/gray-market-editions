@@ -15,6 +15,8 @@ define('GME_TEMPLATES_PATH', get_stylesheet_directory() . '/inc/templates/');
 // Make custom directory
 wp_mkdir_p(GME_UPLOADS_PATH);
 
+require_once get_stylesheet_directory() . '/woocommerce/function-overrides.php';
+
 require_once get_stylesheet_directory() . '/inc/gme-functions.php';
 require_once get_stylesheet_directory() . '/inc/wp-enqueue.php';
 require_once get_stylesheet_directory() . '/inc/hooks/acf.php';
