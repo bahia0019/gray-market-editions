@@ -1,9 +1,11 @@
 import Vue from "vue"
 import EditorComponent from "./components/EditorComponent.vue"
+import ExhibitionPrintsQty from "./components/ExhibitionPrintsQty.vue"
 
 require("./theme-scripts.js")
 
 Vue.component("editor-component", EditorComponent)
+Vue.component("exhibition-prints-qty", ExhibitionPrintsQty)
 
 const app = new Vue({
     el: "#vue-app",
@@ -38,7 +40,10 @@ const app = new Vue({
         infoLinks() {
             let labels = document.querySelectorAll(".variations .label > label")
             let infoTabWrapper = document.querySelector(".wc-tabs-wrapper")
-            infoTabWrapper.setAttribute("id", "info-tab-wrapper")
+
+            if (infoTabWrapper) {
+                infoTabWrapper.setAttribute("id", "info-tab-wrapper")
+            }
 
             for (let i = 0; i < labels.length; i++) {
                 labels[i].innerHTML =

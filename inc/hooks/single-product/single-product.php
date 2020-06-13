@@ -25,3 +25,6 @@ add_action('woocommerce_product_meta_end', function () {
 
     echo '</div>';
 });
+
+// Remove the variable price range.
+remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_price', 10);

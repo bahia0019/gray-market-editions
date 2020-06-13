@@ -49,7 +49,8 @@ add_action('woocommerce_before_quantity_input_field', function () {
     if (!is_product() || $product->get_name() !== 'Exhibition Prints') {
         return;
     }
-
+    
+    echo '<exhibition-prints-qty></exhibition-prints-qty>';
     echo '<div style="display: none;">';
 });
 

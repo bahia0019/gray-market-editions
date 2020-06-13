@@ -3,7 +3,7 @@
     <div class="dropbox" :class="{'is-overlay': isOverlay}">
       <input
         type="file"
-        multiple
+        :multiple="isMultiple"
         :disabled="isSaving"
         @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
         accept="image/*"
@@ -46,6 +46,10 @@ export default {
       default: true
     },
     isOverlay: {
+      type: Boolean,
+      default: false
+    },
+    isMultiple: {
       type: Boolean,
       default: false
     }
