@@ -1,9 +1,11 @@
 import Vue from "vue"
 import EditorComponent from "./components/EditorComponent.vue"
+import ExhibitionPrintsQty from "./components/ExhibitionPrintsQty.vue"
 
 require("./theme-scripts.js")
 
 Vue.component("editor-component", EditorComponent)
+Vue.component("exhibition-prints-qty", ExhibitionPrintsQty)
 
 const app = new Vue({
     el: "#vue-app",
