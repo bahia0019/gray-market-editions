@@ -17,12 +17,12 @@
 
       <div v-if="fullFrame" class="tool-tip">
         <div class="triangle"></div>
-        <div class="tip">Fit to paper</div>
+        <div class="tip">Set to Original Aspect Ratio</div>
       </div>
 
       <div v-else class="tool-tip">
         <div class="triangle"></div>
-        <div class="tip">Full Frame</div>
+        <div class="tip">Fit to Print Size</div>
       </div>
     </button>
 
@@ -45,7 +45,7 @@
 
       <div class="tool-tip" v-if="isHidden">
         <div class="triangle"></div>
-        <div class="tip">Borders</div>
+        <div class="tip">Set Borders</div>
       </div>
     </div>
 
@@ -72,11 +72,11 @@
 
       <div v-if="canvasPortrait" class="tool-tip">
         <div class="triangle"></div>
-        <div class="tip">Switch to Landscape layout</div>
+        <div class="tip">Switch to Landscape Layout</div>
       </div>
       <div v-else class="tool-tip">
         <div class="triangle"></div>
-        <div class="tip">Switch to Portrait layout</div>
+        <div class="tip">Switch to Portrait Layout</div>
       </div>
     </button>
 

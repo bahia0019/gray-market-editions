@@ -15,6 +15,10 @@ Updated: 2020-05-09 15:53:18
     width: 80ch;
     margin: 0 auto;
 }
+html.no-focus-outline a:focus,
+html.no-focus-outline button:focus {
+    outline: none;
+}
 .woocommerce-page .entry-content {
     width: 100%;
 }
@@ -22,6 +26,10 @@ Updated: 2020-05-09 15:53:18
 body,
 html {
     scroll-behavior: smooth;
+}
+
+.home .entry-header {
+    display: none;
 }
 
 .woocommerce-tabs:focus {
