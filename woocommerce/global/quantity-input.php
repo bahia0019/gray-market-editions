@@ -17,9 +17,18 @@
 
 defined( 'ABSPATH' ) || exit;
 
-global $product;
+$isExhibitionPrints = false;
 
-$isExhibitionPrints = $product->get_name() === 'Exhibition Prints' ? true : false;
+if (is_product()) {
+    global $product;
+
+    if ($product) {
+        $isExhibitionPrints = $product->get_name() === 'Exhibition Prints' 
+            ? true 
+            : false;
+    }
+
+}
 
 if ( $max_value && $min_value === $max_value ) {
 	?>
