@@ -35,11 +35,13 @@ if (!function_exists('gme_image_upload')) {
         $thumbnail               = wp_get_attachment_image_src($attach_id);
         $editor_image            = wp_get_attachment_image_src($attach_id, $image_size);
         $editor_image_dimensions = getimagesize($editor_image[0]);
+        $short_name              = '...' . substr($file['name'], -10);
 
         define('GME_AJAX_UPLOADING', false);
 
         return [
-            'id'           => $attach_id,
+            'id'         => $attach_id,
+            'short_name' => $short_name,
             'editor_image' => [
                 'url'    => $editor_image[0],
                 'width'  => $editor_image_dimensions[0],
