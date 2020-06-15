@@ -37,7 +37,7 @@ $wrapper_classes   = apply_filters(
     ]
 );
 
-$product_types = ['Exhibition Prints', 'Posters', 'Outdoor/Vinyl Prints', 'Frames'];
+$product_types = [ 'Exhibition Prints', 'Posters', 'Outdoor/Vinyl Prints' ];
 ?>
 
 <div class="<?php echo esc_attr(implode(' ', array_map('sanitize_html_class', $wrapper_classes))); ?>" data-columns="<?php echo esc_attr($columns); ?>">
