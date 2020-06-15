@@ -2,6 +2,10 @@
 
 // Append the Informational Tabs
 add_filter('woocommerce_product_tabs', function ($array) {
+    global $product;
+
+    $product_name = $product->get_name(); // returns 'Exhibition Prints', 'Posters', etc...
+
     $options = ['frame', 'paper', 'ink'];
     $order   = 1;
     $tabs    = [];
