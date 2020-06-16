@@ -13,7 +13,7 @@
       v-show="image.id === $root.currentImage.id"
     ></image-stage>
 
-    <image-grid></image-grid>
+    <image-grid v-if="isExhibitionPrints"></image-grid>
   </div>
 </template>
 
