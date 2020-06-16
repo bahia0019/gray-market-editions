@@ -107,7 +107,9 @@ export default {
     this.setImageOrientation();
     this.setInitialCanvasOrientation();
     this.dpiCheck();
-    this.getFrameInfo();
+    if (this.isExhibitionPrints) {
+      this.getFrameInfo();
+    }
     this.defaultPrintSize();
     this.drawCanvas();
   },
