@@ -1,6 +1,5 @@
 // All scripts to go inside this listener.
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("test")
     document.querySelector("html").classList.add("no-focus-outline")
     /**
      * Listen to tab events to enable outlines only when needed.

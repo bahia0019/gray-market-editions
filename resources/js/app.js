@@ -20,7 +20,6 @@ const app = new Vue({
     mounted() {
         this.infoLinks()
         this.addToCartValidation()
-        this.amount()
     },
     updated() {
         this.addToCartValidation()
@@ -76,22 +75,6 @@ const app = new Vue({
                     }
                 })
             }
-        },
-        amount() {
-            let labels = document.querySelectorAll(".variations select")
-            let amount = document.querySelector(".amount")
-            console.log(labels)
-            console.log(amount.innerHTML)
-
-            // for (let i = 0; i < labels.length; i++) {
-            //     labels[i].addEventListener("change", function() {
-            //         let amount = document.querySelector(
-            //             ".woocommerce-variation-price"
-            //         )
-            //         console.log("poop")
-            //         console.log(amount.innerHTML)
-            //     })
-            // }
         },
     },
     computed: {

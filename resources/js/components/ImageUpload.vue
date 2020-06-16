@@ -9,24 +9,17 @@
         accept="image/*"
         class="input-file"
       />
-      <div
-        class="dropbox__body"
-        :class="{'is-overlay': isOverlay}"
-        v-if="!isSaving"
-      >
+      <div class="dropbox__body" :class="{'is-overlay': isOverlay}" v-if="!isSaving">
         <svg viewBox="0 0 32 32">
           <path
             d="M26 2h-20l-6 6v21c0 0.552 0.448 1 1 1h30c0.552 0 1-0.448 1-1v-21l-6-6zM20 20v6h-8v-6h-6l10-8 10 8h-6zM4.828 6l2-2h18.343l2 2h-22.343z"
           />
         </svg>
         <span>{{ isOverlay ? 'Upload More' : 'Upload Images' }}</span>
-        <span
-          class="cancel"
-          @click="$root.showUploader = false"
-          v-if="isOverlay"
-        >cancel</span>
+        <span class="cancel" @click="$root.showUploader = false" v-if="isOverlay">cancel</span>
       </div>
-      <p v-if="isSaving">Uploading {{ fileCount }} files...</p>
+      <p v-if="isSaving && isMultiple">Uploading {{ fileCount }} files...</p>
+      <p v-if="isSaving">Uploading file.</p>
     </div>
   </form>
 </template>
@@ -119,7 +112,7 @@ export default {
 
       return axios.post(url, formData).then(({ data }) => {
         // Stop loader
-        
+
         this.$root.images.push(...data.map(data => data));
 
         if (this.$root.images.length && !this.$root.currentImage.id) {
