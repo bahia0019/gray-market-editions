@@ -32,6 +32,7 @@
         :class="{ warning: dpiWarning }"
       >Your image is {{ imageDPI }} dpi, we recommend a resolution of 200dpi or more.</div>
       <edit-tools
+        v-if="isExhibitionPrints"
         :fullFrame="fullFrame"
         @fullFrameClick="setFullFrame"
         @setBorder="setBorders"
@@ -53,6 +54,10 @@ export default {
   props: {
     image: {
       type: Object,
+      required: true
+    },
+    isExhibitionPrints: {
+      type: Boolean,
       required: true
     }
   },

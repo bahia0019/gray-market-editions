@@ -11,9 +11,10 @@
       :key="image.id"
       :image="image"
       v-show="image.id === $root.currentImage.id"
+      :is-exhibition-prints="isExhibitionPrints"
     ></image-stage>
 
-    <image-grid></image-grid>
+    <image-grid v-if="isExhibitionPrints"></image-grid>
   </div>
 </template>
 
