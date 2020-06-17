@@ -15,27 +15,6 @@ add_filter('woocommerce_add_to_cart_quantity', function ($quantity, $product_id)
     return $gme_quantity;
 }, 10, 2);
 
-// Conditionally Add Vue ref around 'add to cart'
-add_action('woocommerce_before_add_to_cart_button', function () {
-    global $product;
-
-    if ($product->get_name() !== 'Exhibition Prints') {
-        return;
-    }
-
-    echo '<div ref="addToCart">';
-});
-
-add_action('woocommerce_after_add_to_cart_button', function () {
-    global $product;
-
-    if ($product->get_name() !== 'Exhibition Prints') {
-        return;
-    }
-
-    echo '</div>';
-});
-
 // Add hidden input field to bind to Vue data for capturing GME image URL's to send along with $_POST data
 add_action('woocommerce_after_variations_form', function () {
     echo '<input type="hidden" name="gme_image_data" v-model="finData" />';
