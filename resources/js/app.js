@@ -29,8 +29,11 @@ const app = new Vue({
             if (this.$refs.addToCart) {
                 // Disable add-to-cart button if no images have been added
                 const addtoCartBtn = this.$refs.addToCart.querySelector(
-                    '.variations_form [type="submit"]'
+                    '.single-product .summary.entry-summary form [type="submit"]'
                 )
+                
+                if (!addtoCartBtn) return
+
                 this.images.length === 0
                     ? addtoCartBtn.setAttribute("disabled", true)
                     : addtoCartBtn.removeAttribute("disabled")
