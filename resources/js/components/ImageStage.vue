@@ -435,7 +435,7 @@ export default {
       this.fin.border = border * this.fin.dpi * 2;
     },
     getFrameInfo() {
-      let frame = document.querySelector("select#frame");
+      let frame = document.querySelector("select#frame-style");
       let regex = /[!"#$%&'()*+,./:;<=>?@[\]^_`{|}~]/g;
       let frameStyle;
       frame.addEventListener("change", event => {
