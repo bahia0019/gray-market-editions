@@ -12,4 +12,31 @@ document.addEventListener("DOMContentLoaded", () => {
             )
         }
     })
+
+    const fixedScrollEditor = () => {
+        let interval = setInterval(() => {
+            const summary = document.querySelector(".summary")
+
+            // Wait till frame select is loaded to run these functions.
+            if (summary) {
+                const controller = new ScrollMagic.Controller({})
+                const editorWrapper = document.querySelector(".wrapper")
+
+                function summaryHeight() {
+                    return summary.offsetHeight - 500
+                }
+
+                new ScrollMagic.Scene({
+                    triggerElement: "#trigger",
+                    offset: 200,
+                    duration: summaryHeight,
+                })
+                    .setPin(editorWrapper)
+                    .addTo(controller)
+
+                clearInterval(interval)
+            }
+        }, 1000)
+    }
+    fixedScrollEditor()
 })
