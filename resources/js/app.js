@@ -131,6 +131,14 @@ const app = new Vue({
             }
         },
     },
+    watch: {
+        images: {
+            handler() {
+                this.addToCartValidation()
+            },
+            immediate: true 
+        }
+    },
     computed: {
         exhibitionQuantity() {
             return parseInt(this.images.length)
