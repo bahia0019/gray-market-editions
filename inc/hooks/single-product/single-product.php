@@ -28,28 +28,3 @@ add_action('woocommerce_product_meta_end', function () {
 
 // Remove the variable price range.
 remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_price', 10);
-
-// Conditionally Add Vue ref around 'add to cart'
-add_action('woocommerce_before_add_to_cart_button', function () {
-    global $product;
-
-    $allowed = ['Exhibition Prints', 'Posters', 'Outdoor/Vinyl Prints'];
-
-    if (!in_array($product->get_name(), $allowed)) {
-        return;
-    }
-
-    echo '<div ref="addToCart">';
-});
-
-add_action('woocommerce_after_add_to_cart_button', function () {
-    global $product;
-
-    $allowed = ['Exhibition Prints', 'Posters', 'Outdoor/Vinyl Prints'];
-
-    if (!in_array($product->get_name(), $allowed)) {
-        return;
-    }
-
-    echo '</div>';
-});
