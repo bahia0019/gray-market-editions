@@ -18,16 +18,12 @@ const app = new Vue({
         }
     },
     mounted() {
-        // this.addToCartValidation()
         if ("exhibition-prints" !== GME_PRODUCT.type) {
             this.infoLinks()
             this.changeFrameSize()
         } else {
             this.delayLoad()
         }
-    },
-    updated() {
-        // this.addToCartValidation()
     },
     methods: {
         delayLoad() {
@@ -39,23 +35,22 @@ const app = new Vue({
                 if (frameSelect) {
                     this.infoLinks()
                     this.changeFrameSize()
+                    this.addToCartValidation()
                     clearInterval(interval)
                 }
             }, 1000)
         },
         addToCartValidation() {
-            if (this.$refs.addToCart) {
-                // Disable add-to-cart button if no images have been added
-                const addtoCartBtn = this.$refs.addToCart.querySelector(
-                    '.single-product .summary.entry-summary form [type="submit"]'
-                )
-                console.log(addtoCartBtn)
-                if (!addtoCartBtn) return
+            // Disable add-to-cart button if no images have been added
+            const addtoCartBtn = document.querySelector(
+                '.single-product .single_add_to_cart_button'
+            )
 
-                this.images.length === 0
-                    ? addtoCartBtn.setAttribute("disabled", true)
-                    : addtoCartBtn.removeAttribute("disabled")
-            }
+            if (!addtoCartBtn) return
+
+            this.images.length === 0
+                ? addtoCartBtn.setAttribute("disabled", true)
+                : addtoCartBtn.removeAttribute("disabled")
         },
         infoLinks() {
             let labels = document.querySelectorAll(".variations .label > label")
