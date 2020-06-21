@@ -5,7 +5,9 @@ use Intervention\Image\ImageManager;
 if (!function_exists('gme_image_upload')) {
     function gme_image_upload($file, $image_size = 'editor_image', $post_id = 0)
     {
-        define('GME_AJAX_UPLOADING', true);
+        global $gme_ajax_uploading;
+
+        $gme_ajax_uploading = true;
 
         $image_data = (new ImageManager)
             ->make($file['tmp_name'])
@@ -37,11 +39,11 @@ if (!function_exists('gme_image_upload')) {
         $editor_image_dimensions = getimagesize($editor_image[0]);
         $short_name              = '...' . substr($file['name'], -10);
 
-        define('GME_AJAX_UPLOADING', false);
+        $gme_ajax_uploading = false;
 
         return [
-            'id'         => $attach_id,
-            'short_name' => $short_name,
+            'id'           => $attach_id,
+            'short_name'   => $short_name,
             'editor_image' => [
                 'url'    => $editor_image[0],
                 'width'  => $editor_image_dimensions[0],

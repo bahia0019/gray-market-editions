@@ -18,7 +18,9 @@ add_filter('upload_mimes', function ($mimes) {
 
 // Mutate $sizes to return only needed images during AJAX image upload
 add_filter('intermediate_image_sizes', function ($sizes) {
-    if (!defined('GME_AJAX_UPLOADING') || GME_AJAX_UPLOADING === false) {
+    global $gme_ajax_uploading;
+
+    if (!$gme_ajax_uploading) {
         return $sizes;
     }
 
