@@ -5,8 +5,8 @@ if (!defined('WPINC')) {
     die;
 }
 
-// Add the support for full width Gutenberg blocks. 
-add_theme_support( 'align-wide' );
+// Add the support for full width Gutenberg blocks.
+add_theme_support('align-wide');
 
 require_once __DIR__ . '/vendor/autoload.php';
 
