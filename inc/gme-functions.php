@@ -62,3 +62,32 @@ if (!function_exists('gme_image_upload')) {
         ];
     }
 }
+
+if (!function_exists('gme_send_json')) {
+    function gme_send_json(array $data)
+    {
+        $data = json_encode($data);
+
+        header('Content-Type: application/json');
+
+        // Checks if gzip is supported by client
+        $pack = true;
+
+        if (empty($_SERVER['HTTP_ACCEPT_ENCODING']) || strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === false) {
+            $pack = false;
+        }
+
+        // If supported, gzips data
+        if ($pack) {
+            header('Content-Encoding: gzip');
+
+            $data = gzencode($data, 9, FORCE_GZIP);
+        }
+
+        // Compressed or not, sets the Content-Length
+        header('Content-Length: ' . strlen($data, 'latin1'));
+
+        echo $data;
+        exit;
+    }
+}

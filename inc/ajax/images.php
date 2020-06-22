@@ -17,7 +17,7 @@ function gme_ajax_image_upload()
         return gme_image_upload($file);
     }, $_FILES);
 
-    wp_send_json($uploads);
+    gme_send_json($uploads);
 }
 add_action('wp_ajax_gme_ajax_image_upload', 'gme_ajax_image_upload');
 add_action('wp_ajax_nopriv_gme_ajax_image_upload', 'gme_ajax_image_upload');
