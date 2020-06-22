@@ -11,27 +11,6 @@ Updated: 2020-05-09 15:53:18
 
 */
 
-.entry-content {
-    padding-left: 15px;
-    padding-right: 15px;
-    margin: 0 1rem;
-    max-width: calc(100% - 2rem);
-}
-
-@media only screen and (min-width: 768px) {
-    .entry-content {
-        margin: 0 auto;
-        max-width: 60ch;
-    }
-}
-
-@media only screen and (min-width: 1500px) {
-    .entry-content {
-        margin: 0 auto;
-        max-width: 1200px;
-    }
-}
-
 .alignwide {
     margin-left: -8em;
     margin-right: -8em;
