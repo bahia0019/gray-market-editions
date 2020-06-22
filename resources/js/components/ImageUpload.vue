@@ -15,12 +15,28 @@
             d="M26 2h-20l-6 6v21c0 0.552 0.448 1 1 1h30c0.552 0 1-0.448 1-1v-21l-6-6zM20 20v6h-8v-6h-6l10-8 10 8h-6zM4.828 6l2-2h18.343l2 2h-22.343z"
           />
         </svg>
-        <span v-if="isMultiple">{{ isOverlay ? 'Upload More' : 'Upload Images' }}</span>
-        <span v-else>Upload Image</span>
+        <span v-if="isMultiple">{{ isOverlay ? 'Upload More' : 'Upload Multiple Images' }}</span>
+        <span v-else>Upload Single Image</span>
         <span class="cancel" @click="$root.showUploader = false" v-if="isOverlay">cancel</span>
       </div>
-      <p v-if="isSaving && isMultiple">Uploading {{ fileCount }} files...</p>
-      <p v-if="isSaving && !isMultiple">Uploading file...</p>
+      <div class="loading-text" v-if="isSaving && isMultiple">
+        <p>Uploading {{ fileCount }} files...</p>
+        <p>Don't close window. Multiple large files may take a couple minutes.</p>
+        <svg viewBox="0 0 32 32" class="spinner">
+          <path
+            d="M32 12h-12l4.485-4.485c-2.267-2.266-5.28-3.515-8.485-3.515s-6.219 1.248-8.485 3.515c-2.266 2.267-3.515 5.28-3.515 8.485s1.248 6.219 3.515 8.485c2.267 2.266 5.28 3.515 8.485 3.515s6.219-1.248 8.485-3.515c0.189-0.189 0.371-0.384 0.546-0.583l3.010 2.634c-2.933 3.349-7.239 5.464-12.041 5.464-8.837 0-16-7.163-16-16s7.163-16 16-16c4.418 0 8.418 1.791 11.313 4.687l4.687-4.687v12z"
+          />
+        </svg>
+      </div>
+      <div class="loading-text" v-if="isSaving && !isMultiple">
+        <p>Uploading file...</p>
+        <p>Don't close window. Large files may take a couple minutes.</p>
+        <svg viewBox="0 0 32 32" class="spinner">
+          <path
+            d="M32 12h-12l4.485-4.485c-2.267-2.266-5.28-3.515-8.485-3.515s-6.219 1.248-8.485 3.515c-2.266 2.267-3.515 5.28-3.515 8.485s1.248 6.219 3.515 8.485c2.267 2.266 5.28 3.515 8.485 3.515s6.219-1.248 8.485-3.515c0.189-0.189 0.371-0.384 0.546-0.583l3.010 2.634c-2.933 3.349-7.239 5.464-12.041 5.464-8.837 0-16-7.163-16-16s7.163-16 16-16c4.418 0 8.418 1.791 11.313 4.687l4.687-4.687v12z"
+          />
+        </svg>
+      </div>
     </div>
   </form>
 </template>
@@ -151,7 +167,6 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-
     svg {
       width: 40px;
       fill: #ffffff;
@@ -166,6 +181,34 @@ export default {
       padding: 5px 20px;
     }
   }
+}
+.loading-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes spinner {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  display: block;
+  width: 25px;
+  height: 25px;
+  margin-top: 10px;
+  filter: opacity(0.5);
+  z-index: 10;
+  animation-name: spinner;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
 }
 
 .input-file {
