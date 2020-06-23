@@ -34,7 +34,7 @@
     </div>
 
     <div class="tray">
-      <div>Your Chosen Print size is {{fin.canvasHeight / 200}}"x{{fin.canvasWidth / 200}}". Your Image area is {{(fin.overlayHeight / 200).toFixed(1)}}"x{{(fin.overlayWidth / 200).toFixed(1)}}"</div>
+      <div>Your Chosen Print size is {{fin.canvasHeight / 200}}"x{{fin.canvasWidth / 200}}". Your Image area is {{(fin.overlayHeight / 200 ).toFixed(1)}}"x{{(fin.overlayWidth / 200).toFixed(1)}}"</div>
       <edit-tools
         v-if="isExhibitionPrints"
         :fullFrame="fullFrame"
@@ -116,7 +116,7 @@ export default {
     this.defaultPrintSize();
     this.drawCanvas();
 
-    this.$root.$on('setBorder', border => this.setBorders(border))
+    this.$root.$on("setBorder", border => this.setBorders(border));
   },
   computed: {
     canvasStyles() {
@@ -418,6 +418,13 @@ export default {
       }
     },
     setBorders(border) {
+      // Final border width *2 for Intervention.
+      if (border) {
+        this.fin.border = border * this.fin.dpi * 2;
+      } else {
+        this.fin.border = 0;
+      }
+
       //Sets a 3/4" rabbit on frames (solely cosmetic for the editor).
       let frameRabbit;
       if (true === this.frame) {
@@ -436,8 +443,6 @@ export default {
       }
       //
       this.border = border + frameRabbit;
-      // Final border width *2 for Intervention.
-      this.fin.border = border * this.fin.dpi * 2;
     },
     getFrameInfo() {
       let frame = document.querySelector("select#frame-style");
