@@ -25,12 +25,16 @@
           d="M32 12h-12l4.485-4.485c-2.267-2.266-5.28-3.515-8.485-3.515s-6.219 1.248-8.485 3.515c-2.266 2.267-3.515 5.28-3.515 8.485s1.248 6.219 3.515 8.485c2.267 2.266 5.28 3.515 8.485 3.515s6.219-1.248 8.485-3.515c0.189-0.189 0.371-0.384 0.546-0.583l3.010 2.634c-2.933 3.349-7.239 5.464-12.041 5.464-8.837 0-16-7.163-16-16s7.163-16 16-16c4.418 0 8.418 1.791 11.313 4.687l4.687-4.687v12z"
         />
       </svg>
+      <div v-if="dpiWarning" :class="{ warning: dpiWarning }">
+        <div>
+          <p>At {{fin.canvasHeight / 200}}"x{{fin.canvasWidth / 200}}", your image resolution is {{ imageDPI }} dpi, we suggest a resolution of 200dpi or more.</p>
+          <p>Either select a smaller print size, or upload a larger file.</p>
+        </div>
+      </div>
     </div>
 
     <div class="tray">
-      <div
-        :class="{ warning: dpiWarning }"
-      >Your image is {{ imageDPI }} dpi, we recommend a resolution of 200dpi or more.</div>
+      <div>Your Chosen Print size is {{fin.canvasHeight / 200}}"x{{fin.canvasWidth / 200}}". Your Image area is {{(fin.overlayHeight / 200).toFixed(1)}}"x{{(fin.overlayWidth / 200).toFixed(1)}}"</div>
       <edit-tools
         v-if="isExhibitionPrints"
         :fullFrame="fullFrame"
@@ -486,6 +490,9 @@ export default {
   position: relative;
   width: fit-content;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .frame {
@@ -557,11 +564,27 @@ export default {
 .tray {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   color: green;
 }
 
 .warning {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
   color: orangered;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  div {
+    width: 50%;
+    color: #fff;
+    padding: 1em;
+    border-radius: 1em;
+    background-color: #f05228;
+  }
 }
 </style>
