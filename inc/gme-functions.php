@@ -85,7 +85,7 @@ if (!function_exists('gme_send_json')) {
         }
 
         // Compressed or not, sets the Content-Length
-        header('Content-Length: ' . strlen($data, 'latin1'));
+        header('Content-Length: ' . strlen($data));
 
         echo $data;
         exit;
