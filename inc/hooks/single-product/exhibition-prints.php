@@ -21,6 +21,11 @@ add_action('woocommerce_after_variations_form', function () {
     echo '<input type="hidden" name="gme_exhibition_quantity" v-model="exhibitionQuantity" />';
 });
 
+add_action('woocommerce_composite_after_components', function () {
+    echo '<input type="hidden" name="gme_image_data" v-model="finData" />';
+    echo '<input type="hidden" name="gme_exhibition_quantity" v-model="exhibitionQuantity" />';
+});
+
 // Hide woo input field and use Vue binding to handle quantity based on number of images
 add_action('woocommerce_before_quantity_input_field', function () {
     global $product;
