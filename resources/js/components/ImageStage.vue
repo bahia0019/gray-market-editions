@@ -39,7 +39,6 @@
         v-if="isExhibitionPrints"
         :fullFrame="fullFrame"
         @fullFrameClick="setFullFrame"
-        @setBorder="setBorders"
         :canvasPortrait="canvasPortrait"
         @toggleCanvasOrientation="toggleCanvasOrientation"
         @angleClick="rotate"
@@ -116,6 +115,8 @@ export default {
     }
     this.defaultPrintSize();
     this.drawCanvas();
+
+    this.$root.$on('setBorder', border => this.setBorders(border))
   },
   computed: {
     canvasStyles() {
