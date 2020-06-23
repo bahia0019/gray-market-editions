@@ -3,16 +3,19 @@
 use Intervention\Image\ImageManager;
 
 if (!function_exists('gme_image_upload')) {
-    function gme_image_upload($file, $image_size = 'editor_image', $post_id = 0)
+    function gme_image_upload($file, $image_size = 'editor_image', $post_id = 0): array
     {
         global $gme_ajax_uploading;
 
         $gme_ajax_uploading = true;
 
-        $image_data = (new ImageManager)
-            ->make($file['tmp_name'])
-            ->orientate()
-            ->response();
+        $image_data = (new ImageManager)->make($file['tmp_name']);
+
+        if ($image_data->mime() !== 'image/jpeg') {
+            return [];
+        }
+
+        $image_data->orientate()->response();
 
         $upload = wp_upload_bits($file['name'], null, $image_data);
 
