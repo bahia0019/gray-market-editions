@@ -69,7 +69,7 @@ const app = new Vue({
                     let link = labels[j].htmlFor
                     if (link === infoTabLinks[i].dataset.infoTab) {
                         labels[j].innerHTML =
-                            '<a href="#info-tab-wrapper" style="display:flex;">' +
+                            '<a href="#info-tab-wrapper" style="display:flex;align-items: center;">' +
                             infoIcon +
                             "</a>" +
                             labels[j].innerHTML
