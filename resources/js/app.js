@@ -7,7 +7,7 @@ require("./theme-scripts.js")
 Vue.component("editor-component", EditorComponent)
 Vue.component("exhibition-prints-qty", ExhibitionPrintsQty)
 
-if (GME_PRODUCT.needVue) {   
+if (GME_PRODUCT.needVue) {
     const app = new Vue({
         el: "#vue-app",
         data() {
@@ -32,11 +32,10 @@ if (GME_PRODUCT.needVue) {
                     let frameSelect = document.querySelector(
                         "#component_options_1592007075 select"
                     )
+                    let total = document.querySelector(".price")
                     // Wait till frame select is loaded to run these functions.
-                    if (frameSelect) {
+                    if (frameSelect && total) {
                         this.infoLinks()
-                        // this.changeFrameSize()
-                        this.appendToPrice()
                         this.addToCartValidation()
                         clearInterval(interval)
                     }
@@ -55,7 +54,9 @@ if (GME_PRODUCT.needVue) {
                     : addtoCartBtn.removeAttribute("disabled")
             },
             infoLinks() {
-                let labels = document.querySelectorAll(".variations .label > label")
+                let labels = document.querySelectorAll(
+                    ".variations .label > label"
+                )
                 let infoTabWrapper = document.querySelector(".wc-tabs-wrapper")
                 let infoTabLinks = infoTabWrapper.querySelectorAll("h2")
                 let infoIcon =
@@ -90,8 +91,9 @@ if (GME_PRODUCT.needVue) {
                                     wcTabs[k].classList.remove("active")
                                 }
                                 for (let l = 0; l < infoTabLinks.length; l++) {
-                                    infoTabLinks[l].parentElement.style.display =
-                                        "none"
+                                    infoTabLinks[
+                                        l
+                                    ].parentElement.style.display = "none"
                                 }
                                 switch (clicked) {
                                     case "paper":
@@ -148,37 +150,6 @@ if (GME_PRODUCT.needVue) {
                         }
                     }
                 }
-            },
-            changeFrameSize() {
-                let printSize = document.querySelector(
-                    "#component_1592172322 #size"
-                )
-                let frameSelect = document.querySelector(
-                    "#component_options_1592007075 select"
-                )
-                // Set default print size.
-                printSize.value = "16x24"
-                // Sets Frame Size to match the Print Size initially.
-                if (frameSelect.options[1].selected) {
-                    let subInterval = setInterval(() => {
-                        let frameSize = document.querySelector(
-                            "#component_1592007075 #size"
-                        )
-                        if (frameSize) {
-                            frameSize.value = printSize.selectedOptions[0].value
-
-                            // Checks to see if Print size changes, and updates frame size.
-                            printSize.addEventListener("change", () => {
-                                frameSize.value = printSize.selectedOptions[0].value
-                            })
-                            clearInterval(subInterval)
-                        }
-                    }, 500)
-                }
-            },
-            appendToPrice() {
-                let total = document.querySelector(".price")
-                total.innerHTML = total.innerHTML + "/ea"
             },
         },
         watch: {

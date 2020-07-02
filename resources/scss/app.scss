@@ -44,6 +44,12 @@
         margin: 95px 0 0;
     }
 }
+.price:after {
+    content: "/ea";
+}
+.postid-15 .price:after {
+    content: "/per 6 pack";
+}
 
 @media (min-width: 768px) {
     .storefront-full-width-content.single-product
