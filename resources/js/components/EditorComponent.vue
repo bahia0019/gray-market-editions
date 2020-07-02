@@ -46,5 +46,6 @@ export default {
 <style lang="scss" scoped>
 .wrapper {
   position: relative;
+  padding: 0.5em;
 }
 </style>

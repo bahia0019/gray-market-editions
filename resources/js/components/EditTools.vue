@@ -36,11 +36,14 @@
       </button>
 
       <div class="btn-group" v-if="!isHidden">
-        <button @click="$root.$emit('setBorder', 0)">0</button>
-        <button @click="$root.$emit('setBorder', 0.25)">1/4"</button>
-        <button @click="$root.$emit('setBorder', 0.5)">1/2"</button>
-        <button @click="$root.$emit('setBorder', 0.75)">3/4"</button>
-        <button @click="$root.$emit('setBorder', 1)">1"</button>
+        <button class="dd" @click="$root.$emit('setBorder', 0)">0</button>
+        <button class="dd" @click="$root.$emit('setBorder', 0.25)">1/4"</button>
+        <button class="dd" @click="$root.$emit('setBorder', 0.5)">1/2"</button>
+        <button class="dd" @click="$root.$emit('setBorder', 1)">1"</button>
+        <button class="dd" @click="$root.$emit('setBorder', 1.5)">1 1/2"</button>
+        <button class="dd" @click="$root.$emit('setBorder', 2)">2"</button>
+        <button class="dd" @click="$root.$emit('setBorder', 3)">3"</button>
+        <button class="dd" @click="$root.$emit('setBorder', 4)">4"</button>
       </div>
 
       <div class="tool-tip" v-if="isHidden">
@@ -165,8 +168,12 @@ export default {
 }
 
 #border + .btn-group {
-  // visibility: hidden;
   position: absolute;
+  bottom: 35px;
+  width: 55px;
+  .dd {
+    width: 55px;
+  }
 }
 
 .triangle {

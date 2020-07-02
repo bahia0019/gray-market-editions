@@ -27,14 +27,19 @@
       </svg>
       <div v-if="dpiWarning" :class="{ warning: dpiWarning }">
         <div>
-          <p>At {{fin.canvasHeight / 200}}"x{{fin.canvasWidth / 200}}", your image resolution is {{ imageDPI }} dpi, we suggest a resolution of 200dpi or more.</p>
-          <p>Either select a smaller print size, or upload a larger file.</p>
+          <p>
+            At {{fin.canvasHeight / 200}}"x{{fin.canvasWidth / 200}}", your image resolution is {{ imageDPI }} pixels per inch. For optimal image quality, we recommend a resolution of 200 ppi or more.
+            <br />Files that are significantly lower in resolution may appear pixelated or blurry in the final print. We suggest either selecting a smaller print size or uploading a larger file.
+          </p>
+          <button
+            v-on:click="dpiWarning = false"
+          >If you wish to continue with your existing file, click here.</button>
         </div>
       </div>
     </div>
 
     <div class="tray">
-      <div>Your Chosen Print size is {{fin.canvasHeight / 200}}"x{{fin.canvasWidth / 200}}". Your Image area is {{(fin.overlayHeight / 200 ).toFixed(1)}}"x{{(fin.overlayWidth / 200).toFixed(1)}}"</div>
+      <div>Your Chosen Print size is {{fin.canvasHeight / 200}}"x{{fin.canvasWidth / 200}}". Actual Image Size is {{(fin.overlayHeight / 200 ).toFixed(1)}}"x{{(fin.overlayWidth / 200).toFixed(1)}}"</div>
       <edit-tools
         v-if="isExhibitionPrints"
         :fullFrame="fullFrame"
@@ -499,6 +504,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0px 0px 7px 2px rgba(0, 0, 0, 0.5);
 }
 
 .frame {
@@ -570,8 +576,9 @@ export default {
 .tray {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   color: green;
+  margin-top: 1em;
 }
 
 .warning {
@@ -587,10 +594,17 @@ export default {
   align-items: center;
   div {
     width: 50%;
-    color: #fff;
+    color: #333;
     padding: 1em;
+    border: 5px solid #f05228;
     border-radius: 1em;
-    background-color: #f05228;
+    background-color: #fff;
+    button {
+      border: 1px solid orangered;
+      &:hover {
+        border: 1px solid orangered;
+      }
+    }
   }
 }
 </style>
