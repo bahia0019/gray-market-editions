@@ -16,6 +16,7 @@ if (GME_PRODUCT.needVue) {
                 currentImage: {},
                 showUploader: true,
                 processingImage: false,
+                frameSizeWarning: true,
             }
         },
         mounted() {
@@ -32,26 +33,26 @@ if (GME_PRODUCT.needVue) {
                     let frameSelect = document.querySelector(
                         "#component_options_1592007075 select"
                     )
-                    let total = document.querySelector(".price")
                     // Wait till frame select is loaded to run these functions.
-                    if (frameSelect && total) {
-                        this.infoLinks()
-                        this.addToCartValidation()
+                    if (frameSelect) {
                         clearInterval(interval)
+                        this.infoLinks()
+                        this.checkFrameSize()
+                        this.addToCartValidation()
                     }
                 }, 1000)
             },
             addToCartValidation() {
                 // Disable add-to-cart button if no images have been added
-                const addtoCartBtn = document.querySelector(
-                    ".single-product .single_add_to_cart_button"
+                let addToCartBtn = document.querySelector(
+                    ".single_add_to_cart_button"
                 )
 
-                if (!addtoCartBtn) return
+                if (!addToCartBtn) return
 
                 this.images.length === 0
-                    ? addtoCartBtn.setAttribute("disabled", true)
-                    : addtoCartBtn.removeAttribute("disabled")
+                    ? addToCartBtn.setAttribute("disabled", true)
+                    : addToCartBtn.removeAttribute("disabled")
             },
             infoLinks() {
                 let labels = document.querySelectorAll(
@@ -150,6 +151,34 @@ if (GME_PRODUCT.needVue) {
                         }
                     }
                 }
+            },
+            checkFrameSize() {
+                const printSize = document.querySelector(
+                    "#component_1592172322 #size"
+                )
+                const frameSize = document.querySelector(
+                    "#component_1592007075 #size"
+                )
+                let button = document.querySelector(".composite_wrap")
+
+                button.addEventListener("mouseenter", () => {
+                    if (
+                        frameSize.value !== printSize.value &&
+                        true === this.frameSizeWarning
+                    ) {
+                        this.frameSizeWarning = false
+                        let div = document.createElement("div")
+                        div.className = "frame-size-warning"
+                        div.innerHTML =
+                            'Your Frame Size does not match your Print Size. Please check your size selection before ordering.<button type="button">OK</button>'
+
+                        button.appendChild(div)
+                        button.addEventListener("click", (e) => {
+                            e.preventDefault
+                            div.parentNode.removeChild(div)
+                        })
+                    }
+                })
             },
         },
         watch: {

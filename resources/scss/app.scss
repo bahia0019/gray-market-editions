@@ -51,6 +51,29 @@
     content: "/per 6 pack";
 }
 
+.composite_wrap {
+    position: relative;
+}
+.frame-size-warning {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 5px solid #f05228;
+    border-radius: 1em;
+    background-color: rgba(255, 255, 255, 0.85);
+    button {
+        border: 1px solid orangered;
+        &:hover {
+            border: 1px solid orangered;
+        }
+    }
+}
+
 @media (min-width: 768px) {
     .storefront-full-width-content.single-product
         div.product
