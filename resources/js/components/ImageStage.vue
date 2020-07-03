@@ -450,34 +450,65 @@ export default {
       this.border = border + frameRabbit;
     },
     getFrameInfo() {
-      let frame = document.querySelector("select#frame-style");
-      let regex = /[!"#$%&'()*+,./:;<=>?@[\]^_`{|}~]/g;
-      let frameStyle;
-      frame.addEventListener("change", event => {
-        frameStyle = frame.selectedOptions[0].value
-          .toLowerCase()
-          .replace(regex, "")
-          .replace(/ +/g, "-");
+      let interval = setInterval(() => {
+        let frameSelect = document.querySelector(
+          "#component_options_1592007075 select"
+        );
+        // Wait till frame select is loaded to run these functions.
+        if (frameSelect) {
+          clearInterval(interval);
 
-        switch (frameStyle) {
-          case "black":
-            this.$refs.frame.classList = "frame";
-            this.$refs.frame.classList.add("frame-black", "active");
-            this.frameWidth = this.imageDPI + "px";
-            this.frame = true;
-            this.setBorders();
-            break;
-          case "down-n-dirty":
-            this.$refs.frame.classList = "frame";
-            this.$refs.frame.classList.add("frame-down-n-dirty", "active");
-            this.woodFrameWidth = this.imageDPI + "px";
-            this.frame = true;
-            this.setBorders();
-            break;
-          default:
-            this.frame = false;
-            this.setBorders();
-            this.$refs.frame.classList = "";
+          let frame = document.querySelector("select#frame-style");
+          let regex = /[!"#$%&'()*+,./:;<=>?@[\]^_`{|}~]/g;
+          let frameStyle;
+          frame.addEventListener("change", event => {
+            frameStyle = frame.selectedOptions[0].value
+              .toLowerCase()
+              .replace(regex, "")
+              .replace(/ +/g, "-");
+
+            switch (frameStyle) {
+              case "black":
+                this.$refs.frame.classList = "frame";
+                this.$refs.frame.classList.add("frame-black", "active");
+                this.frameWidth = this.imageDPI + "px";
+                this.frame = true;
+                this.setBorders();
+                break;
+              case "gray":
+                this.$refs.frame.classList = "frame";
+                this.$refs.frame.classList.add("frame-gray", "active");
+                this.woodFrameWidth = this.imageDPI + "px";
+                this.frame = true;
+                this.setBorders();
+                break;
+              case "rustic":
+                this.$refs.frame.classList = "frame";
+                this.$refs.frame.classList.add("frame-rustic", "active");
+                this.woodFrameWidth = this.imageDPI + "px";
+                this.frame = true;
+                this.setBorders();
+                break;
+              case "natural":
+                this.$refs.frame.classList = "frame";
+                this.$refs.frame.classList.add("frame-natural", "active");
+                this.woodFrameWidth = this.imageDPI + "px";
+                this.frame = true;
+                this.setBorders();
+                break;
+              case "madera":
+                this.$refs.frame.classList = "frame";
+                this.$refs.frame.classList.add("frame-ply", "active");
+                this.woodFrameWidth = this.imageDPI + "px";
+                this.frame = true;
+                this.setBorders();
+                break;
+              default:
+                this.frame = false;
+                this.setBorders();
+                this.$refs.frame.classList = "";
+            }
+          });
         }
       });
     }
@@ -520,8 +551,20 @@ export default {
 .frame-black {
   border-color: #000;
 }
-.frame-down-n-dirty {
-  border-image: url(https://img.freepik.com/free-photo/wooden-textured-background_53876-14865.jpg?size=626&ext=jpg)
+.frame-gray {
+  border-image: url(https://flauntyoursite.dev/wp-content/uploads/2020/07/gray-frame.png)
+    30 round;
+}
+.frame-rustic {
+  border-image: url(https://flauntyoursite.dev/wp-content/uploads/2020/07/rustic-frame.png)
+    30 round;
+}
+.frame-natural {
+  border-image: url(https://flauntyoursite.dev/wp-content/uploads/2020/07/natural-frame.png)
+    30 round;
+}
+.frame-ply {
+  border-image: url(https://flauntyoursite.dev/wp-content/uploads/2020/07/plywood-frame.png)
     30 round;
 }
 .frame.active {
