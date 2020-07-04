@@ -63,3 +63,14 @@ html {
     height: 14px;
     margin-right: 5px;
 }
+
+.blog article:nth-child(odd) .wp-block-columns {
+    flex-direction: row-reverse;
+}
+
+.blog article:nth-child(odd) .wp-block-image {
+    margin-right: 32px;
+}
+.blog article:nth-child(odd) .wp-block-column:not(:first-child) {
+    margin-left: 0;
+}
