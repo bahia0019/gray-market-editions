@@ -21,6 +21,7 @@
     margin-left: 0;
     margin-right: 0;
     padding: 0;
+    margin-bottom: 5em;
 }
 
 .header-widget-region .widget {
@@ -90,4 +91,9 @@
 .postid-10 .quantity input::-webkit-outer-spin-button,
 .postid-16 .quantity input::-webkit-inner-spin-button {
     display: none;
+}
+
+.hentry .entry-content .wp-block-separator,
+.editor-styles-wrapper .wp-block-separator {
+    margin-bottom: 4em;
 }
