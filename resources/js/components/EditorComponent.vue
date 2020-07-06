@@ -3,7 +3,7 @@
     <image-upload
       :show="$root.showUploader"
       :is-overlay="$root.images.length ? true : false"
-      :is-multiple="isExhibitionPrints"
+      :is-multiple="isExhibitionPrints || isVinyl"
     ></image-upload>
 
     <image-stage
@@ -14,7 +14,7 @@
       :is-exhibition-prints="isExhibitionPrints"
     ></image-stage>
 
-    <image-grid v-if="isExhibitionPrints"></image-grid>
+    <image-grid v-if="isExhibitionPrints || isVinyl"></image-grid>
   </div>
 </template>
 
@@ -38,6 +38,9 @@ export default {
   computed: {
     isExhibitionPrints() {
       return this.productType === "Exhibition Prints" ? true : false;
+    },
+    isVinyl() {
+      return this.productType === "Outdoor/Vinyl Prints" ? true : false;
     }
   }
 };

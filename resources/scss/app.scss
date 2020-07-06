@@ -85,3 +85,9 @@
         width: 35%;
     }
 }
+
+// Removes the qty arrows on Safari.
+.postid-10 .quantity input::-webkit-outer-spin-button,
+.postid-16 .quantity input::-webkit-inner-spin-button {
+    display: none;
+}
