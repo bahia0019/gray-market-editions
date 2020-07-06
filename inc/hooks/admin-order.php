@@ -10,9 +10,11 @@ add_action('woocommerce_before_order_itemmeta', function ($item_id, $item, $prod
 
     $order = new WC_Order($order_id);
 
+    $ext = "__order_id_{$order_id}_item_id_{$item_id}";
+
     $zip_file_name = !empty($order->get_billing_last_name()) ?
-        strtolower($order->get_billing_last_name()) . '__order_id_' . $order_id
-        : 'order_id_' . $order_id;
+        strtolower($order->get_billing_last_name()) . $ext
+        : $ext;
 
     require GME_TEMPLATES_PATH . 'admin-gme-mini-grid.php';
 }, 10, 3);
