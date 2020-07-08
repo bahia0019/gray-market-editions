@@ -37,3 +37,9 @@ require_once get_stylesheet_directory() . '/inc/hooks/single-product/posters.php
 require_once get_stylesheet_directory() . '/inc/hooks/single-product/vinyl.php';
 require_once get_stylesheet_directory() . '/inc/hooks/single-product/exhibition-prints.php';
 require_once get_stylesheet_directory() . '/inc/hooks/single-product/woocommerce-tabs.php';
+
+
+function remove_featured_image_single(){
+	remove_action( 'storefront_post_content_before', 'storefront_post_thumbnail', 10);
+}
+add_action( 'init', 'remove_featured_image_single' );
