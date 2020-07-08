@@ -1,11 +1,11 @@
 import Vue from "vue"
 import EditorComponent from "./components/EditorComponent.vue"
-import ExhibitionPrintsQty from "./components/ExhibitionPrintsQty.vue"
+import EditionsQuantity from "./components/EditionsQuantity.vue"
 
 require("./theme-scripts.js")
 
 Vue.component("editor-component", EditorComponent)
-Vue.component("exhibition-prints-qty", ExhibitionPrintsQty)
+Vue.component("editions-quantity", EditionsQuantity)
 
 if (GME_PRODUCT.needVue) {
     const app = new Vue({
@@ -190,7 +190,7 @@ if (GME_PRODUCT.needVue) {
             },
         },
         computed: {
-            exhibitionQuantity() {
+            editionsQuantity() {
                 return parseInt(this.images.length)
             },
             finData() {

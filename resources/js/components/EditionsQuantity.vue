@@ -1,17 +1,17 @@
 <template>
   <div>
     <label
-      for="exhibition_prints_qty"
+      for="editions_quantity"
       class="screen-reader-text"
-    >Exhibition Prints quantity</label>
+    >Editions Prints Quantity</label>
     <input
       type="number"
-      id="exhibition_prints_qty"
+      id="editions_quantity"
       step="1"
       min="1"
       max
       name="custom_quantity"
-      :value="$root.exhibitionQuantity"
+      :value="$root.editionsQuantity"
       title="Qty"
       size="4"
       placeholder

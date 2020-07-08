@@ -15,9 +15,11 @@ add_action('woocommerce_remove_cart_item', function ($cart_item_key) {
     }
 });
 
-// If Exhibition Prints, replace quantity input with quantity as number
+// If editions prints, replace quantity input with quantity as number
 add_filter('woocommerce_cart_item_quantity', function ($product_quantity, $cart_item_key, $cart_item) {
-    if ($cart_item['data']->get_name() !== 'Exhibition Prints') {
+    $print_types = ['Exhibition Prints', 'Outdoor/Vinyl Prints'];
+    
+    if (!in_array($cart_item['data']->get_name(), $print_types)) {
         return $product_quantity;
     }
 
