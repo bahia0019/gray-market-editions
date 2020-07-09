@@ -7,7 +7,7 @@ add_filter('woocommerce_product_tabs', function ( $array ) {
 	$option_products = [ 'Exhibition Prints', 'Outdoor/Vinyl Prints' ];
 
 	if ( ( 'Exhibition Prints' === $product_name ) ) {
-		$options = [ [ 'paper', 'Paper Styles' ], [ 'ink', 'Ink Styles' ], [ 'frame', 'Frame Styles' ], [ 'frame_rental', 'Frame Rental Info' ], [ 'frame_options', 'Additional Options' ] ];
+		$options = [ [ 'paper', 'Paper Styles' ], [ 'ink', 'Ink Styles' ], [ 'frame', 'Frame Styles' ], [ 'frame_rental', 'Frame Rental Info' ], [ 'frame_options', 'Additional Options' ], [ 'edition_pricing', 'Edition Pricing' ] ];
 	} else if ( 'Outdoor/Vinyl Prints' === $product_name ) {
 		$options = [ [ 'vinyl', 'Vinyl Styles' ], [ 'grommet', 'Grommet Info' ], [ 'hem', 'Hems Info' ] ];
 	}

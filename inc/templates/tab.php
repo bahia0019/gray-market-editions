@@ -1,9 +1,10 @@
 <h2 data-info-tab="<?php the_field( $tab . '_options_link' ); ?>"><?php echo esc_html( $context['title'] ); ?></h2>
 
 	<?php
-	if ( have_rows( $tab . '_repeater' ) ) : ?>
-
-<?php
+	if ( !have_rows( $tab . '_repeater' ) ) {
+			the_field('edition_pricing_title');
+			the_field('edition_pricing_text');
+		} else {
 			while ( have_rows( $tab . '_repeater' ) ) :
 				
 				the_row();
@@ -35,4 +36,5 @@
 			</div>
 			<?php endwhile; ?>
 
-	<?php endif; ?>
+	<?php 
+	}
