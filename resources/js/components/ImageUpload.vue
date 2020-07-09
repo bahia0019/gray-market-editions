@@ -15,10 +15,14 @@
             d="M26 2h-20l-6 6v21c0 0.552 0.448 1 1 1h30c0.552 0 1-0.448 1-1v-21l-6-6zM20 20v6h-8v-6h-6l10-8 10 8h-6zM4.828 6l2-2h18.343l2 2h-22.343z"
           />
         </svg>
-        <span
-          v-if="isMultiple"
-        >{{ isOverlay ? 'Drag Here to Upload More' : 'Drag Multiple Images here to Upload' }}</span>
-        <span v-else>Upload Single Image</span>
+        <span v-if="isMultiple">
+          {{ isOverlay ? 'Drag Here to Upload More' : 'Drag Multiple Images here to Upload' }}
+          <br />(Only JPEGs accepted)
+        </span>
+        <span v-else>
+          Upload Single Image
+          <br />(Only JPEGs accepted)
+        </span>
         <span class="cancel" @click="$root.showUploader = false" v-if="isOverlay">cancel</span>
       </div>
       <div class="loading-text" v-if="isSaving && isMultiple">
@@ -157,6 +161,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
 
   &.is-overlay {
     position: absolute;
