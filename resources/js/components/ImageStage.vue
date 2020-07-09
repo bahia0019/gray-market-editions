@@ -341,8 +341,15 @@ export default {
 
       if (false === this.fullFrame) {
         this.fullFrame = true;
+
         if ("portrait" === this.imageOrientation) {
-          if (this.imageAspectRatio < this.canvasAspectRatio) {
+          // Portrait
+          // Aspect ratio is equal.
+          if (this.imageAspectRatio === this.canvasAspectRatio) {
+            this.imageHeight = this.canvasLongDimension / 2;
+            this.imageWidth = this.canvasShortDimension / 2;
+          } else if (this.imageAspectRatio < this.canvasAspectRatio) {
+            //   Image is DSLR, Canvas is Standard.
             //   Editor
             this.imageWidth = this.canvasShortDimension / 2;
             this.imageHeight = this.imageWidth / this.imageAspectRatio;
@@ -351,6 +358,7 @@ export default {
             this.fin.overlayHeight =
               this.fin.overlayWidth / this.imageAspectRatio;
           } else {
+            //   Image is Standard, Canvas is DSLR.
             //   Editor
             this.imageHeight = this.canvasLongDimension / 2;
             this.imageWidth = this.imageHeight / this.imageAspectRatio;
@@ -361,7 +369,12 @@ export default {
           }
         } else {
           // Landscape
-          if (this.imageAspectRatio < this.canvasAspectRatio) {
+          // Aspect ratio is equal.
+          if (this.imageAspectRatio === this.canvasAspectRatio) {
+            this.imageHeight = this.canvasShortDimension;
+            this.imageWidth = this.canvasLongDimension;
+          } else if (this.imageAspectRatio < this.canvasAspectRatio) {
+            //   Image is DSLR, Canvas is Standard.
             //   Editor
             this.imageHeight = this.canvasShortDimension;
             this.imageWidth = this.imageHeight / this.imageAspectRatio;
@@ -371,6 +384,7 @@ export default {
             this.fin.overlayWidth =
               this.fin.overlayHeight / this.imageAspectRatio;
           } else {
+            //   Image is Standard, Canvas is DSLR.
             //   Editor
             this.imageWidth = this.canvasLongDimensions;
             this.imageHeight = this.imageWidth * this.imageAspectRatio;
