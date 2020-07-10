@@ -26,7 +26,7 @@
         />
       </svg>
       <div v-if="dpiWarning" :class="{ warning: dpiWarning }">
-        <div>
+        <div :class="{warningportrait: canvasPortrait }">
           <p>
             At {{fin.canvasHeight / 200}}"x{{fin.canvasWidth / 200}}", your image resolution is {{ imageDPI }} pixels per inch. For optimal image quality, we recommend a resolution of 200 ppi or more.
             <br />Files that are significantly lower in resolution may appear pixelated or blurry in the final print. We suggest either selecting a smaller print size or uploading a larger file.
@@ -656,6 +656,9 @@ export default {
     border: 5px solid #f05228;
     border-radius: 1em;
     background-color: #fff;
+    &.warningportrait {
+      width: 100%;
+    }
     button {
       border: 1px solid orangered;
       &:hover {
