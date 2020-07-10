@@ -70,3 +70,12 @@ html {
 .blog article:nth-child(odd) .wp-block-column:not(:first-child) {
     margin-left: 0;
 }
+
+.site-header .site-branding img {
+    max-width: 325px;
+}
+@media (min-width: 768px) {
+    .site-header .site-branding img {
+        max-width: 450px;
+    }
+}
