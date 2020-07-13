@@ -555,7 +555,7 @@ export default {
 .frame {
   display: none;
   border-width: 30px;
-  border-color: transparent;
+  border-color: #000;
   border-style: solid;
   position: absolute;
   width: 100%;

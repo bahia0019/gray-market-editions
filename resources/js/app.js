@@ -58,6 +58,8 @@ if (GME_PRODUCT.needVue) {
                 let labels = document.querySelectorAll(
                     ".variations .label > label"
                 )
+                let editionPricingLink = document.querySelector(".edition-link")
+
                 let infoTabWrapper = document.querySelector(".wc-tabs-wrapper")
                 let infoTabLinks = infoTabWrapper.querySelectorAll("h2")
                 let infoIcon =
@@ -72,10 +74,9 @@ if (GME_PRODUCT.needVue) {
                         let link = labels[j].htmlFor
                         if (link === infoTabLinks[i].dataset.infoTab) {
                             labels[j].innerHTML =
-                                '<a href="#info-tab-wrapper" style="display:flex;align-items: center;">' +
-                                infoIcon +
-                                "</a>" +
-                                labels[j].innerHTML
+                                labels[j].innerHTML +
+                                '<a href="#info-tab-wrapper" style="display:flex;align-items: center; margin-left:10px; font-size:65%;">Learn More</a>'
+
                             labels[j].style.display = "flex"
 
                             labels[j].addEventListener("click", (e) => {

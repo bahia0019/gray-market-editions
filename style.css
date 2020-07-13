@@ -78,4 +78,31 @@ html {
     .site-header .site-branding img {
         max-width: 450px;
     }
+    .site-header-cart .cart-contents {
+        display: flex !important;
+        flex-direction: row-reverse;
+    }
+    .site-header-cart .cart-contents .amount {
+        margin-right: 0;
+        margin-left: 5px;
+    }
+}
+
+.site-header-cart .cart-contents::after {
+    float: none !important;
+    margin: 0 5px;
+}
+
+.social-icons {
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    float: right;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    fill: #6d6d6d;
 }

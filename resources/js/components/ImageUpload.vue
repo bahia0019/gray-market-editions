@@ -17,7 +17,9 @@
         </svg>
         <span v-if="isMultiple">
           {{ isOverlay ? 'Drag Here to Upload More' : 'Drag Multiple Images here to Upload' }}
-          <br />(Only JPEGs accepted)
+          <br />*Only JPEGs accepted
+          <br />*Images should be sized to at least
+          <br />200dpi at the size you’d like to print.
         </span>
         <span v-else>
           Upload Single Image
