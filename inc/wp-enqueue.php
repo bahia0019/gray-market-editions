@@ -20,12 +20,10 @@ add_action('wp_enqueue_scripts', function () {
 
         $need_vue = in_array($product, ['exhibition-prints', 'posters', 'outdoor-vinyl-prints']);
 
-        if ($product) {
-            wp_localize_script('woo_photo', 'GME_PRODUCT', [
-                'type'    => $product,
-                'needVue' => (bool) $need_vue,
-            ]);
-        }
+        wp_localize_script('woo_photo', 'GME_PRODUCT', [
+            'type'    => $product,
+            'needVue' => (bool) $need_vue,
+        ]);
     }
 });
 
