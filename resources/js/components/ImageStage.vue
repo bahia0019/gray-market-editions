@@ -464,66 +464,68 @@ export default {
       this.border = border + frameRabbit;
     },
     getFrameInfo() {
-      let interval = setInterval(() => {
-        let frameSelect = document.querySelector(
-          "#component_options_1592007075 select"
-        );
-        // Wait till frame select is loaded to run these functions.
-        if (frameSelect) {
-          clearInterval(interval);
+      const frameSelect = document.querySelector(
+        "select#component_options_1592007075"
+      );
 
+      frameSelect.addEventListener("change", () => {
+        let interval = setInterval(() => {
           let frame = document.querySelector("select#frame-style");
-          let regex = /[!"#$%&'()*+,./:;<=>?@[\]^_`{|}~]/g;
-          let frameStyle;
-          frame.addEventListener("change", event => {
-            frameStyle = frame.selectedOptions[0].value
-              .toLowerCase()
-              .replace(regex, "")
-              .replace(/ +/g, "-");
+          if (frame) {
+            let regex = /[!"#$%&'()*+,./:;<=>?@[\]^_`{|}~]/g;
+            let frameStyle;
+            frame.addEventListener("change", event => {
+              frameStyle = frame.selectedOptions[0].value
+                .toLowerCase()
+                .replace(regex, "")
+                .replace(/ +/g, "-");
 
-            switch (frameStyle) {
-              case "black":
-                this.$refs.frame.classList = "frame";
-                this.$refs.frame.classList.add("frame-black", "active");
-                this.frameWidth = this.imageDPI + "px";
-                this.frame = true;
-                this.setBorders();
-                break;
-              case "gray":
-                this.$refs.frame.classList = "frame";
-                this.$refs.frame.classList.add("frame-gray", "active");
-                this.woodFrameWidth = this.imageDPI + "px";
-                this.frame = true;
-                this.setBorders();
-                break;
-              case "rustic":
-                this.$refs.frame.classList = "frame";
-                this.$refs.frame.classList.add("frame-rustic", "active");
-                this.woodFrameWidth = this.imageDPI + "px";
-                this.frame = true;
-                this.setBorders();
-                break;
-              case "natural":
-                this.$refs.frame.classList = "frame";
-                this.$refs.frame.classList.add("frame-natural", "active");
-                this.woodFrameWidth = this.imageDPI + "px";
-                this.frame = true;
-                this.setBorders();
-                break;
-              case "madera":
-                this.$refs.frame.classList = "frame";
-                this.$refs.frame.classList.add("frame-ply", "active");
-                this.woodFrameWidth = this.imageDPI + "px";
-                this.frame = true;
-                this.setBorders();
-                break;
-              default:
-                this.frame = false;
-                this.setBorders();
-                this.$refs.frame.classList = "";
-            }
-          });
-        }
+              switch (frameStyle) {
+                case "black":
+                  this.$refs.frame.classList = "frame";
+                  this.$refs.frame.classList.add("frame-black", "active");
+                  this.frameWidth = this.imageDPI + "px";
+                  this.frame = true;
+                  this.setBorders();
+                  break;
+                case "gray":
+                  this.$refs.frame.classList = "frame";
+                  this.$refs.frame.classList.add("frame-gray", "active");
+                  this.woodFrameWidth = this.imageDPI + "px";
+                  this.frame = true;
+                  this.setBorders();
+                  break;
+                case "rustic":
+                  this.$refs.frame.classList = "frame";
+                  this.$refs.frame.classList.add("frame-rustic", "active");
+                  this.woodFrameWidth = this.imageDPI + "px";
+                  this.frame = true;
+                  this.setBorders();
+                  break;
+                case "natural":
+                  this.$refs.frame.classList = "frame";
+                  this.$refs.frame.classList.add("frame-natural", "active");
+                  this.woodFrameWidth = this.imageDPI + "px";
+                  this.frame = true;
+                  this.setBorders();
+                  break;
+                case "madera":
+                  this.$refs.frame.classList = "frame";
+                  this.$refs.frame.classList.add("frame-ply", "active");
+                  this.woodFrameWidth = this.imageDPI + "px";
+                  this.frame = true;
+                  this.setBorders();
+                  break;
+                default:
+                  this.frame = false;
+                  this.setBorders();
+                  this.$refs.frame.classList = "";
+              }
+            });
+
+            clearInterval(interval);
+          }
+        }, 500);
       });
     }
   },
