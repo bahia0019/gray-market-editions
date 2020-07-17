@@ -470,6 +470,11 @@ export default {
 
       frameSelect.addEventListener("change", () => {
         let interval = setInterval(() => {
+          // Set frame size disclaimer.
+          let sizeLabel = document.querySelector("[for=" + id + "]");
+          sizeLabel.innerText =
+            sizeLabel.innerText + " (Must match print size)";
+
           let frame = document.querySelector("select#frame-style");
           if (frame) {
             let regex = /[!"#$%&'()*+,./:;<=>?@[\]^_`{|}~]/g;

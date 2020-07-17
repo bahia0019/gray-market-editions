@@ -97,3 +97,7 @@
 .editor-styles-wrapper .wp-block-separator {
     margin-bottom: 4em;
 }
+
+#component_1592007075 label[for="size"]:after {
+    content: " (Must match print size)";
+}

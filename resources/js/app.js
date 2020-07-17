@@ -75,7 +75,7 @@ if (GME_PRODUCT.needVue) {
                         if (link === infoTabLinks[i].dataset.infoTab) {
                             labels[j].innerHTML =
                                 labels[j].innerHTML +
-                                '<a href="#info-tab-wrapper" style="display:flex;align-items: center; margin-left:10px; font-size:65%;">Learn More</a>'
+                                '<a href="#info-tab-wrapper" style="display:flex;align-items: center; margin-left:10px; font-size:65%;text-decoration: underline;">Learn More</a>'
 
                             labels[j].style.display = "flex"
 
