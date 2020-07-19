@@ -39,7 +39,7 @@
     </div>
 
     <div class="tray">
-      <div>Your Chosen Print size is {{fin.canvasHeight / 200}}"x{{fin.canvasWidth / 200}}". Actual Image Size is {{(fin.overlayHeight / 200 ).toFixed(1)}}"x{{(fin.overlayWidth / 200).toFixed(1)}}"</div>
+      <div>Your Chosen Print size is {{fin.canvasHeight / 200}}"x{{fin.canvasWidth / 200}}". Actual Image Size is {{((fin.overlayHeight / 200) - (fin.border/200) ).toFixed(1)}}"x{{((fin.overlayWidth / 200) - (fin.border / 200)).toFixed(1)}}"</div>
       <edit-tools
         v-if="isExhibitionPrints"
         :fullFrame="fullFrame"
@@ -115,11 +115,9 @@ export default {
     this.setImageOrientation();
     this.setInitialCanvasOrientation();
     this.dpiCheck();
-    if (this.isExhibitionPrints) {
-      this.getFrameInfo();
-    }
     this.defaultPrintSize();
     this.drawCanvas();
+    this.delayLoad();
 
     this.$root.$on("setBorder", border => this.setBorders(border));
   },
@@ -135,6 +133,20 @@ export default {
     }
   },
   methods: {
+    delayLoad() {
+      let interval = setInterval(() => {
+        let frameSelect = document.querySelector(
+          "#component_options_1592007075 select"
+        );
+        // Wait till frame select is loaded to run these functions.
+        if (frameSelect) {
+          clearInterval(interval);
+          if (this.isExhibitionPrints) {
+            this.getFrameInfo();
+          }
+        }
+      }, 1000);
+    },
     // Takes the Print Size info from the Product Size select dropdown.
     getImageInfo() {
       let size = document.querySelector("select#size");
@@ -467,14 +479,8 @@ export default {
       const frameSelect = document.querySelector(
         "select#component_options_1592007075"
       );
-
       frameSelect.addEventListener("change", () => {
         let interval = setInterval(() => {
-          // Set frame size disclaimer.
-          let sizeLabel = document.querySelector("[for=" + id + "]");
-          sizeLabel.innerText =
-            sizeLabel.innerText + " (Must match print size)";
-
           let frame = document.querySelector("select#frame-style");
           if (frame) {
             let regex = /[!"#$%&'()*+,./:;<=>?@[\]^_`{|}~]/g;
