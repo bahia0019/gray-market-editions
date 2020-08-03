@@ -75,8 +75,9 @@ if (GME_PRODUCT.needVue) {
                         let link = labels[j].htmlFor
                         if (link === infoTabLinks[i].dataset.infoTab) {
                             labels[j].innerHTML =
+                                '<a href="#info-tab-wrapper" style="display:flex;">' +
                                 labels[j].innerHTML +
-                                '<a href="#info-tab-wrapper" style="display:flex;align-items: center; margin-left:10px; font-size:65%;text-decoration: underline;">Learn More</a>'
+                                '<span style="display:flex;align-items: center; margin-left:10px; font-size:65%;text-decoration: underline;">Learn More</span></a>'
 
                             labels[j].style.display = "flex"
 
@@ -116,8 +117,9 @@ if (GME_PRODUCT.needVue) {
                                         link === infoTabLinks[i].dataset.infoTab
                                     ) {
                                         labels[j].innerHTML =
+                                            '<a href="#info-tab-wrapper" style="display:flex;">' +
                                             labels[j].innerHTML +
-                                            '<a href="#info-tab-wrapper" style="display:flex;align-items: center; margin-left:10px; font-size:65%;text-decoration: underline;">Learn More</a>'
+                                            '<span style="display:flex;align-items: center; margin-left:10px; font-size:65%;text-decoration: underline;">Learn More</span></a>'
 
                                         labels[j].style.display = "flex"
 
