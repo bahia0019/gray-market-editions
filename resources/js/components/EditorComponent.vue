@@ -12,6 +12,7 @@
       :image="image"
       v-show="image.id === $root.currentImage.id"
       :is-exhibition-prints="isExhibitionPrints"
+      :show-edit-tools="isExhibitionPrints || isVinyl"
     ></image-stage>
 
     <image-grid v-if="isExhibitionPrints || isVinyl"></image-grid>

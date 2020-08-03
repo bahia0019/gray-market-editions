@@ -41,7 +41,7 @@
     <div class="tray">
       <div>Your Chosen Print size is {{fin.canvasHeight / 200}}"x{{fin.canvasWidth / 200}}". Actual Image Size is {{((fin.overlayHeight / 200) - (fin.border/200) ).toFixed(1)}}"x{{((fin.overlayWidth / 200) - (fin.border / 200)).toFixed(1)}}"</div>
       <edit-tools
-        v-if="isExhibitionPrints"
+        v-if="showEditTools"
         :fullFrame="fullFrame"
         @fullFrameClick="setFullFrame"
         :canvasPortrait="canvasPortrait"
@@ -65,6 +65,10 @@ export default {
       required: true
     },
     isExhibitionPrints: {
+      type: Boolean,
+      required: true
+    },
+    showEditTools: {
       type: Boolean,
       required: true
     }
