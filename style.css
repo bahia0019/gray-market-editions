@@ -106,3 +106,21 @@ html {
     margin-left: 5px;
     fill: #6d6d6d;
 }
+
+.woocommerce-info,
+.woocommerce-noreviews,
+p.no-comments {
+    background-color: #f05228;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+textarea,
+.input-text {
+    border: 1px solid #999;
+}
