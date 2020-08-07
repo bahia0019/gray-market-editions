@@ -13,9 +13,16 @@ function gme_ajax_image_upload()
         ], 422);
     }
 
+    $time_pre = microtime(true);
+
     $uploads = array_map(function ($file) {
         return gme_image_upload($file);
     }, $_FILES);
+
+    $time_post = microtime(true);
+    $exec_time = $time_post - $time_pre;
+
+    $uploads[0]['time'] = $exec_time;
 
     gme_send_json(array_filter($uploads));
 }
