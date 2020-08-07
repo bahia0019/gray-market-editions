@@ -110,7 +110,7 @@ html {
 .woocommerce-info,
 .woocommerce-noreviews,
 p.no-comments {
-    background-color: #f05228;
+    background-color: #f05228 !important;
 }
 
 input[type="text"],

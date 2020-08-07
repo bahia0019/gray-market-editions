@@ -41,7 +41,7 @@
     <div class="tray">
       <div>
         Your Chosen Print size is {{fin.canvasHeight / 200}}"x{{fin.canvasWidth / 200}}".
-        <!-- Actual Image Size is {{((fin.overlayHeight / 200) - (fin.border/200) ).toFixed(1)}}"x{{((fin.overlayWidth / 200) - (fin.border / 200)).toFixed(1)}}" -->
+        Actual Image Size is {{((fin.overlayHeight / 200) - (fin.border/200) ).toFixed(1)}}"x{{((fin.overlayWidth / 200) - (fin.border / 200)).toFixed(1)}}"
       </div>
       <edit-tools
         v-if="showEditTools"
@@ -164,7 +164,7 @@ export default {
         this.dpiCheck();
         this.defaultPrintSize();
         this.drawCanvas();
-        this.setBorders(border);
+        this.setBorders(0);
       });
       this.widthHeight = size.selectedOptions[0].value.split("x");
       this.canvasLongInches = parseInt(this.widthHeight[1]);
