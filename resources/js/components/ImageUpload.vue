@@ -30,20 +30,14 @@
       <div class="loading-text" v-if="isSaving && isMultiple">
         <p>Uploading {{ fileCount }} files...</p>
         <p>Don't close window. Multiple large files may take a couple minutes.</p>
-        <svg viewBox="0 0 32 32" class="spinner">
-          <path
-            d="M32 12h-12l4.485-4.485c-2.267-2.266-5.28-3.515-8.485-3.515s-6.219 1.248-8.485 3.515c-2.266 2.267-3.515 5.28-3.515 8.485s1.248 6.219 3.515 8.485c2.267 2.266 5.28 3.515 8.485 3.515s6.219-1.248 8.485-3.515c0.189-0.189 0.371-0.384 0.546-0.583l3.010 2.634c-2.933 3.349-7.239 5.464-12.041 5.464-8.837 0-16-7.163-16-16s7.163-16 16-16c4.418 0 8.418 1.791 11.313 4.687l4.687-4.687v12z"
-          />
-        </svg>
       </div>
       <div class="loading-text" v-if="isSaving && !isMultiple">
         <p>Uploading file...</p>
         <p>Don't close window. Large files may take a couple minutes.</p>
-        <svg viewBox="0 0 32 32" class="spinner">
-          <path
-            d="M32 12h-12l4.485-4.485c-2.267-2.266-5.28-3.515-8.485-3.515s-6.219 1.248-8.485 3.515c-2.266 2.267-3.515 5.28-3.515 8.485s1.248 6.219 3.515 8.485c2.267 2.266 5.28 3.515 8.485 3.515s6.219-1.248 8.485-3.515c0.189-0.189 0.371-0.384 0.546-0.583l3.010 2.634c-2.933 3.349-7.239 5.464-12.041 5.464-8.837 0-16-7.163-16-16s7.163-16 16-16c4.418 0 8.418 1.791 11.313 4.687l4.687-4.687v12z"
-          />
-        </svg>
+      </div>
+
+      <div class="progress-bar">
+        <div :style="[isSaving ? { 'transition': 'width ' + estimatedUploadTime + 'ms', 'width': '97%' } : { 'width': '0%' }]"></div>
       </div>
     </div>
   </form>
@@ -76,7 +70,8 @@ export default {
     return {
       uploadedFiles: [],
       uploadError: null,
-      currentStatus: null
+      currentStatus: null,
+      fileList: []
     };
   },
   mounted() {
@@ -94,6 +89,14 @@ export default {
     },
     isFailed() {
       return this.currentStatus === STATUS_FAILED;
+    },
+    estimatedUploadTime() {
+      let totalBytes = this.fileList.reduce((total, file) => {
+        return total + file.size;
+      }, 0);
+
+      // Estimate upload time in milliseconds
+      return Math.round((totalBytes / 300000) * 1000);
     }
   },
   methods: {
@@ -122,6 +125,8 @@ export default {
       const formData = new FormData();
 
       if (!fileList.length) return;
+
+      this.fileList = Array.from(fileList);
 
       // append the files to FormData
       Array.from(Array(fileList.length).keys()).map(index => {
@@ -164,6 +169,7 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
+  flex-direction: column;
 
   &.is-overlay {
     position: absolute;
@@ -230,5 +236,18 @@ export default {
 
 .dropbox:hover {
   background: #8d8d8d;
+}
+
+.progress-bar {
+    width: 70%;
+    max-width: 250px;
+    height: 14px;
+    margin-top: 1rem;
+
+  div {
+    width: 0%;
+    background-color: #ffffff;
+    height: 100%;
+  }
 }
 </style>
